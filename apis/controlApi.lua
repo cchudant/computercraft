@@ -327,8 +327,6 @@ function autoUpdate(timeout)
 			file.close()
 		end
 
-		shell.run("cp /firmware/computerStartup.lua /startup.lua")
-
 		print("Firmware flashed over the air!")
 		print("Rebooting...")
 		os.sleep(1)
