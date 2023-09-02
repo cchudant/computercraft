@@ -1,5 +1,11 @@
-VERSION_MAJOR = 1
-VERSION_MINOR = 8
+VERSION_MAJOR = 2
+
+local file = fs.open("/firmware/commits", "r")
+local commits = file.readAll()
+commits = commits:gsub("%s+", "")
+
+VERSION_MINOR = tonumber(commits)
+
 VERSION = VERSION_MAJOR .. '.' .. VERSION_MINOR
 PROTOCOL_STRING = 'CONTROL'
 
@@ -206,6 +212,7 @@ function _remoteControlTask(shell)
 			end
 			makeCodeTable('/firmware')
 			codeTable['/startup.lua'] = codeTable['/firmware/computerStartup.lua']
+
 			return {
 				files = codeTable,
 				versionMajor = VERSION_MAJOR,
@@ -319,6 +326,8 @@ function autoUpdate(timeout)
 			file.write(v)
 			file.close()
 		end
+
+		shell.run("cp /firmware/computerStartup.lua /startup.lua")
 
 		print("Firmware flashed over the air!")
 		print("Rebooting...")
