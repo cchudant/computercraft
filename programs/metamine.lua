@@ -48,6 +48,8 @@ end
 
 print(nChunksRight .. "x" .. nChunksHeight)
 
+local nGoBackHeight = 0
+
 for ch = 1, nChunksHeight do
 
 	local nGoBackRight = 0
@@ -88,6 +90,10 @@ for ch = 1, nChunksHeight do
 		end
 	end
 
+end
+
+for i = 1, nForChunkHeight do
+	turtle.down()
 end
 
 
