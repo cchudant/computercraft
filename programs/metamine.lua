@@ -86,7 +86,7 @@ for ch = 1, nChunksHeight do
 	for cr = 1, nChunksRight do
 
 		local nForChunkRight = math.floor(right / nChunksRight)
-		if cr > right % nChunksRight then
+		if cr < right % nChunksRight then
 			nForChunkRight = nForChunkRight + 1
 		end
 
