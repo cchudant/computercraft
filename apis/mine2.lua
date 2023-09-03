@@ -54,6 +54,7 @@ function defaultArgs(options, defaults)
 end
 
 function travelCuboid(turtle, options)
+	print("Hello")
 
 	function turnRight()
 		if options.right < 0 then turtle.turnLeft()
@@ -110,7 +111,7 @@ function travelCuboid(turtle, options)
 	if options.depth < 0 then error("Depth cannot be negative") end
 	
 	if options.height == 0 or options.right == 0 or options.depth == 0 then
-
+		return
 	end
 
 	local depth = options.depth
