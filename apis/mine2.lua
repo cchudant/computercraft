@@ -185,11 +185,10 @@ function travelCuboid(turtle, options)
 		if i < math.floor(height/heightStep) then
 			local nGoUp = heightStep
 			if i == 1 and heightStep == 3 then
-				nGoUp = firstNGoUp
+				nGoUp = 3 - firstNGoUp
 			end
 			for i = 1,nGoUp do
 				options.runBeforeHeightStep(funcs)
-				print('up')
 			    funcs.up()
 				options.runAfterHeightStep(funcs)
 			end
