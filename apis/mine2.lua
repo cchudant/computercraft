@@ -54,8 +54,6 @@ function defaultArgs(options, defaults)
 end
 
 function travelCuboid(turtle, options)
-	print("Hello2")
-
 	function turnRight()
 		if options.right < 0 then turtle.turnLeft()
 		else turtle.turnRight() end
@@ -128,44 +126,60 @@ function travelCuboid(turtle, options)
 
 	function layer(bottom, up)
 		line(1, bottom, up)
-		local fullRoundtrip = math.floor(right/2)
-	    for i = 1,fullRoundtrip-1 do
-	        line(depth-2, bottom, up)
-	        turnRight()
-	        line(1, bottom, up)
-	        turnRight()
-	        line(depth-2, bottom, up)
-	        turnLeft()
-	        line(1, bottom, up)
-	        turnLeft()
-	    end
-	    if right % 2 == 0 then
-	        line(depth-2, bottom, up)
-	        turnRight()
-	        line(1, bottom, up)
-	        turnRight()
-	        line(depth-1, bottom, up)
-	    else
-	        line(depth-2, bottom, up)
-	        turnRight()
-	        line(1, bottom, up)
-	        turnRight()
-	        line(depth-2, bottom, up)
-	        turnLeft()
-	        line(1, bottom, up)
-	        turnLeft()
 
-	        line(depth-2, bottom, up)
-	        turnRight()
-	        turnRight()
-			for i = 1,depth-2 do
-				turtle.forward()
+		if depth == 1 then
+			-- special case
+			turnRight()
+			line(right-1, bottom, up)
+			turnRight()
+			turnRight()
+			line(right-2, bottom, up)
+			turnRight()
+		elseif right == 1 then
+			-- special case
+			line(right-1, bottom, up)
+			turnRight()
+			turnRight()
+			line(right-2, bottom, up)
+			turnRight()
+			turnRight()
+		else
+			local fullRoundtrip = math.floor(right/2)
+		    for i = 1,fullRoundtrip-1 do
+		        line(depth-2, bottom, up)
+		        turnRight()
+		        line(1, bottom, up)
+		        turnRight()
+		        line(depth-2, bottom, up)
+		        turnLeft()
+		        line(1, bottom, up)
+		        turnLeft()
+		    end
+		    if right % 2 == 0 then
+		        line(depth-2, bottom, up)
+		        turnRight()
+		        line(1, bottom, up)
+		        turnRight()
+		        line(depth-1, bottom, up)
+		    else
+		        line(depth-2, bottom, up)
+		        turnRight()
+		        line(1, bottom, up)
+		        turnRight()
+		        line(depth-2, bottom, up)
+		        turnLeft()
+		        line(1, bottom, up)
+		        turnLeft()
+
+		        line(depth-2, bottom, up)
+		        turnRight()
+		        turnRight()
+				line(depth-1, bottom, up)
 			end
-	        line(1, bottom, up)
-		end
-        turnRight()
-        line(right-1, bottom, up)
-        turnRight()
+	        turnRight()
+	        line(right-1, bottom, up)
+	        turnRight()
+	    end
 	end
 
 	local heightStep = options.heightStep
@@ -198,7 +212,6 @@ function travelCuboid(turtle, options)
 	end
 
 	for i = 1,nUpSteps do
-		print("layer")
 		if i == 1 and heightStep == 3 then
 			layer(firstBottom, firstUp)
 		else
