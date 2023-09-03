@@ -40,11 +40,11 @@ function placeTurtle(side, depth, right, height)
 	elseif side == 'top' then while not turtle.placeUp() do end
 	else while not turtle.placeDown() do end end
 
-	local t = peripheral.wrap(side)
-	t.turnOn()
-	local id = t.getID()
+	-- local t = peripheral.wrap(side)
+	-- t.turnOn()
+	-- local id = t.getID()
 
-	print(id, side, depth, right, height)
+	print(side, depth, right, height)
 	-- turtle = controlApi.connectControl(id).turtle
 	-- turtle.turnLeft()
 
