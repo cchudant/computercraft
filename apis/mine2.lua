@@ -161,11 +161,14 @@ function travelCuboid(turtle, options)
 	local nUpSteps = math.ceil(height/heightStep)
 
 	for i = 1,nUpSteps do
-		local bottom = i ~= 1 or height % heightStep == 0
-		local up = i ~= 1 or (height % heightStep == 0 or height % heightStep == 2)
+		if heightStep == 3 then
+			local bottom = i ~= 1 or height % heightStep == 0
+			local up = i ~= 1 or (height % heightStep == 0 or height % heightStep == 2)
+			layer(bottom, up)
+		else
+			layer(false, false)
+		end
 
-		print(i, bottom, up)
-		layer(bottom, up)
 		if i < height/heightStep then
 			for i = 1,heightStep do
 				options.runBeforeHeightStep(funcs)
@@ -174,10 +177,13 @@ function travelCuboid(turtle, options)
 			end
 		end
 	end
-	for i = 1,height do
+	for i = 1,height-1 do
 		for i = 1,heightStep do
 			funcs.down()
 		end
+	end
+	if heightStep == 3 and height % heightStep == 0 then
+		funcs.down()
 	end
 	turtle.back()
 end
