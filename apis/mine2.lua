@@ -180,9 +180,6 @@ function travelCuboid(turtle, options)
 	for i = 1,height-1 do
 		funcs.down()
 	end
-	if heightStep == 3 and height % heightStep == 0 then
-		funcs.down()
-	end
 	turtle.back()
 end
 
