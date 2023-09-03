@@ -167,9 +167,9 @@ function travelCuboid(turtle, options)
 		if height % heightStep == 0 then
 			firstNGoUp = 3
 		elseif height % heightStep == 1 then
-			firstNGoUp = 1
-		elseif height % heightStep == 2 then
 			firstNGoUp = 2
+		elseif height % heightStep == 2 then
+			firstNGoUp = 3
 		end
 		local firstBottom = height % heightStep == 0
 		local firstUp = (height % heightStep == 1 or height % heightStep == 2)
