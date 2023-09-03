@@ -188,11 +188,11 @@ function _remoteControlTask(shell)
 			}
 		end,
 		shellRun = function(arg) shell.run(arg) end,
-		goUp = function(arg) turtle.up() end,
-		goDown = function(arg) turtle.down() end,
-		goForward = function(arg) turtle.forward() end,
-		turnLeft = function(arg) turtle.turnLeft() end,
-		turnRight = function(arg) turtle.turnRight() end,
+		turtle = function(arg)
+			if type(arg.method) == 'string' and type(arg.args) == 'table' then
+				turtle[arg.method](unpack(arg.args))
+			end
+		end,
 		currentUpdate = function(arg)
 			return { versionMajor = VERSION_MAJOR, versionMinor = VERSION_MINOR }
 		end,
@@ -291,8 +291,10 @@ function listAvailable(timeout)
 	local x, y, z = gps.locate()
 	local available = {}
 	for _,rep in ipairs(reps) do
-		rep.args.id = rep.id
-		table.insert(available, _handleIdentify(rep.args, x, y, z))
+		if rep.args ~= nil then
+			rep.args.id = rep.id
+			table.insert(available, _handleIdentify(rep.args, x, y, z))
+		end
 	end
 	return available
 end
@@ -337,7 +339,29 @@ function autoUpdate(timeout)
 end
 
 function connectControl(sourceid)
+	local turtleFunctions = {
+		"craft", "forward", "back", "up", "down", "turnLeft", "turnRight", "select",
+		"getSelectedSlot", "getItemCount", "getItemSpace", "getItemDetail", "equipLeft",
+		"equipRight", "attack", "attackUp", "attackDown", "dig", "digUp", "digDown", "place",
+		"placeUp", "placeDown", "detect", "detectUp", "detectDown", "inspect", "inspectUp",
+		"inspectDown", "compare", "compareUp", "compareDown", "compareTo", "drop", "dropUp",
+		"dropDown", "suck", "suckUp", "suckDown", "refuel", "getFuelLevel", "getFuelLimit",
+		"transferTo"
+	}
+
+	local turtle = { id = sourceid }
+	for _,method in ipairs(methods) do
+		turtle[method] = function(...)
+			local ret = _sendRoundtrip(clientid, 'turtle', {
+				method = method,
+				args = {...},
+			})
+			return ret
+		end
+	end
+
 	return {
+		id = sourceid,
 		identify = function() 
 			local args = _sendRoundtrip(sourceid, 'identify')
 			local x, y, z = gps.locate()
@@ -346,14 +370,6 @@ function connectControl(sourceid)
 		shutdown = function() _sendRoundtrip(sourceid, 'shutdown') end,
 		reboot = function() _sendRoundtrip(sourceid, 'reboot') end,
 		shellRun = function(command) return _sendRoundtrip(sourceid, 'shellRun', command) end,
-		goUp = function() _sendRoundtrip(sourceid, 'goUp') end,
-		goDown = function() _sendRoundtrip(sourceid, 'goDown') end,
-		goForward = function() _sendRoundtrip(sourceid, 'goForward') end,
-		turnLeft = function() _sendRoundtrip(sourceid, 'turnLeft') end,
-		turnRight = function() _sendRoundtrip(sourceid, 'turnRight') end,
-		updateCode = function() return _sendRoundtrip(sourceid, 'updateCode') end,
-		connectTerm = function()
-			remoteTermClient(sourceid)
-		end,
+		turtle = turtle
 	}
 end
