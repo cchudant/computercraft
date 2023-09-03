@@ -70,15 +70,21 @@ local nGoBackHeight = 0
 
 for ch = 1, nChunksHeight do
 
+	local nForChunkHeight = math.floor(height / nChunksHeight)
+	if ch > height % nChunksHeight then
+		nForChunkHeight = nForChunkHeight + 1
+	end
+
 	local nGoBackRight = 0
 
 	for cr = 1, nChunksRight do
-		turtle.place()
 
 		local nForChunkRight = math.floor(right / nChunksRight)
 		if cr > right % nChunksRight then
 			nForChunkRight = nForChunkRight + 1
 		end
+
+		placeTurtle(nForChunkHeight, nForChunkRight)
 
 		if cr ~= nChunksRight then
 			turtle.turnRight()
@@ -95,11 +101,6 @@ for ch = 1, nChunksHeight do
 		turtle.forward()
 	end
 	turtle.turnRight()
-
-	local nForChunkHeight = math.floor(height / nChunksHeight)
-	if ch > height % nChunksHeight then
-		nForChunkHeight = nForChunkHeight + 1
-	end
 
 	if ch ~= nChunksHeight then
 		nGoBackHeight = nGoBackHeight + nForChunkHeight
