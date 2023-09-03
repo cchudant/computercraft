@@ -87,12 +87,13 @@ function travelCuboid(turtle, options)
 		prepareSameLevel = function(funcs, firstBottom, firstUp)
 			turtle.forward()
 		end,
-		prepareUpOne = function(funcs)
+		prepareUpOne = function(func, isDownwards)
 			turtle.forward()
 			funcs.up()
 		end,
 		runBeforeHeightStep = function(funcs, isDownwards) end,
 		runAfterHeightStep = function(funcs, isDownwards) end,
+		finish = function() turtle.back() end,
 		heightStep = 1,
 	})
 
@@ -210,7 +211,7 @@ function travelCuboid(turtle, options)
 	end
 
 	if heightStep == 3 and height % heightStep == 0 then
-		options.prepareUpOne(funcs)
+		options.prepareUpOne(funcs, isDownwards)
 	else
 		options.prepareSameLevel(funcs, firstBottom, firstUp)
 	end
@@ -247,7 +248,7 @@ function travelCuboid(turtle, options)
 	if heightStep == 3 and height % heightStep == 0 then
 		funcs.down()
 	end
-	turtle.back()
+	options.finish()
 end
 
 function digCuboid(turtle, options)
@@ -286,12 +287,14 @@ function digCuboid(turtle, options)
 				digUp()
 			end
 		end,
-		prepareUpOne = function(funcs)
+		prepareUpOne = function(funcs, isDownwards)
 			dig()
 			turtle.forward()
-			digUp()
+			if isDownwards then digDown() 
+			else digUp() end
 			funcs.up()
-			digUp()
+			if isDownwards then digDown() 
+			else digUp() end
 		end,
 		runBeforeHeightStep = function(funcs, isDownwards)
 			if isDownwards then digDown() 

@@ -34,13 +34,35 @@ height = tonumber(height)
 
 print("I have " .. nTurtles .. " turtles.")
 
-function placeTurtle(height, right)
-	print(height, right)
+function placeTurtle(side, depth, right, height)
 	selectTurtle()
-	turtle.place()
-end
+	if side == 'front' then turtle.place()
+	elseif side = 'top' then turtle.placeUp()
+	else turtle.placeDown()
 
--- mine2.digCuboid(turtle, {depth = depth, right = right, height = height})
+	local t = peripheral.wrap(side)
+	t.turnOn()
+	local id = t.getID()
+
+	print(id, side, depth, right, height)
+	-- turtle = controlApi.connectControl(id).turtle
+	-- turtle.turnLeft()
+
+	return function()
+		mine2.digCuboid(turtle, {
+			depth = depth, right = right, height = height,
+			prepareSameLevel = function() end,
+			prepareUpOne = function(funcs)
+				if isDownwards then digDown() 
+				else digUp() end
+				funcs.up()
+				if isDownwards then digDown() 
+				else digUp() end
+			end,
+			finish = function() end
+		})
+	end
+end
 
 function findBest(nChunksRight, nChunksHeight)
 	local usedTurtles = nChunksHeight * nChunksRight
@@ -56,7 +78,7 @@ function findBest(nChunksRight, nChunksHeight)
 	if canChunkRight and canChunkHeight then
 		local nChunksRight1, nChunksHeight1 = findBest(nChunksRight + 1, nChunksHeight)
 		local nChunksRight2, nChunksHeight2 = findBest(nChunksRight, nChunksHeight + 1)
-		if nChunksRight1 * nChunksHeight1 > nChunksRight2 * nChunksHeight2 then
+		if nChunksRight1 * nChunksHeight1 >= nChunksRight2 * nChunksHeight2 then
 			return nChunksRight1, nChunksHeight1
 		else
 			return nChunksRight2, nChunksHeight2
@@ -76,57 +98,59 @@ print(nChunksRight .. "x" .. nChunksHeight)
 
 local nGoBackHeight = 0
 
-for ch = 1, nChunksHeight do
+local turtles = {}
 
+function gnForChunkHeight(ch)
 	local nForChunkHeight = math.floor(height / nChunksHeight)
 	if ch - 1 < height % nChunksHeight then
 		nForChunkHeight = nForChunkHeight + 1
 	end
+	return nForChunkHeight
+end
+function fnForChunkRight(cr)
+	local nForChunkRight = math.floor(right / nChunksRight)
+	if cr - 1 < right % nChunksRight then
+		nForChunkRight = nForChunkRight + 1
+	end
+	return nForChunkRight
+end
 
-	local nGoBackRight = 0
+for ch = 1, nChunksHeight-1 do
+	local nForChunkHeight = gnForChunkHeight(ch)
+	for k = 1, nForChunkHeight do turtle.up() end
+end
+for ch = 1, nChunksHeight-1, -1 do
+	local nForChunkHeight = gnForChunkHeight(ch)
 
-	for cr = 1, nChunksRight do
+	turtle.turnRight()
+	for cr = 1, nChunksRight-1 do
+		local nForChunkRight = gnForChunkRight(cr)
+		for k = 1, nForChunkRight do turtle.forward() end
+	end
 
-		local nForChunkRight = math.floor(right / nChunksRight)
-		if cr - 1 < right % nChunksRight then
-			nForChunkRight = nForChunkRight + 1
-		end
-
-		print('heiy', ch, cr)
-		placeTurtle(nForChunkHeight, nForChunkRight)
-
-		if cr ~= nChunksRight then
-			turtle.turnRight()
-			nGoBackRight = nGoBackRight + nForChunkRight
-			for i = 1, nForChunkRight do
-				turtle.forward()
-			end
-			turtle.turnLeft()
-		end
-
+	for cr = nChunksRight-2, 1, -1 do
+		local nForChunkRight = gnForChunkRight(cr)
+		-- place forward
+		table.insert(turtles, placeTurtle('front', nForChunkRight, nForChunkHeight))
+		--
+		for k = 1, nForChunkRight do turtle.back() end
 	end
 	turtle.turnLeft()
-	for i = 1, nGoBackRight do
-		turtle.forward()
-	end
-	turtle.turnRight()
 
-	if ch ~= nChunksHeight then
-		nGoBackHeight = nGoBackHeight + nForChunkHeight
-		for i = 1, nForChunkHeight do
-			turtle.up()
-		end
-	end
+	if ch ~= 1 then
+		local nForChunkRight = gnForChunkRight(1)
+		turtle.down()
+		-- place up
+		table.insert(turtles, placeTurtle('top', nForChunkRight, nForChunkHeight))
+		--
 
+		for k = 2, nForChunkHeight do turtle.down() end
+	end
 end
 
-for i = 1, nGoBackHeight do
-	turtle.down()
-end
-
-
-
--- for r in 1, do
-
-
--- end
+turtle.back()
+-- place forward
+local nForChunkRight = gnForChunkRight(1)
+local nForChunkHeight = gnForChunkHeight(1)
+table.insert(turtles, placeTurtle('front', nForChunkRight, nForChunkHeight))
+--
