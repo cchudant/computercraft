@@ -162,8 +162,8 @@ function travelCuboid(turtle, options)
 	local nUpSteps = math.ceil(height/heightStep)
 
 	for i = 1,nUpSteps do
-		local bottom = i == 1 and height % heightStep == 0
-		local up = i == 1 and (height % heightStep == 0 or height % heightStep == 2)
+		local bottom = i ~= 1 or height % heightStep == 0
+		local up = i ~= 1 or (height % heightStep == 0 or height % heightStep == 2)
 
 		print(i, bottom, up)
 		layer(bottom, up)
