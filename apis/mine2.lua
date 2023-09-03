@@ -130,17 +130,17 @@ function travelCuboid(turtle, options)
 		if depth == 1 then
 			-- special case
 			turnRight()
-			line(right-1, bottom, up)
+			line(right-2, bottom, up)
 			turnRight()
 			turnRight()
 			line(right-2, bottom, up)
 			turnRight()
 		elseif right == 1 then
 			-- special case
-			line(right-1, bottom, up)
+			line(depth-2, bottom, up)
 			turnRight()
 			turnRight()
-			line(right-2, bottom, up)
+			line(depth-2, bottom, up)
 			turnRight()
 			turnRight()
 		else
