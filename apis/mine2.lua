@@ -115,7 +115,7 @@ function travelCuboid(turtle, options)
 	    for i = 1,x do
 	        options.runBeforeEveryStep(funcs, bottom, up)
 	        turtle.forward()
-	    	options.runAfterEveryStep(funcs)
+	    	options.runAfterEveryStep(funcs, bottom, up)
 	    end
 	end
 
