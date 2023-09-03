@@ -125,8 +125,6 @@ function travelCuboid(turtle, options)
 	end
 
 	function layer(bottom, up)
-		line(1, bottom, up)
-
 		if depth == 1 then
 			-- special case
 			turnRight()
@@ -144,6 +142,8 @@ function travelCuboid(turtle, options)
 			turnRight()
 			turnRight()
 		else
+			line(1, bottom, up)
+
 			local fullRoundtrip = math.floor(right/2)
 		    for i = 1,fullRoundtrip-1 do
 		        line(depth-2, bottom, up)
