@@ -190,7 +190,7 @@ function _remoteControlTask(shell)
 		shellRun = function(arg) shell.run(arg) end,
 		turtle = function(arg)
 			if type(arg.method) == 'string' and type(arg.args) == 'table' then
-				return turtle[arg.method](unpack(arg.args))
+				return table.pack(turtle[arg.method](unpack(arg.args)))
 			end
 		end,
 		currentUpdate = function(arg)
