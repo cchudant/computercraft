@@ -165,6 +165,8 @@ function travelCuboid(turtle, options)
 		local bottom = i == 1 and height % heightStep == 0
 		local up = i == 1 and (height % heightStep == 0 or height % heightStep == 1)
 
+		print(bottom, up)
+
 		layer(bottom, up)
 		if i < height/heightStep then
 			for i = 1,heightStep do
@@ -201,6 +203,7 @@ function digCuboid(turtle, options)
 			dig()
 		end,
 		runAfterEveryStep = function(funcs, bottom, up)
+			print('dig', bottom, up)
 			if bottom then
 				digDown()
 			end
