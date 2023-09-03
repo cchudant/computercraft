@@ -165,6 +165,7 @@ function travelCuboid(turtle, options)
 		local bottom = i == 1 and height % heightStep == 0
 		local up = i == 1 and (height % heightStep == 0 or height % heightStep == 2)
 
+		print(i, bottom, up)
 		layer(bottom, up)
 		if i < height/heightStep then
 			for i = 1,heightStep do
