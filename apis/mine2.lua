@@ -54,7 +54,7 @@ function defaultArgs(options, defaults)
 end
 
 function travelCuboid(turtle, options)
-	print("Hello")
+	print("Hello2")
 
 	function turnRight()
 		if options.right < 0 then turtle.turnLeft()
