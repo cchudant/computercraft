@@ -107,7 +107,7 @@ function gnForChunkHeight(ch)
 	end
 	return nForChunkHeight
 end
-function fnForChunkRight(cr)
+function gnForChunkRight(cr)
 	local nForChunkRight = math.floor(right / nChunksRight)
 	if cr - 1 < right % nChunksRight then
 		nForChunkRight = nForChunkRight + 1
