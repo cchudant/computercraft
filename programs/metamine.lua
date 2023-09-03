@@ -117,7 +117,7 @@ end
 
 turtle.forward()
 
-for ch = 2, nChunksHeight-1 do
+for ch = 2, nChunksHeight do
 	local nForChunkHeight = gnForChunkHeight(ch)
 	for k = 1, nForChunkHeight do turtle.up() end
 end
