@@ -265,6 +265,7 @@ function digCuboid(turtle, options)
 			dig()
 		end,
 		runAfterEveryStep = function(funcs, bottom, up)
+			print(bottom, up)
 			if bottom then
 				digDown()
 			end
