@@ -153,7 +153,7 @@ function travelCuboid(turtle, options)
 				turtle.forward()
 			end
 	        line(1, bottom, up)
-		else
+		end
         turnRight()
         line(right-1, bottom, up)
         turnRight()
