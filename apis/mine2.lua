@@ -142,15 +142,10 @@ function travelCuboid(turtle, options)
 	    if right % 2 == 1 then
 	        line(depth-2, bottom, up)
 	        turnRight()
-	        line(1, bottom, up)
-			-- have to go back a bit
-		    turnRight()
-		    turnRight()
+	        turnRight()
 			for i = 1,depth-2 do
 				turtle.forward()
 			end
-		    line(1, bottom, up)
-		    turnRight()
 		end
 	    line(1, bottom, up)
 	    turnRight()
@@ -200,11 +195,8 @@ function travelCuboid(turtle, options)
 			if i == 1 and heightStep == 3 then
 				nGoUp = firstNGoUp
 			end
-			print(nGoUp)
 			for i = 1,nGoUp do
 				options.runBeforeHeightStep(funcs, isDownwards)
-				print('up')
-				os.sleep(2)
 			    funcs.up()
 				options.runAfterHeightStep(funcs, isDownwards)
 			end
