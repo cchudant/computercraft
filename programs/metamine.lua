@@ -56,9 +56,14 @@ while true do
 
 	print(wouldUseIfChunkedHeight, wouldUseIfChunkedRight, canChunkHeight, canChunkRight)
 
-	if wouldUseIfChunkedHeight <= wouldUseIfChunkedRight and canChunkHeight then 
+	if canChunkHeight and canChunkRight then
+		canChunkRight = wouldUseIfChunkedRight <= wouldUseIfChunkedHeight
+		canChunkHeight = wouldUseIfChunkedHeight <= wouldUseIfChunkedRight
+	end
+
+	if  canChunkHeight then 
 		nChunksHeight = nChunksHeight + 1
-	elseif (wouldUseIfChunkedRight <= wouldUseIfChunkedHeight or not canChunkHeight) and canChunkRight then 
+	elseif canChunkRight then 
 		nChunksRight = nChunksRight + 1
 	else
 		break
