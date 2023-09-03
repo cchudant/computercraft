@@ -352,7 +352,7 @@ function connectControl(sourceid)
 	local turtle = { id = sourceid }
 	for _,method in ipairs(turtleFunctions) do
 		turtle[method] = function(...)
-			local ret = _sendRoundtrip(clientid, 'turtle', {
+			local ret = _sendRoundtrip(sourceid, 'turtle', {
 				method = method,
 				args = {...},
 			})
