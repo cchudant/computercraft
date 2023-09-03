@@ -58,7 +58,7 @@ while true do
 
 	if wouldUseIfChunkedHeight <= wouldUseIfChunkedRight and canChunkHeight then 
 		nChunksHeight = nChunksHeight + 1
-	elseif (wouldUseIfChunkedRight <= wouldUseIfChunkedHeight or canChunkHeight) and canChunkRight then 
+	elseif (wouldUseIfChunkedRight <= wouldUseIfChunkedHeight or not canChunkHeight) and canChunkRight then 
 		nChunksRight = nChunksRight + 1
 	else
 		break
