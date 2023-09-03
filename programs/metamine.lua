@@ -58,7 +58,7 @@ while true do
 
 	if wouldUseIfChunkedHeight <= wouldUseIfChunkedRight and canChunkHeight then 
 		nChunksHeight = nChunksHeight + 1
-	elseif wouldUseIfChunkedRight <= wouldUseIfChunkedHeight and canChunkRight then 
+	elseif (wouldUseIfChunkedRight <= wouldUseIfChunkedHeight or canChunkHeight) and canChunkRight then 
 		nChunksRight = nChunksRight + 1
 	else
 		break
@@ -85,7 +85,7 @@ for ch = 1, nChunksHeight do
 			nForChunkRight = nForChunkRight + 1
 		end
 
-		print(ch, cr)
+		print('heiy', ch, cr)
 		placeTurtle(nForChunkHeight, nForChunkRight)
 
 		if cr ~= nChunksRight then
