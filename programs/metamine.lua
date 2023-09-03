@@ -34,7 +34,8 @@ height = tonumber(height)
 
 print("I have " .. nTurtles .. " turtles.")
 
-function placeTurtle()
+function placeTurtle(height, right)
+	print(height, right)
 	selectTurtle()
 	turtle.place()
 end
@@ -84,6 +85,7 @@ for ch = 1, nChunksHeight do
 			nForChunkRight = nForChunkRight + 1
 		end
 
+		print(ch, cr)
 		placeTurtle(nForChunkHeight, nForChunkRight)
 
 		if cr ~= nChunksRight then
