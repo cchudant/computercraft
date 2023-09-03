@@ -42,8 +42,6 @@ end
 
 -- mine2.digCuboid(turtle, {depth = depth, right = right, height = height})
 
-local nChunksRight, nChunksHeight = findBest(1, 1, 1)
-
 function findBest(nChunksRight, nChunksHeight)
 	local usedTurtles = nChunksHeight * nChunksRight
 
@@ -72,7 +70,7 @@ function findBest(nChunksRight, nChunksHeight)
 	return nChunksRight, nChunksHeight
 end
 
-local 
+local nChunksRight, nChunksHeight = findBest(1, 1, 1)
 
 print(nChunksRight .. "x" .. nChunksHeight)
 
