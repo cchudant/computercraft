@@ -1,0 +1,98 @@
+os.loadAPI("/firmware/apis/mine2.lua")
+
+local depth, right, height = ...
+if depth == nil or right == nil or height == nil then
+	print("usage: metamine <depth> <right> <height>")
+	return
+end
+
+TURTLE1 = "computercraft:turtle_basic"
+TURTLE2 = "computercraft:turtle_advanced"
+
+local nTurtles = 0
+for slot=1,16 do
+	local detail = turtle.getItemDetail(slot)
+	if detail ~= nil and (detail.name == TURTLE1 or detail.name == TURTLE2) then
+		nTurtles = nTurtles + detail.count
+	end
+end
+
+depth = tonumber(depth)
+right = tonumber(right)
+height = tonumber(height)
+
+print("I have " .. nTurtles .. " turtles.")
+
+-- mine2.digCuboid(turtle, {depth = depth, right = right, height = height})
+
+local nChunksRight = 1
+local nChunksHeight = 1
+
+while true do
+	local usedTurtles = nChunksHeight * nChunksRight
+
+	local wouldUseIfChunkedRight = usedTurtles + nChunksHeight
+	local wouldUseIfChunkedHeight = usedTurtles + nChunksRight
+
+	local canChunkRight = math.floor(right / nChunksRight) > 1 and wouldUseIfChunkedRight <= nTurtles
+	local canChunkHeight = math.floor(height / nChunksHeight) > 1 and wouldUseIfChunkedHeight <= nTurtles
+
+	if wouldUseIfChunkedHeight < wouldUseIfChunkedRight and canChunkHeight then 
+		nChunksHeight = nChunksHeight + 1
+	elseif wouldUseIfChunkedRight < wouldUseIfChunkedHeight and canChunkRight then 
+		nChunksRight = nChunksRight + 1
+	else
+		break
+	end
+end
+
+print(nChunksRight .. "x" .. nChunksHeight)
+
+for ch = 1, nChunksHeight do
+
+	local nGoBackRight = 0
+
+	for cr = 1, nChunksRight do
+		turtle.place()
+
+		local nForChunkRight = math.floor(right / nChunksRight)
+		if cr > right % nChunksRight then
+			nForChunkRight = nForChunkRight + 1
+		end
+
+		if cr ~= nChunksRight then
+			turtle.turnRight()
+			nGoBackRight = nGoBackRight + nForChunkRight
+			for i = 1, nForChunkRight do
+				turtle.forward()
+			end
+			turtle.turnLeft()
+		end
+
+	end
+	turtle.turnLeft()
+	for i = 1, nForChunkRight do
+		turtle.forward()
+	end
+	turtle.turnRight()
+
+	local nForChunkHeight = math.floor(Height / nChunksHeight)
+	if cr > height % nChunksHeight then
+		nForChunkHeight = nForChunkHeight + 1
+	end
+
+	if ch ~= nChunksHeight then
+		nGoBackHeight = nGoBackHeight + nForChunkHeight
+		for i = 1, nForChunkHeight do
+			turtle.up()
+		end
+	end
+
+end
+
+
+
+-- for r in 1, do
+
+
+-- end
