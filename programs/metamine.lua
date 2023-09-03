@@ -36,9 +36,9 @@ print("I have " .. nTurtles .. " turtles.")
 
 function placeTurtle(side, depth, right, height)
 	selectTurtle()
-	if side == 'front' then turtle.place()
-	elseif side == 'top' then turtle.placeUp()
-	else turtle.placeDown() end
+	if side == 'front' then while not turtle.place() do end
+	elseif side == 'top' then while not turtle.placeUp() do end
+	else while not turtle.placeDown() do end end
 
 	local t = peripheral.wrap(side)
 	t.turnOn()
