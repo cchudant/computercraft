@@ -145,7 +145,7 @@ for ch = nChunksHeight, 1, -1 do
 		table.insert(turtles, placeTurtle('top', depth, nForChunkRight, nForChunkHeight))
 		--
 
-		for k = 2, nForChunkHeight do turtle.down() end
+		for k = 1, nForChunkHeight do turtle.down() end
 	end
 end
 
