@@ -51,8 +51,8 @@ while true do
 	local wouldUseIfChunkedRight = usedTurtles + nChunksHeight
 	local wouldUseIfChunkedHeight = usedTurtles + nChunksRight
 
-	local canChunkRight = math.floor(right / nChunksRight) > 1 and wouldUseIfChunkedRight <= nTurtles
-	local canChunkHeight = math.floor(height / nChunksHeight) > 1 and wouldUseIfChunkedHeight <= nTurtles
+	local canChunkRight = math.floor(right / nChunksRight) > 1
+	local canChunkHeight = math.floor(height / nChunksHeight) > 1
 
 	print(wouldUseIfChunkedHeight, wouldUseIfChunkedRight, canChunkHeight, canChunkRight)
 
