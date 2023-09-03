@@ -139,18 +139,24 @@ function travelCuboid(turtle, options)
 	        line(1, bottom, up)
 	        turnLeft()
 	    end
-	 --    if right % 2 == 1 then
-	 --        line(depth-2, bottom, up)
-	 --        turnRight()
-	 --        turnRight()
-		-- 	for i = 1,depth-2 do
-		-- 		turtle.forward()
-		-- 	end
-		-- end
-	 --    line(1, bottom, up)
-	 --    turnRight()
-	 --    line(right-1, bottom, up)
-	 --    turnRight()
+	    if right % 2 == 0 then
+	        line(depth-2, bottom, up)
+	        turnRight()
+	        line(1, bottom, up)
+	        turnRight()
+	        line(depth-1, bottom, up)
+	    else
+	        line(depth-2, bottom, up)
+	        turnRight()
+	        turnRight()
+			for i = 1,depth-2 do
+				turtle.forward()
+			end
+	        line(1, bottom, up)
+		else
+        turnRight()
+        line(right-1, bottom, up)
+        turnRight()
 	end
 
 	local heightStep = options.heightStep
