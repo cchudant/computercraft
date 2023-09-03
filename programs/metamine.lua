@@ -6,7 +6,7 @@ if depth == nil or right == nil or height == nil then
 	return
 end
 
-TURTLE1 = "computercraft:turtle_basic"
+TURTLE1 = "computercraft:turtle_normal"
 TURTLE2 = "computercraft:turtle_advanced"
 
 local nTurtles = 0
@@ -73,7 +73,7 @@ for ch = 1, nChunksHeight do
 
 	end
 	turtle.turnLeft()
-	for i = 1, nForChunkRight do
+	for i = 1, nGoBackRight do
 		turtle.forward()
 	end
 	turtle.turnRight()
@@ -92,7 +92,7 @@ for ch = 1, nChunksHeight do
 
 end
 
-for i = 1, nForChunkHeight do
+for i = 1, nGoBackHeight do
 	turtle.down()
 end
 
