@@ -138,21 +138,21 @@ function travelCuboid(turtle, options)
 	        line(1, bottom, up)
 	        turnLeft()
 	    end
-		line(depth-2, bottom, up)
-	    turnRight()
-	    line(1, bottom, up)
-	    turnRight()
-	    line(depth-1, bottom, up)
-	    turnRight()
 	    if right % 2 == 1 then
+	        line(depth-2, bottom, up)
+	        turnRight()
+	        line(1, bottom, up)
 			-- have to go back a bit
+		    turnRight()
 		    turnRight()
 			for i = 1,depth-2 do
 				turtle.forward()
 			end
 		    line(1, bottom, up)
 		    turnRight()
-		end
+		else
+	    line(1, bottom, up)
+	    turnRight()
 	    line(right-1, bottom, up)
 	    turnRight()
 	end
