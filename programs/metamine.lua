@@ -17,11 +17,27 @@ for slot=1,16 do
 	end
 end
 
+function selectTurtle()
+	for slot=1,16 do
+		local detail = turtle.getItemDetail(slot)
+		if detail ~= nil and (detail.name == TURTLE1 or detail.name == TURTLE2) then
+			turtle.select(slot)
+			return true
+		end
+	end
+	return false
+end
+
 depth = tonumber(depth)
 right = tonumber(right)
 height = tonumber(height)
 
 print("I have " .. nTurtles .. " turtles.")
+
+function placeTurtle()
+	selectTurtle()
+	turtle.place()
+end
 
 -- mine2.digCuboid(turtle, {depth = depth, right = right, height = height})
 
