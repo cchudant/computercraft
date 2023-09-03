@@ -180,6 +180,7 @@ function travelCuboid(turtle, options)
 	end
 
 	for i = 1,nUpSteps do
+		print("layer")
 		if i == 1 and heightStep == 3 then
 			layer(firstBottom, firstUp)
 		else
