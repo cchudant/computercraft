@@ -77,7 +77,7 @@ local nGoBackHeight = 0
 for ch = 1, nChunksHeight do
 
 	local nForChunkHeight = math.floor(height / nChunksHeight)
-	if ch < height % nChunksHeight then
+	if ch - 1 < height % nChunksHeight then
 		nForChunkHeight = nForChunkHeight + 1
 	end
 
@@ -86,7 +86,7 @@ for ch = 1, nChunksHeight do
 	for cr = 1, nChunksRight do
 
 		local nForChunkRight = math.floor(right / nChunksRight)
-		if cr < right % nChunksRight then
+		if cr - 1 < right % nChunksRight then
 			nForChunkRight = nForChunkRight + 1
 		end
 
