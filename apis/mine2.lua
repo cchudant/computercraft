@@ -84,7 +84,7 @@ function travelCuboid(turtle, options)
 		height = nil,
 		runBeforeEveryStep = function(funcs) end,
 		runAfterEveryStep = function(funcs, bottom, up) end,
-		prepareSameLevel = function(funcs)
+		prepareSameLevel = function(funcs, firstBottom, firstUp)
 			turtle.forward()
 		end,
 		prepareUpOne = function(funcs)
@@ -183,13 +183,6 @@ function travelCuboid(turtle, options)
 	end
 
 	local heightStep = options.heightStep
-
-	if heightStep == 3 and height % heightStep == 0 then
-		options.prepareUpOne(funcs)
-	else
-		options.prepareSameLevel(funcs)
-	end
-
 	local nUpSteps = math.ceil(height/heightStep)
 
 	local firstNGoUp = 1
@@ -209,6 +202,17 @@ function travelCuboid(turtle, options)
 			firstUp = true
 			firstBottom = false
 		end
+	end
+	if isDownwards then
+		local t = firstUp
+		firstUp = firstBottom
+		firstBottom = t
+	end
+
+	if heightStep == 3 and height % heightStep == 0 then
+		options.prepareUpOne(funcs)
+	else
+		options.prepareSameLevel(funcs, firstBottom, firstUp)
 	end
 
 	for i = 1,nUpSteps do
@@ -273,9 +277,15 @@ function digCuboid(turtle, options)
 				digUp()
 			end				
 		end,
-		prepareSameLevel = function(funcs)
+		prepareSameLevel = function(funcs, bottom, up)
 			dig()
 			turtle.forward()
+			if bottom then
+				digDown()
+			end
+			if up then
+				digUp()
+			end
 		end,
 		prepareUpOne = function(funcs)
 			dig()
