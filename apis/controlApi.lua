@@ -356,7 +356,7 @@ function connectControl(sourceid)
 				method = method,
 				args = {...},
 			})
-			return ret
+			return unpack(ret)
 		end
 	end
 
