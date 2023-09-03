@@ -57,8 +57,8 @@ while true do
 	print(wouldUseIfChunkedHeight, wouldUseIfChunkedRight, canChunkHeight, canChunkRight)
 
 	if canChunkHeight and canChunkRight then
-		canChunkRight = wouldUseIfChunkedRight <= wouldUseIfChunkedHeight
-		canChunkHeight = wouldUseIfChunkedHeight <= wouldUseIfChunkedRight
+		canChunkRight = wouldUseIfChunkedRight < wouldUseIfChunkedHeight
+		canChunkHeight = not canChunkRight
 	end
 
 	if  canChunkHeight then 
