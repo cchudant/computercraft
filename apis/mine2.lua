@@ -109,8 +109,6 @@ function travelCuboid(turtle, options)
 	local right = math.abs(options.right) 
 	local height = math.abs(options.height)
 
-	local heightStep = options.heightStep
-
 	function line(x, bottom, up)
 	    for i = 1,x do
 	        options.runBeforeEveryStep(funcs, bottom, up)
@@ -152,6 +150,8 @@ function travelCuboid(turtle, options)
 	    turnRight()
 	end
 
+	local heightStep = options.heightStep
+
 	if heightStep == 3 and height % heightStep == 0 then
 		options.prepareUpOne(funcs)
 	else
@@ -160,25 +160,49 @@ function travelCuboid(turtle, options)
 
 	local nUpSteps = math.ceil(height/heightStep)
 
+	local firstNGoUp = 1
+	local firstUp = false
+	local firstBottom = false
+	if heightStep == 3 then
+		if height % heightStep == 0 then
+			firstNGoUp = 3
+		elseif height % heightStep == 1 then
+			firstNGoUp = 1
+		elseif height % heightStep == 2 then
+			firstNGoUp = 2
+		end
+		local firstBottom = height % heightStep == 0
+		local firstUp = (height % heightStep == 1 or height % heightStep == 2)
+	end
+
 	for i = 1,nUpSteps do
-		if heightStep == 3 then
-			local bottom = i ~= 1 or height % heightStep == 0
-			local up = i ~= 1 or (height % heightStep == 0 or height % heightStep == 2)
-			layer(bottom, up)
+		if i == 1 and heightStep == 3 then
+			layer(firstBottom, firstUp)
 		else
-			layer(false, false)
+			layer(heightStep == 3, heightStep == 3)
 		end
 
-		if i < height/heightStep then
-			for i = 1,heightStep do
+		if i < math.floor(height/heightStep) then
+			local nGoUp = heightStep
+			if i == 1 and heightStep == 3 then
+				nGoUp = firstNGoUp
+			end
+			for i = 1,nGoUp do
 				options.runBeforeHeightStep(funcs)
 			    funcs.up()
 				options.runAfterHeightStep(funcs)
 			end
 		end
 	end
-	for i = 1,height-heightStep do
-		funcs.down()
+	for i = 1,nUpSteps do
+		local nGoUp = heightStep
+		if i == 1 and heightStep == 3 then
+			nGoUp = firstNGoUp
+		end
+
+		for j = 1,nGoUp do
+			funcs.down()
+		end
 	end
 	turtle.back()
 end
