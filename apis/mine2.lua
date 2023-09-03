@@ -189,6 +189,7 @@ function travelCuboid(turtle, options)
 			end
 			for i = 1,nGoUp do
 				options.runBeforeHeightStep(funcs)
+				print('up')
 			    funcs.up()
 				options.runAfterHeightStep(funcs)
 			end
