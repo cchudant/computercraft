@@ -152,7 +152,7 @@ function travelCuboid(turtle, options)
 	    turnRight()
 	end
 
-	if height % heightStep == 0 then
+	if heightStep == 3 and height % heightStep == 0 then
 		options.prepareUpOne(funcs)
 	else
 		options.prepareSameLevel(funcs)
