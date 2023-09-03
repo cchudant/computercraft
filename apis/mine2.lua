@@ -182,7 +182,7 @@ function travelCuboid(turtle, options)
 			layer(heightStep == 3, heightStep == 3)
 		end
 
-		if i < math.floor(height/heightStep) then
+		if i < nUpSteps then
 			local nGoUp = heightStep
 			if i == 1 and heightStep == 3 then
 				nGoUp = firstNGoUp
