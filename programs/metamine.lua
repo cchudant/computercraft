@@ -38,7 +38,7 @@ function placeTurtle(side, depth, right, height)
 	selectTurtle()
 	if side == 'front' then turtle.place()
 	elseif side == 'top' then turtle.placeUp()
-	else turtle.placeDown()
+	else turtle.placeDown() end
 
 	local t = peripheral.wrap(side)
 	t.turnOn()
