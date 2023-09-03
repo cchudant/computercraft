@@ -177,7 +177,7 @@ function travelCuboid(turtle, options)
 			end
 		end
 	end
-	for i = 1,height-1 do
+	for i = 1,height-heightStep do
 		funcs.down()
 	end
 	turtle.back()
