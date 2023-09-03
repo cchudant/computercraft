@@ -53,6 +53,8 @@ while true do
 	local canChunkRight = math.floor(right / nChunksRight) > 1 and wouldUseIfChunkedRight <= nTurtles
 	local canChunkHeight = math.floor(height / nChunksHeight) > 1 and wouldUseIfChunkedHeight <= nTurtles
 
+	print(wouldUseIfChunkedHeight, wouldUseIfChunkedRight, canChunkHeight, canChunkRight)
+
 	if wouldUseIfChunkedHeight < wouldUseIfChunkedRight and canChunkHeight then 
 		nChunksHeight = nChunksHeight + 1
 	elseif wouldUseIfChunkedRight < wouldUseIfChunkedHeight and canChunkRight then 
