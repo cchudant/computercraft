@@ -95,7 +95,7 @@ for ch = 1, nChunksHeight do
 	turtle.turnRight()
 
 	local nForChunkHeight = math.floor(height / nChunksHeight)
-	if cr > height % nChunksHeight then
+	if ch > height % nChunksHeight then
 		nForChunkHeight = nForChunkHeight + 1
 	end
 
