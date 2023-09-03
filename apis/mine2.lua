@@ -109,6 +109,8 @@ function travelCuboid(turtle, options)
 	local right = math.abs(options.right) 
 	local height = math.abs(options.height)
 
+	local heightStep = options.heightStep
+
 	function line(x, bottom, up)
 	    for i = 1,x do
 	        options.runBeforeEveryStep(funcs, bottom, up)
