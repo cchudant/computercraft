@@ -142,7 +142,6 @@ function travelCuboid(turtle, options)
 		else
 			-- have to go back a bit
 		    turnRight()
-		    turnRight()
 			for i = 1,depth-2 do
 				turtle.forward()
 			end
