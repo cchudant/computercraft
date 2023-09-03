@@ -54,6 +54,7 @@ function defaultArgs(options, defaults)
 end
 
 function travelCuboid(turtle, options)
+
 	function turnRight()
 		if options.right < 0 then turtle.turnLeft()
 		else turtle.turnRight() end
@@ -91,10 +92,13 @@ function travelCuboid(turtle, options)
 			turtle.forward()
 			funcs.up()
 		end,
-		runBeforeHeightStep = function(funcs) end,
-		runAfterHeightStep = function(funcs) end,
+		runBeforeHeightStep = function(funcs, isDownwards) end,
+		runAfterHeightStep = function(funcs, isDownwards) end,
 		heightStep = 1,
 	})
+
+	local isDownwards = false
+	if options.height < 0 then isDownwards = true end
 
 	if options.heightStep ~= 1 and options.heightStep ~= 3 then
 		error("heightStep must be 1 or 3")
@@ -103,9 +107,13 @@ function travelCuboid(turtle, options)
 	if options.depth == nil then error("No depth bound for cubeoid") end
 	if options.right == nil then error("No right bound for cubeoid") end
 	if options.height == nil then error("No height bound for cubeoid") end
+	if options.depth < 0 then error("Depth cannot be negative") end
+	
+	if options.height == 0 or options.right == 0 or options.depth == 0 then
+
+	end
 
 	local depth = options.depth
-	if depth < 0 then error("Depth cannot be negative") end
 	local right = math.abs(options.right) 
 	local height = math.abs(options.height)
 
@@ -194,15 +202,15 @@ function travelCuboid(turtle, options)
 			end
 			print(nGoUp)
 			for i = 1,nGoUp do
-				options.runBeforeHeightStep(funcs)
+				options.runBeforeHeightStep(funcs, isDownwards)
 				print('up')
 				os.sleep(2)
 			    funcs.up()
-				options.runAfterHeightStep(funcs)
+				options.runAfterHeightStep(funcs, isDownwards)
 			end
 		end
 	end
-	for i = 1,nUpSteps do
+	for i = 1,nUpSteps-1 do
 		local nGoUp = heightStep
 		if i == 1 and heightStep == 3 then
 			nGoUp = firstNGoUp
@@ -252,9 +260,13 @@ function digCuboid(turtle, options)
 			funcs.up()
 			digUp()
 		end,
-		runAfterHeightStep = function(funcs)
-		print('after')
-			digUp()
+		runBeforeHeightStep = function(funcs, isDownwards)
+			if isDownwards then digDown() 
+			else digUp() end
+		end,
+		runAfterHeightStep = function(funcs, isDownwards)
+			if isDownwards then digDown() 
+			else digUp() end
 		end,
 		heightStep = 3,
 	})
