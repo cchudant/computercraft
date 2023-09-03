@@ -42,10 +42,9 @@ end
 
 -- mine2.digCuboid(turtle, {depth = depth, right = right, height = height})
 
-local nChunksRight = 1
-local nChunksHeight = 1
+local nChunksRight, nChunksHeight = findBest(1, 1, 1)
 
-while true do
+function findBest(nChunksRight, nChunksHeight)
 	local usedTurtles = nChunksHeight * nChunksRight
 
 	local wouldUseIfChunkedRight = usedTurtles + nChunksHeight
@@ -56,19 +55,24 @@ while true do
 
 	print(wouldUseIfChunkedHeight, wouldUseIfChunkedRight, canChunkHeight, canChunkRight)
 
-	if canChunkHeight and canChunkRight then
-		canChunkRight = wouldUseIfChunkedRight < wouldUseIfChunkedHeight
-		canChunkHeight = not canChunkRight
+	if canChunkRight and canChunkHeight then
+		local nChunksRight1, nChunksHeight1 = findBest(nChunksRight + 1, nChunksHeight)
+		local nChunksRight2, nChunksHeight2 = findBest(nChunksRight, nChunksHeight + 1)
+		if nChunksRight1 * nChunksHeight1 > nChunksRight2 * nChunksHeight2 then
+			return nChunksRight1, nChunksHeight1
+		else
+			return nChunksRight2, nChunksHeight2
+		end
+	elseif canChunkRight then
+		return findBest(nChunksRight + 1, nChunksHeight)
+	elseif canChunkHeight then
+		return findBest(nChunksRight, nChunksHeight + 1)
 	end
 
-	if  canChunkHeight then 
-		nChunksHeight = nChunksHeight + 1
-	elseif canChunkRight then 
-		nChunksRight = nChunksRight + 1
-	else
-		break
-	end
+	return nChunksRight, nChunksHeight
 end
+
+local 
 
 print(nChunksRight .. "x" .. nChunksHeight)
 
