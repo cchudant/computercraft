@@ -251,6 +251,7 @@ function digCuboid(turtle, options)
 			digUp()
 		end,
 		runAfterHeightStep = function(funcs)
+		print('after')
 			digUp()
 		end,
 		heightStep = 3,
