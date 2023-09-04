@@ -148,7 +148,7 @@ for ch = nChunksHeight, 1, -1 do
 	end
 	turtle.turnLeft()
 
-	if ch ~= 1 and ch ~= nChunksHeight then
+	if ch ~= 1 then
 		local nForChunkRight = gnForChunkRight(1)
 		turtle.down()
 		-- place up
