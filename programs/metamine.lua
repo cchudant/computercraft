@@ -127,10 +127,12 @@ for ch = nChunksHeight, 1, -1 do
 	local nForChunkHeight = gnForChunkHeight(ch)
 
 	turtle.turnRight()
+	local ignoreFirst = 0
 	for cr = 1, nChunksRight-1 do
 		local nForChunkRight = gnForChunkRight(cr)
 		for k = 1, nForChunkRight do
-			turtle.forward()
+			if ignoreFirst > 0 then ignoreFirst = ignoreFirst + 1
+			else turtle.forward() end
 		end
 	end
 
