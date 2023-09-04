@@ -148,6 +148,7 @@ for ch = nChunksHeight, 1, -1 do
 	end
 	turtle.turnLeft()
 
+	local ignore = 1
 	if ch ~= 1 then
 		local nForChunkRight = gnForChunkRight(1)
 		turtle.down()
@@ -157,7 +158,8 @@ for ch = nChunksHeight, 1, -1 do
 		--
 
 		for k = 2, nForChunkHeight do
-			turtle.down()
+			if ignore > 0 then ignore = ignore - 1
+			else turtle.down() end
 		end
 	end
 end
