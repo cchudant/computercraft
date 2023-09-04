@@ -120,8 +120,10 @@ turtle.forward()
 local ignoreFirst = true
 for ch = 1, nChunksHeight-1 do
 	local nForChunkHeight = gnForChunkHeight(ch)
-	if not ignoreFirst then turtle.up()
-	else ignoreFirst = false end
+	for k = 1, nForChunkHeight do
+		if not ignoreFirst then turtle.up()
+		else ignoreFirst = false end
+	end
 end
 for ch = nChunksHeight, 1, -1 do
 	local nForChunkHeight = gnForChunkHeight(ch)
