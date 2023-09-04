@@ -134,7 +134,7 @@ for ch = nChunksHeight, 1, -1 do
 		end
 	end
 
-	for cr = nChunksRight, 2, -1 do
+	for cr = nChunksRight, 1, -1 do
 		local nForChunkRight = gnForChunkRight(cr)
 		-- place forward
 		print('cr', cr, 'ch', ch)
@@ -146,10 +146,13 @@ for ch = nChunksHeight, 1, -1 do
 			end
 		end
 	end
+	local nForChunkRight = gnForChunkRight(1)
+	for k = 2, nForChunkRight do
+		turtle.back()
+	end
 	turtle.turnLeft()
 
 	if ch ~= 1 then
-		local nForChunkRight = gnForChunkRight(1)
 		turtle.down()
 		-- place up
 		print('cr', 1, 'ch', ch)
