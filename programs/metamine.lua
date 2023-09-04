@@ -117,24 +117,20 @@ end
 
 turtle.forward()
 
-local ignore = 1
 for ch = 1, nChunksHeight-1 do
 	local nForChunkHeight = gnForChunkHeight(ch)
 	for k = 1, nForChunkHeight do
-		if ignore > 0 then ignore = ignore - 1
-		else turtle.up() end
+		else turtle.up()
 	end
 end
 for ch = nChunksHeight, 1, -1 do
 	local nForChunkHeight = gnForChunkHeight(ch)
 
 	turtle.turnRight()
-	local ignore = 1
 	for cr = 1, nChunksRight-1 do
 		local nForChunkRight = gnForChunkRight(cr)
 		for k = 1, nForChunkRight do
-			if ignore > 0 then ignore = ignore - 1
-			else turtle.forward() end
+			turtle.forward()
 		end
 	end
 
@@ -152,7 +148,6 @@ for ch = nChunksHeight, 1, -1 do
 	end
 	turtle.turnLeft()
 
-	local ignore = 1
 	if ch ~= 1 then
 		local nForChunkRight = gnForChunkRight(1)
 		turtle.down()
@@ -162,8 +157,7 @@ for ch = nChunksHeight, 1, -1 do
 		--
 
 		for k = 2, nForChunkHeight do
-			if ignore > 0 then ignore = ignore - 1
-			else turtle.down() end
+			turtle.down()
 		end
 	end
 end
