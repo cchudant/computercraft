@@ -117,19 +117,26 @@ end
 
 turtle.forward()
 
-for ch = 2, nChunksHeight do
+local ignoreFirst = true
+for ch = 1, nChunksHeight-1 do
 	local nForChunkHeight = gnForChunkHeight(ch)
-	for k = 1, nForChunkHeight do turtle.up() end
+	if not ignoreFirst then turtle.up()
+	else ignoreFirst = false end
 end
 for ch = nChunksHeight, 1, -1 do
 	local nForChunkHeight = gnForChunkHeight(ch)
 
 	turtle.turnRight()
-	for cr = 2, nChunksRight do
+	local ignoreFirst = true
+	for cr = 2, nChunksRight-1 do
 		local nForChunkRight = gnForChunkRight(cr)
-		for k = 1, nForChunkRight do turtle.forward() end
+		for k = 1, nForChunkRight do
+			if not ignoreFirst then turtle.forward()
+			else ignoreFirst = false end
+		end
 	end
 
+	local ignoreFirst = true
 	for cr = nChunksRight, 2, -1 do
 		local nForChunkRight = gnForChunkRight(cr)
 		-- place forward
@@ -137,11 +144,15 @@ for ch = nChunksHeight, 1, -1 do
 		table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight))
 		--
 		if cr ~= 1 then
-			for k = 1, nForChunkRight do turtle.back() end
+			for k = 1, nForChunkRight do
+				if not ignoreFirst then turtle.back()
+				else ignoreFirst = false end
+			end
 		end
 	end
 	turtle.turnLeft()
 
+	local ignoreFirst = true
 	if ch ~= 1 then
 		local nForChunkRight = gnForChunkRight(1)
 		turtle.down()
@@ -150,7 +161,10 @@ for ch = nChunksHeight, 1, -1 do
 		table.insert(turtles, placeTurtle('top', depth, nForChunkRight, nForChunkHeight))
 		--
 
-		for k = 2, nForChunkHeight do turtle.down() end
+		for k = 2, nForChunkHeight do
+			if not ignoreFirst then turtle.down()
+			else ignoreFirst = false end
+		end
 	end
 end
 
