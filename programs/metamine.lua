@@ -102,14 +102,14 @@ local turtles = {}
 
 function gnForChunkHeight(ch)
 	local nForChunkHeight = math.floor(height / nChunksHeight)
-	if ch >= height % nChunksHeight then
+	if ch > height % nChunksHeight then
 		nForChunkHeight = nForChunkHeight + 1
 	end
 	return nForChunkHeight
 end
 function gnForChunkRight(cr)
 	local nForChunkRight = math.floor(right / nChunksRight)
-	if cr >= right % nChunksRight then
+	if cr > right % nChunksRight then
 		nForChunkRight = nForChunkRight + 1
 	end
 	return nForChunkRight
