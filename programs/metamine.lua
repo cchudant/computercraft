@@ -125,12 +125,12 @@ for ch = nChunksHeight, 1, -1 do
 	local nForChunkHeight = gnForChunkHeight(ch)
 
 	turtle.turnRight()
-	for cr = 2, nChunksRight-1 do
+	for cr = 2, nChunksRight do
 		local nForChunkRight = gnForChunkRight(cr)
 		for k = 1, nForChunkRight do turtle.forward() end
 	end
 
-	for cr = nChunksRight-1, 1, -1 do
+	for cr = nChunksRight, 2, -1 do
 		local nForChunkRight = gnForChunkRight(cr)
 		-- place forward
 		print('cr', cr, 'ch', ch)
