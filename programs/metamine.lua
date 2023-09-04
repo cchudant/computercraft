@@ -134,7 +134,7 @@ for ch = nChunksHeight, 1, -1 do
 			turtle.forward()
 		end
 	end
-
+	turtle.back()
 	for cr = nChunksRight, 2, -1 do
 		local nForChunkRight = gnForChunkRight(cr)
 		-- place forward
