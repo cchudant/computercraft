@@ -143,7 +143,7 @@ for ch = nChunksHeight, 1, -1 do
 		print('cr', cr, 'ch', ch)
 		table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight))
 		--
-		if cr ~= 1 then
+		if cr ~= 2 then
 			for k = 1, nForChunkRight do
 				if not ignoreFirst then turtle.back()
 				else ignoreFirst = false end
