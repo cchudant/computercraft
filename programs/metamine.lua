@@ -12,7 +12,7 @@ height = tonumber(height)
 
 
 if facing ~= 'south' and facing ~= 'north' and facing ~= 'west' and facing ~= 'east' then
-	error("invalid facing")
+	print("invalid facing")
 	print("usage: metamine <depth> <right> <height> <facing>")
 	return
 end
@@ -71,7 +71,7 @@ function placeTurtle(side, depth, right, height)
 
 	print(detail.state.facing)
 
-	local nLeft = facings[facing] - facings[detail.state.facing]
+	local nLeft = (facings[facing] - facings[detail.state.facing]) % 4
 	print(facing, detail.state.facing, nLeft)
 
 	return function()
