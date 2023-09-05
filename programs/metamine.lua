@@ -40,6 +40,10 @@ function selectTurtle()
 end
 
 print("I have " .. nTurtles .. " turtles.")
+if nTurtles == 0 then
+	print("Not enough turtles, need at least one")
+	return
+end
 
 function placeTurtle(side, depth, right, height)
 	selectTurtle()
@@ -69,11 +73,7 @@ function placeTurtle(side, depth, right, height)
 		west = 3,
 	}
 
-	print(detail.state.facing)
-
 	local nLeft = (facings[facing] - facings[detail.state.facing]) % 4
-	print(facing, detail.state.facing, nLeft)
-
 	return function()
 		while not controlApi.waitForReady(id, 1) do
 			print("waiting for " .. id)
@@ -135,7 +135,7 @@ end
 
 local nChunksRight, nChunksHeight = findBest(1, 1)
 
-print(nChunksRight .. "x" .. nChunksHeight)
+print("Tiling found is " .. nChunksRight .. "x" .. nChunksHeight)
 
 local nGoBackHeight = 0
 
@@ -178,8 +178,6 @@ for ch = nChunksHeight, 1, -1 do
 	local nForChunkHeight = gnForChunkHeight(ch)
 
 	if ch ~= nChunksHeight then
-		print(ch)
-
 		for k = 2, nForChunkHeight do
 			turtle.down()
 		end
