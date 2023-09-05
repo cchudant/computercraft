@@ -39,7 +39,7 @@ function protocolReceive(command, sender, timeout, nonce)
 	_setup()
 	local startTime = os.clock()
 	local elapsed = 0
-	-- print(command, sender, nonce)
+	print(command, sender, timeout, nonce)
 	while true do
 		local to_wait = nil
 		if timeout ~= nil then
@@ -246,7 +246,7 @@ function _remoteControlTask(shell)
 			autoUpdate()
 		elseif cmd ~= nil then
 			local ret = cmd(args)
-			print("snd", sender, method, args, unpack(ret))
+			print("snd", sender, command, args, nonce, unpack(ret))
 			protocolSend(sender, command .. "Rep", ret, nonce)
 		end
 	end
