@@ -123,7 +123,7 @@ function _remoteTermSourceTask(shell)
 	end
 	function taskReceive()
 		while true do
-			args = protocolReceive('termEvent', clientid, nonce)
+			args = protocolReceive('termEvent', clientid, nil, nonce)
 			os.queueEvent(args.event, unpack(args.args))
 		end
 	end
@@ -293,7 +293,7 @@ function _sendRoundtrip(sourceid, command, arg)
 	local nonce = tostring(math.floor(math.random() * 10000))
 
 	protocolSend(sourceid, command, arg, nonce)
-	local ret = protocolReceive(command .. 'Rep', sourceid, nonce)
+	local ret = protocolReceive(command .. 'Rep', sourceid, nil, nonce)
 	return ret
 end
 
