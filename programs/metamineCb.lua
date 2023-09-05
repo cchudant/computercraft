@@ -6,6 +6,10 @@ if depth == nil or right == nil or height == nil then
 	return
 end
 
+depth = tonumber(depth)
+right = tonumber(right)
+height = tonumber(height)
+
 function dig()
 	while turtle.dig() do end
 end

@@ -6,6 +6,10 @@ if depth == nil or right == nil or height == nil then
 	return
 end
 
+depth = tonumber(depth)
+right = tonumber(right)
+height = tonumber(height)
+
 TURTLE1 = "computercraft:turtle_normal"
 TURTLE2 = "computercraft:turtle_advanced"
 
@@ -27,10 +31,6 @@ function selectTurtle()
 	end
 	return false
 end
-
-depth = tonumber(depth)
-right = tonumber(right)
-height = tonumber(height)
 
 print("I have " .. nTurtles .. " turtles.")
 
