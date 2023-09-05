@@ -48,6 +48,7 @@ local _toRemove = {
 	"minecraft:granite",
 	"minecraft:diorite",
 	"minecraft:stone",
+	"minecraft:deepslate",
 	"minecraft:gravel",
 	"minecraft:flint",
 	"minecraft:tuff",
