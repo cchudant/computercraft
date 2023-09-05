@@ -51,7 +51,7 @@ function protocolReceive(command, sender, timeout, nonce)
 		if type(message) == 'table' and message.protocol == PROTOCOL_STRING and
 				(sender == nil or sender == snd) and
 				(command == nil or message.command == command) and
-				(nonce == nil or message.nonce == nonce) then
+				message.nonce == nonce then
 			return message.args, message.command, snd, message.nonce
 		end
 
@@ -196,6 +196,7 @@ function _remoteControlTask(shell)
 		end,
 		shellRun = function(arg) shell.run(arg) end,
 		turtle = function(arg)
+			if not turtle then return end 
 			if type(arg.method) == 'string' and type(arg.args) == 'table' then
 				print('called', arg.method, arg.args)
 				return table.pack(turtle[arg.method](unpack(arg.args)))
@@ -292,7 +293,7 @@ function _broadcastCommandRoundtrip(command, args, timeout)
 end
 function _sendRoundtrip(sourceid, command, arg)
 	local nonce = tostring(math.floor(math.random() * 10000000))
-
+	print("snd rt", command, nonce)
 	protocolSend(sourceid, command, arg, nonce)
 	local ret = protocolReceive(command .. 'Rep', sourceid, nil, nonce)
 	return ret
