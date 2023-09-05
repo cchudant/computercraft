@@ -77,9 +77,9 @@ function placeTurtle(side, depth, right, height)
 
 	local control = controlApi.connectControl(id)
 	local remoteTurtle = control.turtle
-	while not controlApi.waitForReady(id, 1) do
+	repeat
 		print("waiting for " .. id)
-	end
+	until controlApi.waitForReady(id, 15)
 
 	while remoteTurtle.getFuelLevel() < mine2.digCuboidFuelRequired(depth, right, height) do
 		print("refueling " .. id)

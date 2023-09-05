@@ -361,7 +361,7 @@ function waitForReady(sourceid, timeout)
 	function send()
 		while true do
 			protocolSend(sourceid, 'identify', args, nonce)
-			os.sleep(0.2)
+			os.sleep(1)
 		end
 	end
 	parallel.waitForAny(receive, send)
