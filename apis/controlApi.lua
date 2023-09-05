@@ -376,6 +376,7 @@ function connectControl(sourceid)
 				method = method,
 				args = {...},
 			})
+			print("Got return for ", method, args, unpack(ret))
 			return unpack(ret)
 		end
 	end
