@@ -52,7 +52,7 @@ function protocolReceive(command, sender, timeout, nonce)
 				(sender == nil or sender == snd) and
 				(command == nil or message.command == command) and
 				(nonce == nil or message.nonce == nonce) then
-			return message.args, message.command, snd
+			return message.args, message.command, snd, message.nonce
 		end
 
 		elapsed = os.clock() - startTime
@@ -83,9 +83,10 @@ end
 -- A task that serves Remote Term requests
 function _remoteTermSourceTask(shell)
 	local clientid
+	local nonce
 
-	_, _, clientid = protocolReceive('connectTerm')
-	protocolSend(clientid, 'connectedTerm')
+	_, _, clientid, nonce = protocolReceive('connectTerm')
+	protocolSend(clientid, 'connectedTerm', nil, nonce)
 
 	local methods = {
 		"write", "blit", "clear", "clearLine", "getCursorPos", "setCursorPos", "setCursorBlink",
@@ -107,7 +108,7 @@ function _remoteTermSourceTask(shell)
 					protocolSend(clientid, 'term', {
 						method = method,
 						args = {...},
-					})
+					}, nonce)
 					return native[method](...)
 				end
 			end
@@ -116,13 +117,13 @@ function _remoteTermSourceTask(shell)
 			shell.run("shell")
 			term.redirect(native)
 
-			protocolSend(clientid, 'endTerm')
+			protocolSend(clientid, 'endTerm', nil, nonce)
 			clientid = nil
 		end
 	end
 	function taskReceive()
 		while true do
-			args = protocolReceive('termEvent', clientid)
+			args = protocolReceive('termEvent', clientid, nonce)
 			os.queueEvent(args.event, unpack(args.args))
 		end
 	end
@@ -131,15 +132,16 @@ end
 
 -- A task that connects to a Remote Term client by id
 function remoteTermClient(sourceid)
+	local nonce
 	function taskReceiveEnd()
-		protocolReceive('endTerm', sourceid)
+		protocolReceive('endTerm', sourceid, nil, nonce)
 	end
 	function taskReceive()
 		term.clear()
 		term.setCursorPos(1, 1)
 
 		while true do
-			args = protocolReceive('term', sourceid)
+			args = protocolReceive('term', sourceid, nil, nonce)
 			ret = table.pack(
 				term[args.method](unpack(args.args))
 			)
@@ -165,15 +167,16 @@ function remoteTermClient(sourceid)
 					protocolSend(sourceid, 'termEvent', {
 						event = ev,
 						args = args,
-					})
+					}, nonce)
 					break
 				end
 			end
 		end
 	end
 
-	protocolSend(sourceid, 'connectTerm')
-	protocolReceive('connectedTerm')
+	local _, _, _, nonce_ = protocolSend(sourceid, 'connectTerm')
+	nonce = nonce_
+	protocolReceive('connectedTerm', nil, nil, nonce)
 
 	parallel.waitForAny(taskReceive, taskSend, taskReceiveEnd)
 end
@@ -227,21 +230,21 @@ function _remoteControlTask(shell)
 	}
 
 	while true do
-		local args, command, sender = protocolReceive()
+		local args, command, sender, nonce = protocolReceive()
 		local cmd = control_commands[command]
 		-- for shutdown and reboot, send rep before running command
 		if cmd == 'shutdown' then
-			protocolSend(sender, 'shutdownRep')
+			protocolSend(sender, 'shutdownRep', nonce)
 			os.shutdown()
 		elseif cmd == 'reboot' then
-			protocolSend(sender, 'rebootRep')
+			protocolSend(sender, 'rebootRep', nonce)
 			os.reboot()
 		elseif cmd == 'updateCode' then
-			protocolSend(sender, 'updateCodeRep')
+			protocolSend(sender, 'updateCodeRep', nonce)
 			autoUpdate()
 		elseif cmd ~= nil then
 			local ret = cmd(args)
-			protocolSend(sender, command .. "Rep", ret)
+			protocolSend(sender, command .. "Rep", ret, nonce)
 		end
 	end
 end
