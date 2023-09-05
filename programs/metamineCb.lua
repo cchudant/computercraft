@@ -29,5 +29,5 @@ mine2.digCuboid(turtle, {
 		if isDownwards then digDown() 
 		else digUp() end
 	end,
-	finish = function() mine2.removeUselessItems(turtle) end
+	finish = function() mine2.removeUselessItems(turtle, true) end
 })

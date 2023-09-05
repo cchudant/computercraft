@@ -247,6 +247,8 @@ turtle.back()
 table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight))
 --
 
+mine2.removeUselessItems(turtle, true)
+
 print("Running turtles...")
 
 parallel.waitForAll(unpack(turtles))

@@ -53,7 +53,7 @@ local _toRemove = {
 	"minecraft:tuff",
 	"minecraft:dirt"
 }
-function removeUselessItems(turtle)
+function removeUselessItems(turtle, force)
 	local stacksAllowed = 2
 	for slot=1,16 do
 		local detail = turtle.getItemDetail(slot)
@@ -69,7 +69,7 @@ function removeUselessItems(turtle)
 			break
 		end
 	end
-	if stacksAllowed <= 0 then
+	if stacksAllowed <= 0 or force then
 		for slot=1,16 do
 			local detail = turtle.getItemDetail(slot)
 			local found = false
@@ -359,7 +359,7 @@ function digCuboid(turtle, options)
 			else digUp() end
 		end,
 		finish = function()
-			removeUselessItems(turtle)
+			removeUselessItems(turtle, true)
 			turtle.back()
 		end,
 		heightStep = 3,
