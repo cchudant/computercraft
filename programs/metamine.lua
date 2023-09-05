@@ -49,7 +49,7 @@ function placeTurtle(side, depth, right, height, turn)
 	local id = t.getID()
 
 	print("place", depth, right, height)
-	os.sleep(5)
+	os.sleep(2)
 
 	return function()
 		while not controlApi.waitForReady(id, 1) do
@@ -218,4 +218,4 @@ table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeigh
 
 print("Running turtles...")
 
-parallel.waitForAll(unpack(turtles))
+-- parallel.waitForAll(unpack(turtles))
