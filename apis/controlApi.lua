@@ -246,6 +246,7 @@ function _remoteControlTask(shell)
 			autoUpdate()
 		elseif cmd ~= nil then
 			local ret = cmd(args)
+			print("snd", sender, method, args, unpack(ret))
 			protocolSend(sender, command .. "Rep", ret, nonce)
 		end
 	end
