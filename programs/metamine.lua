@@ -61,7 +61,7 @@ function placeTurtle(side, depth, right, height)
 
 	local success, detail
 	if side == 'front' then success, detail = turtle.inspect()
-	elseif side == 'top' then success, detail = turtle.inspectTop()
+	elseif side == 'top' then success, detail = turtle.inspectUp()
 	else success, detail = turtle.inspectDown() end
 
 	if not success then error(detail) end
