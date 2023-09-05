@@ -39,7 +39,7 @@ function protocolReceive(command, sender, timeout, nonce)
 	_setup()
 	local startTime = os.clock()
 	local elapsed = 0
-	print(command, sender, timeout)
+	print(command, sender, nonce)
 	while true do
 		local to_wait = nil
 		if timeout ~= nil then
@@ -236,13 +236,13 @@ function _remoteControlTask(shell)
 		local cmd = control_commands[command]
 		-- for shutdown and reboot, send rep before running command
 		if cmd == 'shutdown' then
-			protocolSend(sender, 'shutdownRep', nonce)
+			protocolSend(sender, 'shutdownRep', nil, nonce)
 			os.shutdown()
 		elseif cmd == 'reboot' then
-			protocolSend(sender, 'rebootRep', nonce)
+			protocolSend(sender, 'rebootRep', nil, nonce)
 			os.reboot()
 		elseif cmd == 'updateCode' then
-			protocolSend(sender, 'updateCodeRep', nonce)
+			protocolSend(sender, 'updateCodeRep', nil, nonce)
 			autoUpdate()
 		elseif cmd ~= nil then
 			local ret = cmd(args)
