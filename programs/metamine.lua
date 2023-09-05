@@ -51,6 +51,8 @@ function placeTurtle(side, depth, right, height, turn)
 	print("waiting for " .. id)
 	controlApi.waitForReady(id, 5)
 
+	os.sleep(1)
+
 	print(side, depth, right, height)
 	local turtle = controlApi.connectControl(id).turtle
 	if turn == 'left' then
