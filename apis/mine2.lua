@@ -54,22 +54,22 @@ local _toRemove = {
 	"minecraft:dirt"
 }
 function removeUselessItems(turtle)
-	local needToRemove = false
+	local stacksAllowed = 2
 	for slot=1,16 do
 		local detail = turtle.getItemDetail(slot)
 		if detail ~= nil then
 			for _,v in ipairs(_toRemove) do
 				if v == detail.name then
-					needToRemove = true
+					stacksAllowed = stacksAllowed - 1
 					break
 				end
 			end
 		end
-		if needToRemove then
+		if stacksAllowed == 0 then
 			break
 		end
 	end
-	if needToRemove then
+	if stacksAllowed <= 0 then
 		for slot=1,16 do
 			local detail = turtle.getItemDetail(slot)
 			local found = false
