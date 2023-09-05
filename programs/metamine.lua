@@ -64,6 +64,8 @@ function placeTurtle(side, depth, right, height, turn)
 			turtle.turnLeft()
 		end
 
+		print(id .. ' started')
+
 		function dig()
 			while turtle.dig() do end
 		end
@@ -85,6 +87,8 @@ function placeTurtle(side, depth, right, height, turn)
 			end,
 			finish = function() end
 		})
+		
+		print(id .. ' finished')
 	end
 end
 
