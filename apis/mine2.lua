@@ -51,7 +51,11 @@ local _toRemove = {
 	"minecraft:gravel",
 	"minecraft:flint",
 	"minecraft:tuff",
-	"minecraft:dirt"
+	"minecraft:dirt",
+	"minecraft:netherrack",
+	"minecraft:magma_block",
+	"minecraft:soul_sand",
+	"minecraft:soul_soil"
 }
 function removeUselessItems(turtle, force)
 	local stacksAllowed = 2
