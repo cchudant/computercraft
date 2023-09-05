@@ -160,6 +160,15 @@ end
 for ch = nChunksHeight, 1, -1 do
 	local nForChunkHeight = gnForChunkHeight(ch)
 
+	if ch ~= nChunksHeight then
+		print(ch)
+
+		for k = 2, nForChunkHeight do
+			turtle.down()
+		end
+
+	end
+
 	if nChunksRight ~= 1 then
 		turtle.turnRight()
 		for cr = 1, nChunksRight-1 do
@@ -199,12 +208,6 @@ for ch = nChunksHeight, 1, -1 do
 		print('cr', 1, 'ch', ch)
 		table.insert(turtles, placeTurtle('top', depth, gnForChunkRight(1), nForChunkHeight, 'front'))
 		--
-
-		print(ch)
-
-		for k = 2, nForChunkHeight do
-			turtle.down()
-		end
 	end
 end
 local nForChunkRight = gnForChunkRight(1)
