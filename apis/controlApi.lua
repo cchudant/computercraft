@@ -14,6 +14,17 @@ function _isVersionGreater(versionMajorA, versionMinorA, versionMajorB, versionM
 			(versionMajorA == versionMajorB and versionMinorA > versionMinorB)
 end
 
+local hasLocation = true
+function _getLocation()
+	if not hasLocation then return nil end
+	x, y, z = gps.locate()
+	if x ~= nil then
+		return x, y, z
+	end
+	hasLocation = false
+	return nil
+end
+
 _isSetup = false
 function _setup()
 	if _isSetup then return end
@@ -189,7 +200,7 @@ function _remoteControlTask(shell)
 			return {
 				id = os.getComputerID(),
 				label = os.getComputerLabel(),
-				location = {gps.locate()},
+				-- location = {_getLocation()},
 				uptime = os.clock(),
 				turtle = turtle or nil,
 				pocket = pocket or nil,
@@ -302,7 +313,7 @@ end
 function listAvailable(timeout)
 	local reps = _broadcastCommandRoundtrip('identify', nil, timeout)
 
-	local x, y, z = gps.locate()
+	local x, y, z = nil --_getLocation()
 	local available = {}
 	for _,rep in ipairs(reps) do
 		if rep.args ~= nil then
@@ -398,7 +409,7 @@ function connectControl(sourceid)
 		id = sourceid,
 		identify = function() 
 			local args = _sendRoundtrip(sourceid, 'identify')
-			local x, y, z = gps.locate()
+			local x, y, z = nil --_getLocation()
 			return _handleIdentify(args, x, y, z)
 		end,
 		shutdown = function() _sendRoundtrip(sourceid, 'shutdown') end,
