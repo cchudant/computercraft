@@ -231,6 +231,7 @@ function _remoteControlTask(shell)
 
 	while true do
 		local args, command, sender, nonce = protocolReceive()
+		print(command, sender, nonce)
 		local cmd = control_commands[command]
 		-- for shutdown and reboot, send rep before running command
 		if cmd == 'shutdown' then
