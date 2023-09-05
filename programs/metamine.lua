@@ -64,6 +64,15 @@ function placeTurtle(side, depth, right, height, turn)
 			turtle.turnLeft()
 		end
 
+		function dig()
+			while turtle.dig() do end
+		end
+		function digDown()
+			while turtle.digDown() do end
+		end
+		function digUp()
+			while turtle.digUp() do end
+		end
 		mine2.digCuboid(turtle, {
 			depth = depth, right = right, height = height,
 			prepareSameLevel = function() end,
