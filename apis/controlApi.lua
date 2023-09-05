@@ -390,6 +390,7 @@ function connectControl(sourceid)
 				args = {...},
 			})
 			print("src", sourceid, method, args, unpack(ret))
+			os.sleep(1)
 			return unpack(ret)
 		end
 	end
