@@ -191,3 +191,7 @@ turtle.back()
 print('cr', 1, 'ch', 1)
 table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight, 'back'))
 --
+
+print("Running turtles...")
+
+parallel.waitForAll(unpack(turtles))
