@@ -48,7 +48,11 @@ function placeTurtle(side, depth, right, height)
 	t.turnOn()
 	local id = t.getID()
 
-	local success, detail = turtle.inspect()
+	local success, detail
+	if side == 'front' then success, detail = turtle.inspect()
+	elseif side == 'top' then success, detail = turtle.inspectTop()
+	else success, detail = turtle.inspectDown() end
+
 	if not success then error(detail) end
 
 	local facings = {
