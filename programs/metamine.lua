@@ -34,19 +34,30 @@ height = tonumber(height)
 
 print("I have " .. nTurtles .. " turtles.")
 
-function placeTurtle(side, depth, right, height)
+function placeTurtle(side, depth, right, height, turn)
 	selectTurtle()
 	if side == 'front' then while not turtle.place() do end
 	elseif side == 'top' then while not turtle.placeUp() do end
 	else while not turtle.placeDown() do end end
 
-	-- local t = peripheral.wrap(side)
+	-- local t
+	-- repeat
+	-- 	sleep(0.1)
+	-- 	t = peripheral.wrap(side)
+	-- until t ~= nil 
 	-- t.turnOn()
 	-- local id = t.getID()
 
-	print(side, depth, right, height)
+	-- print(side, depth, right, height)
 	-- turtle = controlApi.connectControl(id).turtle
-	-- turtle.turnLeft()
+	-- if turn == 'left' then
+	-- 	turtle.turnLeft()
+	-- elseif turn == 'right' then
+	-- 	turtle.turnRight()
+	-- elseif turn == 'back' then
+	-- 	turtle.turnLeft()
+	-- 	turtle.turnLeft()
+	-- end
 
 	return function()
 		mine2.digCuboid(turtle, {
@@ -96,6 +107,7 @@ local nChunksRight, nChunksHeight = findBest(1, 1, 1)
 
 print(nChunksRight .. "x" .. nChunksHeight)
 
+return
 local nGoBackHeight = 0
 
 local turtles = {}
@@ -131,7 +143,7 @@ for ch = nChunksHeight, 1, -1 do
 		turtle.down()
 		-- place up
 		print('cr', 1, 'ch', ch)
-		table.insert(turtles, placeTurtle('top', depth, nForChunkRight, nForChunkHeight))
+		table.insert(turtles, placeTurtle('top', depth, gnForChunkRight(1), nForChunkHeight, 'front'))
 		--
 
 		print(nCh)
@@ -149,13 +161,15 @@ for ch = nChunksHeight, 1, -1 do
 		end
 	end
 	turtle.back()
-	table.insert(turtles, placeTurtle('front', depth, gnForChunkRight(nChunksRight), gnForChunkHeight(nForChunkHeight)))
+	-- place forward
+	table.insert(turtles, placeTurtle('front', depth, gnForChunkRight(nChunksRight), gnForChunkHeight(nForChunkHeight)), 'left')
+	--
 	for cr = nChunksRight-1, 2, -1 do
 		local nForChunkRight = gnForChunkRight(cr)
 		turtle.back()
 		-- place forward
 		print('cr', cr, 'ch', ch)
-		table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight))
+		table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight), 'left')
 		--
 		for k = 2, nForChunkRight do
 			turtle.back()
@@ -173,5 +187,5 @@ local nForChunkHeight = gnForChunkHeight(1)
 turtle.back()
 -- place forward
 print('cr', 1, 'ch', 1)
-table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight))
+table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight), 'back')
 --
