@@ -86,6 +86,7 @@ function removeUselessItems(turtle)
 				turtle.dropDown()
 			end
 		end
+		turtle.select(1)
 	end
 end
 
