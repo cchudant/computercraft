@@ -199,6 +199,7 @@ function _remoteControlTask(shell)
 		turtle = function(arg)
 			if not turtle then return end 
 			if type(arg.method) == 'string' and type(arg.args) == 'table' then
+				print(arg.method, arg.args)
 				return table.pack(turtle[arg.method](unpack(arg.args)))
 			end
 		end,
