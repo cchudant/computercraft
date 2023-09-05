@@ -281,7 +281,7 @@ function digCuboid(turtle, options)
 		removeUselessItems(turtle)
 	end
 	function digUp()
-		while turtle.digUp(turtle) do end
+		while turtle.digUp() do end
 		removeUselessItems(turtle)
 	end
 
