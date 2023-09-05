@@ -48,6 +48,9 @@ function placeTurtle(side, depth, right, height, turn)
 	t.turnOn()
 	local id = t.getID()
 
+	print("place", depth, right, height)
+	os.sleep(5)
+
 	return function()
 		while not controlApi.waitForReady(id, 1) do
 			print("waiting for " .. id)
