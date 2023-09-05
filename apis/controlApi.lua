@@ -194,7 +194,7 @@ function _remoteControlTask(shell)
 				fuel = turtle and turtle.getFuelLevel(),
 			}
 		end,
-		shellRun = function(arg) shell.run(arg) end,
+		shellRun = function(arg) return shell.run(arg) end,
 		turtle = function(arg)
 			if not turtle then return end 
 			if type(arg.method) == 'string' and type(arg.args) == 'table' then

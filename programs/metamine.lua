@@ -54,7 +54,8 @@ function placeTurtle(side, depth, right, height, turn)
 		end
 
 		print(side, depth, right, height)
-		local turtle = controlApi.connectControl(id).turtle
+		local control = controlApi.connectControl(id)
+		local turtle = control.turtle
 		if turn == 'left' then
 			turtle.turnLeft()
 		elseif turn == 'right' then
@@ -66,6 +67,8 @@ function placeTurtle(side, depth, right, height, turn)
 
 		print(id .. ' started')
 
+		control.shellRun("/firmware/programs/metamineCb " .. depth .. " " .. right .. " " .. height)
+
 		-- turtle.turnLeft()
 		-- turtle.turnLeft()
 		-- turtle.turnLeft()
@@ -79,27 +82,6 @@ function placeTurtle(side, depth, right, height, turn)
 		-- turtle.turnRight()
 		-- turtle.turnLeft()
 
-		function dig()
-			while turtle.dig() do end
-		end
-		function digDown()
-			while turtle.digDown() do end
-		end
-		function digUp()
-			while turtle.digUp() do end
-		end
-		mine2.digCuboid(turtle, {
-			depth = depth, right = right, height = height,
-			prepareSameLevel = function() end,
-			prepareUpOne = function(funcs, isDownwards)
-				if isDownwards then digDown() 
-				else digUp() end
-				funcs.up()
-				if isDownwards then digDown() 
-				else digUp() end
-			end,
-			finish = function() end
-		})
 		
 		print(id .. ' finished')
 	end
