@@ -363,7 +363,7 @@ function waitForReady(sourceid, timeout)
 
 	function send()
 		while true do
-			protocolSend(sourceid, 'identify', args, nonce)
+			protocolSend(sourceid, 'identify', args, nil, nonce)
 			os.sleep(0.2)
 		end
 	end
