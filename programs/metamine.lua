@@ -172,12 +172,12 @@ end
 function forward()
 	while turtle.dig() do end
 	while not turtle.forward() do end
-	mine2.removeUselessItems()
+	mine2.removeUselessItems(turtle)
 end
 function up()
 	while turtle.digUp() do end
 	while not turtle.up() do end
-	mine2.removeUselessItems()
+	mine2.removeUselessItems(turtle)
 end
 
 forward()
