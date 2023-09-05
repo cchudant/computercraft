@@ -42,12 +42,14 @@ function placeTurtle(side, depth, right, height, turn)
 
 	local t
 	repeat
-		print("waiting for " .. side)
 		sleep(0.1)
 		t = peripheral.wrap(side)
 	until t ~= nil 
 	t.turnOn()
 	local id = t.getID()
+
+	print("waiting for " .. id)
+	controlApi.waitForReady(id, 5)
 
 	print(side, depth, right, height)
 	local turtle = controlApi.connectControl(id).turtle

@@ -338,6 +338,33 @@ function autoUpdate(timeout)
 	end
 end
 
+function waitForReady(sourceid, timeout)
+	for _,rep in ipairs(reps) do
+		if rep.args ~= nil then
+			local x, y, z = gps.locate()
+			rep.args.id = rep.id
+			return _handleIdentify(rep.args, x, y, z)
+		end
+	end
+	if timeout == nil then timeout = 1 end
+
+	local rep
+
+	function receive()
+		rep = protocolReceive(command .. 'Rep', sourceid, timeout)
+	end
+
+	function send()
+		while true do
+			protocolSend(sourceid, command, args)
+			os.sleep(0.2)
+		end
+	end
+	parallel.waitForAny(receive, send)
+
+	return rep
+end
+
 function connectControl(sourceid)
 	local turtleFunctions = {
 		"craft", "forward", "back", "up", "down", "turnLeft", "turnRight", "select",
