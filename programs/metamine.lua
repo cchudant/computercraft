@@ -58,6 +58,8 @@ function placeTurtle(side, depth, right, height)
 		west = 3,
 	}
 
+	print(detail.state.facing)
+
 	local nLeft = facings[facing] - facings[detail.state.facing]
 	print(facing, detail.state.facing, nLeft)
 
