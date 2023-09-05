@@ -35,7 +35,7 @@ function _setup()
 	return true
 end
 
-function protocolReceive(command, sender, timeout)
+function protocolReceive(command, sender, timeout, nonce)
 	_setup()
 	local startTime = os.clock()
 	local elapsed = 0
@@ -50,7 +50,8 @@ function protocolReceive(command, sender, timeout)
 
 		if type(message) == 'table' and message.protocol == PROTOCOL_STRING and
 				(sender == nil or sender == snd) and
-				(command == nil or message.command == command) then
+				(command == nil or message.command == command) and
+				(nonce == nil or message.nonce == nonce) then
 			return message.args, message.command, snd
 		end
 
@@ -60,20 +61,22 @@ function protocolReceive(command, sender, timeout)
 		end
 	end
 end
-function protocolSend(client, command, args)
+function protocolSend(client, command, args, nonce)
 	_setup()
 	rednet.send(client, {
 		protocol = PROTOCOL_STRING,
 		command = command,
 		args = args,
+		nonce = nonce,
 	})
 end
-function protocolBroadcast(command, args)
+function protocolBroadcast(command, args, nonce)
 	_setup()
 	rednet.broadcast({
 		protocol = PROTOCOL_STRING,
 		command = command,
 		args = args,
+		nonce = nonce,
 	})
 end
 
@@ -264,13 +267,15 @@ end
 function _broadcastCommandRoundtrip(command, args, timeout)
 	if timeout == nil then timeout = 1 end
 
-	protocolBroadcast(command, args)
+	local nonce = tostring(math.floor(math.random() * 10000))
+
+	protocolBroadcast(command, args, nonce)
 
 	local startTime = os.clock()
 	local elapsed = 0
 	local reps = {}
 	while true do
-		local ret, _, sourceid = protocolReceive(command .. 'Rep', nil, timeout - elapsed)
+		local ret, _, sourceid = protocolReceive(command .. 'Rep', nil, timeout - elapsed, nonce)
 		local elapsed = os.clock() - startTime
 
 		table.insert(reps, { args = ret, id = sourceid })
@@ -282,9 +287,10 @@ function _broadcastCommandRoundtrip(command, args, timeout)
 	return reps
 end
 function _sendRoundtrip(sourceid, command, arg)
+	local nonce = tostring(math.floor(math.random() * 10000))
 
-	protocolSend(sourceid, command, arg)
-	local ret = protocolReceive(command .. 'Rep', sourceid)
+	protocolSend(sourceid, command, arg, nonce)
+	local ret = protocolReceive(command .. 'Rep', sourceid, nonce)
 	return ret
 end
 
@@ -343,15 +349,16 @@ end
 
 function waitForReady(sourceid, timeout)
 	if timeout == nil then timeout = 1 end
+	local nonce = tostring(math.floor(math.random() * 10000))
 
 	local rep
 	function receive()
-		rep = protocolReceive('identifyRep', sourceid, timeout)
+		rep = protocolReceive('identifyRep', sourceid, timeout, nonce)
 	end
 
 	function send()
 		while true do
-			protocolSend(sourceid, 'identify', args)
+			protocolSend(sourceid, 'identify', args, nonce)
 			os.sleep(0.2)
 		end
 	end
