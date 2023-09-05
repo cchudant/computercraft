@@ -47,6 +47,8 @@ function protocolReceive(command, sender, timeout, nonce)
 
 		local snd, message = rednet.receive(to_wait)
 
+		print("Got", snd, message, message and message.command, message and message.nonce)
+
 		if type(message) == 'table' and message.protocol == PROTOCOL_STRING and
 				(sender == nil or sender == snd) and
 				(command == nil or message.command == command) and
