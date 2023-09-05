@@ -1,5 +1,7 @@
 os.loadAPI("/firmware/apis/mine2.lua")
 
+local FUEL = 'minecraft:dried_kelp_block'
+
 local depth, right, height, facing = ...
 if depth == nil or right == nil or height == nil then
 	print("usage: metamine <depth> <right> <height> <facing>")
@@ -17,8 +19,8 @@ if facing ~= 'south' and facing ~= 'north' and facing ~= 'west' and facing ~= 'e
 	return
 end
 
-TURTLE1 = "computercraft:turtle_normal"
-TURTLE2 = "computercraft:turtle_advanced"
+local TURTLE1 = "computercraft:turtle_normal"
+local TURTLE2 = "computercraft:turtle_advanced"
 
 local nTurtles = 0
 for slot=1,16 do
@@ -81,14 +83,14 @@ function placeTurtle(side, depth, right, height)
 
 	while remoteTurtle.getFuelLevel() < mine2.digCuboidFuelRequired(depth, right, height) do
 		print("refueling " .. id)
-		while not mine2.selectItem(turtle, 'minecraft:dried_kelp') do
+		while not mine2.selectItem(turtle, FUEL) do
 			os.sleep(0.1)
 			print("please provide fuel")
 		end
 		if side == 'front' then success, detail = turtle.drop()
 		elseif side == 'top' then success, detail = turtle.dropUp()
 		else success, detail = turtle.dropDown() end
-		mine2.selectItem(remoteTurtle, 'minecraft:dried_kelp')
+		mine2.selectItem(remoteTurtle, FUEL)
 		remoteTurtle.refuel()
 	end
 
