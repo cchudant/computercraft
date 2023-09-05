@@ -343,12 +343,12 @@ function waitForReady(sourceid, timeout)
 
 	local rep
 	function receive()
-		rep = protocolReceive(command .. 'Rep', sourceid, timeout)
+		rep = protocolReceive('identifyRep', sourceid, timeout)
 	end
 
 	function send()
 		while true do
-			protocolSend(sourceid, command, args)
+			protocolSend(sourceid, 'identify', args)
 			os.sleep(0.2)
 		end
 	end
