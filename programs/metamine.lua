@@ -79,7 +79,7 @@ function placeTurtle(side, depth, right, height)
 		print("waiting for " .. id)
 	end
 
-	while remoteTurtle.getFuelLevel() < digCuboidFuelRequired(depth, right, height) do
+	while remoteTurtle.getFuelLevel() < mine2.digCuboidFuelRequired(depth, right, height) do
 		print("refueling " .. id)
 		while not mine2.selectItem(turtle, 'minecraft:dried_kelp') do
 			os.sleep(0.1)
