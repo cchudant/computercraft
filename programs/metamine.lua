@@ -64,18 +64,18 @@ function placeTurtle(side, depth, right, height, turn)
 			turtle.turnLeft()
 		end
 
-		-- mine2.digCuboid(turtle, {
-		-- 	depth = depth, right = right, height = height,
-		-- 	prepareSameLevel = function() end,
-		-- 	prepareUpOne = function(funcs)
-		-- 		if isDownwards then digDown() 
-		-- 		else digUp() end
-		-- 		funcs.up()
-		-- 		if isDownwards then digDown() 
-		-- 		else digUp() end
-		-- 	end,
-		-- 	finish = function() end
-		-- })
+		mine2.digCuboid(turtle, {
+			depth = depth, right = right, height = height,
+			prepareSameLevel = function() end,
+			prepareUpOne = function(funcs, isDownwards)
+				if isDownwards then digDown() 
+				else digUp() end
+				funcs.up()
+				if isDownwards then digDown() 
+				else digUp() end
+			end,
+			finish = function() end
+		})
 	end
 end
 
@@ -154,20 +154,23 @@ for ch = nChunksHeight, 1, -1 do
 		end
 	end
 
-	turtle.turnRight()
-	for cr = 1, nChunksRight-1 do
-		local nForChunkRight = gnForChunkRight(cr)
-		for k = 1, nForChunkRight do
-			turtle.forward()
+	if nChunksRight ~= 1 then
+		turtle.turnRight()
+		for cr = 1, nChunksRight-1 do
+			local nForChunkRight = gnForChunkRight(cr)
+			for k = 1, nForChunkRight do
+				turtle.forward()
+			end
 		end
-	end
-	turtle.back()
-	-- place forward
-	table.insert(turtles, placeTurtle('front', depth, gnForChunkRight(nChunksRight), nForChunkHeight, 'right'))
-	--
-	local nForChunkRight = gnForChunkRight(1)
-	for k = 2, nForChunkRight do
 		turtle.back()
+		-- place forward
+		table.insert(turtles, placeTurtle('front', depth, gnForChunkRight(nChunksRight), nForChunkHeight, 'right'))
+		--
+
+		local nForChunkRight = gnForChunkRight(1)
+		for k = 2, nForChunkRight do
+			turtle.back()
+		end
 	end
 
 	for cr = nChunksRight-1, 2, -1 do
