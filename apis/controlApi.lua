@@ -339,17 +339,9 @@ function autoUpdate(timeout)
 end
 
 function waitForReady(sourceid, timeout)
-	for _,rep in ipairs(reps) do
-		if rep.args ~= nil then
-			local x, y, z = gps.locate()
-			rep.args.id = rep.id
-			return _handleIdentify(rep.args, x, y, z)
-		end
-	end
 	if timeout == nil then timeout = 1 end
 
 	local rep
-
 	function receive()
 		rep = protocolReceive(command .. 'Rep', sourceid, timeout)
 	end
