@@ -39,6 +39,7 @@ function protocolReceive(command, sender, timeout)
 	_setup()
 	local startTime = os.clock()
 	local elapsed = 0
+	print(command, sender, timeout)
 	while true do
 		local to_wait = nil
 		if timeout ~= nil then
@@ -281,6 +282,7 @@ function _broadcastCommandRoundtrip(command, args, timeout)
 	return reps
 end
 function _sendRoundtrip(sourceid, command, arg)
+
 	protocolSend(sourceid, command, arg)
 	local ret = protocolReceive(command .. 'Rep', sourceid)
 	return ret
