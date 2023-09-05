@@ -48,23 +48,22 @@ function placeTurtle(side, depth, right, height, turn)
 	t.turnOn()
 	local id = t.getID()
 
-	print("waiting for " .. id)
-	controlApi.waitForReady(id, 5)
-
-	os.sleep(1)
-
-	print(side, depth, right, height)
-	local turtle = controlApi.connectControl(id).turtle
-	if turn == 'left' then
-		turtle.turnLeft()
-	elseif turn == 'right' then
-		turtle.turnRight()
-	elseif turn == 'back' then
-		turtle.turnLeft()
-		turtle.turnLeft()
-	end
-
 	return function()
+		while not controlApi.waitForReady(id, 1) do
+			print("waiting for " .. id)
+		end
+
+		print(side, depth, right, height)
+		local turtle = controlApi.connectControl(id).turtle
+		if turn == 'left' then
+			turtle.turnLeft()
+		elseif turn == 'right' then
+			turtle.turnRight()
+		elseif turn == 'back' then
+			turtle.turnLeft()
+			turtle.turnLeft()
+		end
+
 		mine2.digCuboid(turtle, {
 			depth = depth, right = right, height = height,
 			prepareSameLevel = function() end,
@@ -164,7 +163,7 @@ for ch = nChunksHeight, 1, -1 do
 	end
 	turtle.back()
 	-- place forward
-	table.insert(turtles, placeTurtle('front', depth, gnForChunkRight(nChunksRight), nForChunkHeight, 'left'))
+	table.insert(turtles, placeTurtle('front', depth, gnForChunkRight(nChunksRight), nForChunkHeight, 'right'))
 	--
 	local nForChunkRight = gnForChunkRight(1)
 	for k = 2, nForChunkRight do
@@ -176,7 +175,7 @@ for ch = nChunksHeight, 1, -1 do
 		turtle.back()
 		-- place forward
 		print('cr', cr, 'ch', ch)
-		table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight, 'left'))
+		table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight, 'right'))
 		--
 		for k = 2, nForChunkRight do
 			turtle.back()
