@@ -87,11 +87,11 @@ function placeTurtle(side, depth, right, height)
 			os.sleep(0.1)
 			print("please provide fuel")
 		end
-		if side == 'front' then success, detail = turtle.drop()
-		elseif side == 'top' then success, detail = turtle.dropUp()
-		else success, detail = turtle.dropDown() end
+		if side == 'front' then success, detail = turtle.drop(1)
+		elseif side == 'top' then success, detail = turtle.dropUp(1)
+		else success, detail = turtle.dropDown(1) end
 		mine2.selectItem(remoteTurtle, FUEL)
-		remoteTurtle.refuel()
+		remoteTurtle.refuel(1)
 	end
 
 	local nLeft = (facings[facing] - facings[detail.state.facing]) % 4
