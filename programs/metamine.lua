@@ -10,6 +10,13 @@ depth = tonumber(depth)
 right = tonumber(right)
 height = tonumber(height)
 
+
+if facing ~= 'south' and facing ~= 'north' and facing ~= 'west' and facing ~= 'east' then
+	error("invalid facing")
+	print("usage: metamine <depth> <right> <height> <facing>")
+	return
+end
+
 TURTLE1 = "computercraft:turtle_normal"
 TURTLE2 = "computercraft:turtle_advanced"
 
