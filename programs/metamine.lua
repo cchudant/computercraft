@@ -106,6 +106,7 @@ end
 local nChunksRight, nChunksHeight = findBest(1, 1, 1)
 
 print(nChunksRight .. "x" .. nChunksHeight)
+
 local nGoBackHeight = 0
 
 local turtles = {}
@@ -126,9 +127,9 @@ function gnForChunkRight(cr)
 end
 
 for i = 1, nChunksHeight do
-		for j = 1, nChunksRight do
-				print(gnForChunkHeight(i), gnForChunkRight(j))
-		end
+	for j = 1, nChunksRight do
+		print(gnForChunkHeight(i), gnForChunkRight(j))
+	end
 end
 
 return
