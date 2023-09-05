@@ -48,7 +48,7 @@ function placeTurtle(side, depth, right, height, turn)
 	-- t.turnOn()
 	-- local id = t.getID()
 
-	-- print(side, depth, right, height)
+	print(side, depth, right, height)
 	-- turtle = controlApi.connectControl(id).turtle
 	-- if turn == 'left' then
 	-- 	turtle.turnLeft()
@@ -84,8 +84,6 @@ function findBest(nChunksRight, nChunksHeight)
 	local canChunkRight = math.ceil(right / nChunksRight) > 1 and wouldUseIfChunkedRight <= nTurtles
 	local canChunkHeight = math.ceil(height / nChunksHeight) > 1 and wouldUseIfChunkedHeight <= nTurtles
 
-	print(wouldUseIfChunkedHeight, wouldUseIfChunkedRight, canChunkHeight, canChunkRight)
-
 	if canChunkRight and canChunkHeight then
 		local nChunksRight1, nChunksHeight1 = findBest(nChunksRight + 1, nChunksHeight)
 		local nChunksRight2, nChunksHeight2 = findBest(nChunksRight, nChunksHeight + 1)
@@ -103,7 +101,7 @@ function findBest(nChunksRight, nChunksHeight)
 	return nChunksRight, nChunksHeight
 end
 
-local nChunksRight, nChunksHeight = findBest(1, 1, 1)
+local nChunksRight, nChunksHeight = findBest(1, 1)
 
 print(nChunksRight .. "x" .. nChunksHeight)
 
@@ -126,73 +124,65 @@ function gnForChunkRight(cr)
 	return nForChunkRight
 end
 
-for i = 1, nChunksHeight do
-	for j = 1, nChunksRight do
-		print(gnForChunkHeight(i), gnForChunkRight(j))
+turtle.forward()
+
+for ch = 1, nChunksHeight-1 do
+	local nForChunkHeight = gnForChunkHeight(ch)
+	for k = 1, nForChunkHeight do
+		turtle.up()
 	end
 end
 
-return
+for ch = nChunksHeight, 1, -1 do
+	local nForChunkHeight = gnForChunkHeight(ch)
 
--- turtle.forward()
+	if ch ~= nChunksHeight then
+		turtle.down()
+		-- place up
+		print('cr', 1, 'ch', ch)
+		table.insert(turtles, placeTurtle('top', depth, gnForChunkRight(1), nForChunkHeight, 'front'))
+		--
 
--- for ch = 1, nChunksHeight-1 do
--- 	local nForChunkHeight = gnForChunkHeight(ch)
--- 	for k = 1, nForChunkHeight do
--- 		turtle.up()
--- 	end
--- end
+		print(nCh)
 
--- for ch = nChunksHeight, 1, -1 do
--- 	local nForChunkHeight = gnForChunkHeight(ch)
+		for k = 2, nForChunkHeight do
+			turtle.down()
+		end
+	end
 
--- 	if ch ~= nChunksHeight then
--- 		turtle.down()
--- 		-- place up
--- 		print('cr', 1, 'ch', ch)
--- 		table.insert(turtles, placeTurtle('top', depth, gnForChunkRight(1), nForChunkHeight, 'front'))
--- 		--
+	turtle.turnRight()
+	for cr = 1, nChunksRight-1 do
+		local nForChunkRight = gnForChunkRight(cr)
+		for k = 1, nForChunkRight do
+			turtle.forward()
+		end
+	end
+	turtle.back()
+	-- place forward
+	table.insert(turtles, placeTurtle('front', depth, gnForChunkRight(nChunksRight), gnForChunkHeight(nForChunkHeight)), 'left')
+	--
+	for cr = nChunksRight-1, 2, -1 do
+		local nForChunkRight = gnForChunkRight(cr)
+		turtle.back()
+		-- place forward
+		print('cr', cr, 'ch', ch)
+		table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight), 'left')
+		--
+		for k = 2, nForChunkRight do
+			turtle.back()
+		end
+	end
+	local nForChunkRight = gnForChunkRight(1)
+	for k = 2, nForChunkRight do
+		turtle.back()
+	end
+	turtle.turnLeft()
+end
+local nForChunkRight = gnForChunkRight(1)
+local nForChunkHeight = gnForChunkHeight(1)
 
--- 		print(nCh)
-
--- 		for k = 2, nForChunkHeight do
--- 			turtle.down()
--- 		end
--- 	end
-
--- 	turtle.turnRight()
--- 	for cr = 1, nChunksRight-1 do
--- 		local nForChunkRight = gnForChunkRight(cr)
--- 		for k = 1, nForChunkRight do
--- 			turtle.forward()
--- 		end
--- 	end
--- 	turtle.back()
--- 	-- place forward
--- 	table.insert(turtles, placeTurtle('front', depth, gnForChunkRight(nChunksRight), gnForChunkHeight(nForChunkHeight)), 'left')
--- 	--
--- 	for cr = nChunksRight-1, 2, -1 do
--- 		local nForChunkRight = gnForChunkRight(cr)
--- 		turtle.back()
--- 		-- place forward
--- 		print('cr', cr, 'ch', ch)
--- 		table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight), 'left')
--- 		--
--- 		for k = 2, nForChunkRight do
--- 			turtle.back()
--- 		end
--- 	end
--- 	local nForChunkRight = gnForChunkRight(1)
--- 	for k = 2, nForChunkRight do
--- 		turtle.back()
--- 	end
--- 	turtle.turnLeft()
--- end
--- local nForChunkRight = gnForChunkRight(1)
--- local nForChunkHeight = gnForChunkHeight(1)
-
--- turtle.back()
--- -- place forward
--- print('cr', 1, 'ch', 1)
--- table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight), 'back')
--- --
+turtle.back()
+-- place forward
+print('cr', 1, 'ch', 1)
+table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight), 'back')
+--
