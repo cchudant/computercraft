@@ -67,7 +67,7 @@ function placeTurtle(side, depth, right, height, turn)
 
 		print(id .. ' started')
 
-		control.shellRun("/firmware/programs/metamineCb " .. depth .. " " .. right .. " " .. height)
+		-- control.shellRun("/firmware/programs/metamineCb " .. depth .. " " .. right .. " " .. height)
 
 		-- turtle.turnLeft()
 		-- turtle.turnLeft()
@@ -136,12 +136,21 @@ function gnForChunkRight(cr)
 	return nForChunkRight
 end
 
-turtle.forward()
+function forward()
+	while turtle.dig() do end
+	while not turtle.forward() do end
+end
+function up()
+	while turtle.digUp() do end
+	while not turtle.up() do end
+end
+
+forward()
 
 for ch = 1, nChunksHeight-1 do
 	local nForChunkHeight = gnForChunkHeight(ch)
 	for k = 1, nForChunkHeight do
-		turtle.up()
+		up()
 	end
 end
 
@@ -167,7 +176,7 @@ for ch = nChunksHeight, 1, -1 do
 		for cr = 1, nChunksRight-1 do
 			local nForChunkRight = gnForChunkRight(cr)
 			for k = 1, nForChunkRight do
-				turtle.forward()
+				forward()
 			end
 		end
 		turtle.back()
