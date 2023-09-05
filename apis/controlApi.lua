@@ -271,7 +271,7 @@ end
 function _broadcastCommandRoundtrip(command, args, timeout)
 	if timeout == nil then timeout = 1 end
 
-	local nonce = tostring(math.floor(math.random() * 10000))
+	local nonce = tostring(math.floor(math.random() * 10000000))
 
 	protocolBroadcast(command, args, nonce)
 
@@ -291,7 +291,7 @@ function _broadcastCommandRoundtrip(command, args, timeout)
 	return reps
 end
 function _sendRoundtrip(sourceid, command, arg)
-	local nonce = tostring(math.floor(math.random() * 10000))
+	local nonce = tostring(math.floor(math.random() * 10000000))
 
 	protocolSend(sourceid, command, arg, nonce)
 	local ret = protocolReceive(command .. 'Rep', sourceid, nil, nonce)
@@ -353,7 +353,7 @@ end
 
 function waitForReady(sourceid, timeout)
 	if timeout == nil then timeout = 1 end
-	local nonce = tostring(math.floor(math.random() * 10000))
+	local nonce = tostring(math.floor(math.random() * 10000000))
 
 	local rep
 	function receive()
