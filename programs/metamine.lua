@@ -193,7 +193,7 @@ for ch = nChunksHeight, 1, -1 do
 		turtle.turnLeft()
 	end
 
-	if ch ~= nChunksHeight then
+	if ch ~= 1 then
 		turtle.down()
 		-- place up
 		print('cr', 1, 'ch', ch)
