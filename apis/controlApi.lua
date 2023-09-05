@@ -39,7 +39,7 @@ function protocolReceive(command, sender, timeout, nonce)
 	_setup()
 	local startTime = os.clock()
 	local elapsed = 0
-	print(command, sender, nonce)
+	-- print(command, sender, nonce)
 	while true do
 		local to_wait = nil
 		if timeout ~= nil then
@@ -198,7 +198,7 @@ function _remoteControlTask(shell)
 		turtle = function(arg)
 			if not turtle then return end 
 			if type(arg.method) == 'string' and type(arg.args) == 'table' then
-				print('called', arg.method, arg.args)
+				-- print('called', arg.method, arg.args)
 				return table.pack(turtle[arg.method](unpack(arg.args)))
 			end
 		end,
@@ -232,7 +232,7 @@ function _remoteControlTask(shell)
 
 	while true do
 		local args, command, sender, nonce = protocolReceive()
-		print(command, sender, nonce)
+		-- print(command, sender, nonce)
 		local cmd = control_commands[command]
 		-- for shutdown and reboot, send rep before running command
 		if cmd == 'shutdown' then
@@ -293,7 +293,7 @@ function _broadcastCommandRoundtrip(command, args, timeout)
 end
 function _sendRoundtrip(sourceid, command, arg)
 	local nonce = tostring(math.floor(math.random() * 10000000))
-	print("snd rt", command, nonce)
+	-- print("snd rt", command, nonce)
 	protocolSend(sourceid, command, arg, nonce)
 	local ret = protocolReceive(command .. 'Rep', sourceid, nil, nonce)
 	return ret
@@ -390,7 +390,7 @@ function connectControl(sourceid)
 				method = method,
 				args = {...},
 			})
-			print("Got return for ", method, args, unpack(ret))
+			-- print("Got return for ", method, args, unpack(ret))
 			return unpack(ret)
 		end
 	end
