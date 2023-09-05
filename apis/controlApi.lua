@@ -58,9 +58,6 @@ function protocolReceive(command, sender, timeout, nonce)
 
 		local snd, message = rednet.receive(to_wait)
 
-		print(command, sender, timeout, nonce)
-		print("Got", snd, message, message and message.command, message and message.nonce)
-
 		if type(message) == 'table' and message.protocol == PROTOCOL_STRING and
 				(sender == nil or sender == snd) and
 				(command == nil or message.command == command) and
@@ -211,7 +208,6 @@ function _remoteControlTask(shell)
 		turtle = function(arg)
 			if not turtle then return end 
 			if type(arg.method) == 'string' and type(arg.args) == 'table' then
-				print(arg.method, arg.args)
 				return table.pack(turtle[arg.method](unpack(arg.args)))
 			end
 		end,
