@@ -87,9 +87,9 @@ function placeTurtle(side, depth, right, height)
 			os.sleep(0.1)
 			print("please provide fuel")
 		end
-		if side == 'front' then success, detail = turtle.drop(1)
-		elseif side == 'top' then success, detail = turtle.dropUp(1)
-		else success, detail = turtle.dropDown(1) end
+		if side == 'front' then turtle.drop(1)
+		elseif side == 'top' then turtle.dropUp(1)
+		else turtle.dropDown(1) end
 		mine2.selectItem(remoteTurtle, FUEL)
 		remoteTurtle.refuel(1)
 	end
