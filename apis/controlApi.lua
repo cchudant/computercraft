@@ -341,7 +341,6 @@ function autoUpdate(timeout)
 
 		print("Firmware flashed over the air!")
 		print("Rebooting...")
-		os.sleep(1)
 		os.reboot()
 	else
 		return false, table.getn(reps)

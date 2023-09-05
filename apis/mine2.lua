@@ -358,6 +358,10 @@ function digCuboid(turtle, options)
 			if isDownwards then digDown() 
 			else digUp() end
 		end,
+		finish = function()
+			removeUselessItems(turtle)
+			turtle.back()
+		end,
 		heightStep = 3,
 	})
 
