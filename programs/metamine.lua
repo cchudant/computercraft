@@ -81,8 +81,8 @@ function findBest(nChunksRight, nChunksHeight)
 	local wouldUseIfChunkedRight = usedTurtles + nChunksHeight
 	local wouldUseIfChunkedHeight = usedTurtles + nChunksRight
 
-	local canChunkRight = math.ceil(right / nChunksRight) > 1 and wouldUseIfChunkedRight < nTurtles
-	local canChunkHeight = math.ceil(height / nChunksHeight) > 1 and wouldUseIfChunkedHeight < nTurtles
+	local canChunkRight = math.ceil(right / nChunksRight) > 1 and wouldUseIfChunkedRight <= nTurtles
+	local canChunkHeight = math.ceil(height / nChunksHeight) > 1 and wouldUseIfChunkedHeight <= nTurtles
 
 	print(wouldUseIfChunkedHeight, wouldUseIfChunkedRight, canChunkHeight, canChunkRight)
 
