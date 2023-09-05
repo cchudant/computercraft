@@ -54,8 +54,34 @@ local _toRemove = {
 	"minecraft:dirt"
 }
 function removeUselessItems(turtle)
-	for _,v in ipairs(_toRemove) do
-		while selectItem(turtle, v) do
+	local needToRemove = false
+	for slot=1,16 do
+		local detail = turtle.getItemDetail(slot)
+		if detail ~= nil then
+			for _,v in ipairs(_toRemove) do
+				if v == detail.name then
+					needToRemove = true
+					break
+				end
+			end
+		end
+		if needToRemove then
+			break
+		end
+	end
+	for slot=1,16 do
+		local detail = turtle.getItemDetail(slot)
+		local found = false
+		if detail ~= nil then
+			for _,v in ipairs(_toRemove) do
+				if v == detail.name then
+					found = true
+					break
+				end
+			end
+		end
+		if found then
+			turtle.select(slot)
 			turtle.dropDown()
 		end
 	end
@@ -274,15 +300,12 @@ end
 function digCuboid(turtle, options)
 	function dig()
 		while turtle.dig() do end
-		removeUselessItems(turtle)
 	end
 	function digDown()
 		while turtle.digDown() do end
-		removeUselessItems(turtle)
 	end
 	function digUp()
 		while turtle.digUp() do end
-		removeUselessItems(turtle)
 	end
 
 	if turtle.getFuelLevel() < digCuboidFuelRequired(options.depth, options.right, options.height) then
@@ -303,6 +326,7 @@ function digCuboid(turtle, options)
 			if up then
 				digUp()
 			end				
+			removeUselessItems(turtle)
 		end,
 		prepareSameLevel = function(funcs, bottom, up)
 			dig()
