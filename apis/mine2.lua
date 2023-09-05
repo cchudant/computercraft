@@ -305,7 +305,6 @@ end
 
 function digCuboid(turtle, options)
 	function replaceLiquid(turtle, dir)
-
 		local success, detail
 		if dir == 'down' then success, detail = turtle.inspectDown()
 		else  success, detail = turtle.inspectUp() end
