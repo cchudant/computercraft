@@ -182,10 +182,6 @@ for ch = nChunksHeight, 1, -1 do
 				forward()
 			end
 		end
-		turtle.back()
-		-- place forward
-		table.insert(turtles, placeTurtle('front', depth, gnForChunkRight(nChunksRight), nForChunkHeight, 'right'))
-		--
 
 		for cr = nChunksRight-1, 2, -1 do
 			local nForChunkRight = gnForChunkRight(cr)
@@ -198,6 +194,10 @@ for ch = nChunksHeight, 1, -1 do
 				turtle.back()
 			end
 		end
+		turtle.back()
+		-- place forward
+		table.insert(turtles, placeTurtle('front', depth, gnForChunkRight(nChunksRight), nForChunkHeight, 'right'))
+		--
 
 		local nForChunkRight = gnForChunkRight(1)
 		for k = 2, nForChunkRight do
