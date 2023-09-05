@@ -30,11 +30,7 @@
 -- 	end
 -- end
 
--- depth = 8
--- right = 8 -- must be pair
--- height = 9 -- must be multiple of 3
-
-local function select_item(item)
+function selectItem(turtle, item)
 	for slot=1,16 do
 		local detail = turtle.getItemDetail(slot)
 		if detail ~= nil and detail.name == item then
@@ -43,6 +39,26 @@ local function select_item(item)
 		end
 	end
 	return false
+end
+local _toRemove = {
+	"minecraft:andesite",
+	"minecraft:cobbled_deepslate",
+	"minecraft:cobblestone",
+	"minecraft:andesite",
+	"minecraft:granite",
+	"minecraft:diorite",
+	"minecraft:stone",
+	"minecraft:gravel",
+	"minecraft:flint",
+	"minecraft:tuff",
+	"minecraft:dirt"
+}
+function removeUselessItems(turtle)
+	for _,v in ipairs(_toRemove) do
+		while selectItem(turtle, v) do
+			turtle.dropDown()
+		end
+	end
 end
 
 function defaultArgs(options, defaults)
@@ -251,15 +267,26 @@ function travelCuboid(turtle, options)
 	options.finish()
 end
 
+function digCuboidFuelRequired(depth, right, height)
+	return math.ceil(depth / 3) * right * height + 200
+end
+
 function digCuboid(turtle, options)
 	function dig()
 		while turtle.dig() do end
+		removeUselessItems(turtle)
 	end
 	function digDown()
 		while turtle.digDown() do end
+		removeUselessItems(turtle)
 	end
 	function digUp()
-		while turtle.digUp() do end
+		while turtle.digUp(turtle) do end
+		removeUselessItems(turtle)
+	end
+
+	if turtle.getFuelLevel() < digCuboidFuelRequired(options.depth, options.right, options.height) then
+		error("not enough fuel")
 	end
 
 	defaultArgs(options, {

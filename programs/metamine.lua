@@ -73,34 +73,47 @@ function placeTurtle(side, depth, right, height)
 		west = 3,
 	}
 
+	local control = controlApi.connectControl(id)
+	local remoteTurtle = control.turtle
+	while not controlApi.waitForReady(id, 1) do
+		print("waiting for " .. id)
+	end
+
+	while remoteTurtle.getFuelLevel() < digCuboidFuelRequired(depth, right, height) do
+		print("refueling " .. id)
+		while not mine2.selectItem(turtle, 'minecraft:dried_kelp') do
+			os.sleep(0.1)
+			print("please provide fuel")
+		end
+		if side == 'front' then success, detail = turtle.drop()
+		elseif side == 'top' then success, detail = turtle.dropUp()
+		else success, detail = turtle.dropDown() end
+		mine2.selectItem(remoteTurtle, 'minecraft:dried_kelp')
+		remoteTurtle.refuel()
+	end
+
 	local nLeft = (facings[facing] - facings[detail.state.facing]) % 4
 	return function()
-		while not controlApi.waitForReady(id, 1) do
-			print("waiting for " .. id)
-		end
-
-		local control = controlApi.connectControl(id)
-		local turtle = control.turtle
 		for i = 1,nLeft do
-			turtle.turnLeft()
+			remoteTurtle.turnLeft()
 		end
 
 		print(id .. ' started')
 
 		control.shellRun("/firmware/programs/metamineCb " .. depth .. " " .. right .. " " .. height)
 
-		-- turtle.turnLeft()
-		-- turtle.turnLeft()
-		-- turtle.turnLeft()
-		-- turtle.turnLeft()
-		-- turtle.turnRight()
-		-- turtle.turnLeft()
-		-- turtle.turnRight()
-		-- turtle.turnLeft()
-		-- turtle.turnRight()
-		-- turtle.turnLeft()
-		-- turtle.turnRight()
-		-- turtle.turnLeft()
+		-- remoteTurtle.turnLeft()
+		-- remoteTurtle.turnLeft()
+		-- remoteTurtle.turnLeft()
+		-- remoteTurtle.turnLeft()
+		-- remoteTurtle.turnRight()
+		-- remoteTurtle.turnLeft()
+		-- remoteTurtle.turnRight()
+		-- remoteTurtle.turnLeft()
+		-- remoteTurtle.turnRight()
+		-- remoteTurtle.turnLeft()
+		-- remoteTurtle.turnRight()
+		-- remoteTurtle.turnLeft()
 
 		
 		print(id .. ' finished')
@@ -159,10 +172,12 @@ end
 function forward()
 	while turtle.dig() do end
 	while not turtle.forward() do end
+	mine2.removeUselessItems()
 end
 function up()
 	while turtle.digUp() do end
 	while not turtle.up() do end
+	mine2.removeUselessItems()
 end
 
 forward()
