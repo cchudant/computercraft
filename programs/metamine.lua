@@ -66,21 +66,6 @@ function placeTurtle(side, depth, right, height, turn)
 
 		print(id .. ' started')
 
-		print(turtle.forward())
-		print(turtle.forward())
-		print(turtle.forward())
-		print(turtle.back())
-		print(turtle.back())
-		print(turtle.back())
-		print(turtle.turnRight())
-		print(turtle.turnRight())
-		print(turtle.turnRight())
-		print(turtle.turnRight())
-		print(turtle.turnRight())
-		print(turtle.turnRight())
-		print(turtle.turnRight())
-		print(turtle.turnRight())
-
 		-- function dig()
 		-- 	while turtle.dig() do end
 		-- end

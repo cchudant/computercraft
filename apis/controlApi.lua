@@ -293,7 +293,6 @@ function _broadcastCommandRoundtrip(command, args, timeout)
 end
 function _sendRoundtrip(sourceid, command, arg)
 	local nonce = tostring(math.floor(math.random() * 10000000))
-	-- print("snd rt", command, nonce)
 	protocolSend(sourceid, command, arg, nonce)
 	local ret = protocolReceive(command .. 'Rep', sourceid, nil, nonce)
 	return ret
@@ -390,7 +389,7 @@ function connectControl(sourceid)
 				method = method,
 				args = {...},
 			})
-			-- print("Got return for ", method, args, unpack(ret))
+			print("src", sourceid, method, args, unpack(ret))
 			return unpack(ret)
 		end
 	end
