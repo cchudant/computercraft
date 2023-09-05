@@ -1,46 +1,47 @@
+function arrayContains(array, item)
+	for _, v in ipairs(array) do
+		if item == v then
+			return true
+		end
+	end
+	return false
+end
 
--- local depth, right, height = ...
+function selectItem(turtle, items)
+	if type(items) == 'string' then items = {items} end
 
--- print("DEPTH:  " .. depth)
--- print("RIGHT:  " .. right)
--- print("HEIGHT:  " .. height)
-
--- depth = tonumber(depth)
--- right = tonumber(right)
--- height = tonumber(height)
-
--- fuel_to_have = depth * right * (height / 3) + 500
-
--- print("Fuel level: " .. turtle.getFuelLevel() .. "/" .. fuel_to_have)
-
--- if turtle.getFuelLevel() < fuel_to_have then
--- 	print("Unsufficient fuel! Trying to refuel...")
--- 	for i = 1,16 do
--- 		if turtle.getItemCount(i) > 0 then
--- 			turtle.select(i)
--- 			while turtle.refuel(1)
--- 					and turtle.getFuelLevel() < fuel_to_have do end
--- 		end
--- 	end
--- 	turtle.select(1)
--- 	print("Fuel level: " .. turtle.getFuelLevel() .. "/" .. fuel_to_have)
--- 	if turtle.getFuelLevel() < fuel_to_have then
--- 		print("Please provide fuel and try again")
--- 		return 1
--- 	end
--- end
-
-function selectItem(turtle, item)
 	for slot=1,16 do
 		local detail = turtle.getItemDetail(slot)
-		if detail ~= nil and detail.name == item then
+		if detail ~= nil and arrayContains(items, detail.name) then
 			turtle.select(slot)
 			return true
 		end
 	end
 	return false
 end
-local _toRemove = {
+
+local lava = "minecraft:lava"
+local water = "minecraft:water"
+-- no gravel
+local canReplaceLiquid = {
+	"minecraft:andesite",
+	"minecraft:cobbled_deepslate",
+	"minecraft:cobblestone",
+	"minecraft:andesite",
+	"minecraft:granite",
+	"minecraft:diorite",
+	"minecraft:stone",
+	"minecraft:deepslate",
+	"minecraft:flint",
+	"minecraft:tuff",
+	"minecraft:dirt",
+	"minecraft:netherrack",
+	"minecraft:magma_block",
+	"minecraft:soul_sand",
+	"minecraft:soul_soil",
+	"minecraft:blackstone"
+}
+local toRemove = {
 	"minecraft:andesite",
 	"minecraft:cobbled_deepslate",
 	"minecraft:cobblestone",
@@ -56,39 +57,36 @@ local _toRemove = {
 	"minecraft:netherrack",
 	"minecraft:magma_block",
 	"minecraft:soul_sand",
-	"minecraft:soul_soil"
+	"minecraft:soul_soil",
+	"minecraft:blackstone"
 }
 function removeUselessItems(turtle, force)
-	local stacksAllowed = 2
-	for slot=1,16 do
-		local detail = turtle.getItemDetail(slot)
-		if detail ~= nil then
-			for _,v in ipairs(_toRemove) do
-				if v == detail.name then
-					stacksAllowed = stacksAllowed - 1
-					break
-				end
-			end
-		end
-		if stacksAllowed == 0 then
-			break
-		end
-	end
-	if stacksAllowed <= 0 or force then
+	local nStacks = 0
+	if not force then
 		for slot=1,16 do
 			local detail = turtle.getItemDetail(slot)
-			local found = false
 			if detail ~= nil then
-				for _,v in ipairs(_toRemove) do
+				for _,v in ipairs(toRemove) do
 					if v == detail.name then
-						found = true
+						nStacks = nStacks + 1
 						break
 					end
 				end
 			end
-			if found then
+		end
+	end
+	if nStacks > 3 or force then
+		local removed = 0
+		for slot=1,16 do
+			local detail = turtle.getItemDetail(slot)
+			local found = false
+			if detail ~= nil and arrayContains(toRemove, detail.name) then
+				removed = removed + 1
 				turtle.select(slot)
 				turtle.dropDown()
+			end
+			if removed > 2 then
+				break
 			end
 		end
 		turtle.select(1)
@@ -306,14 +304,36 @@ function digCuboidFuelRequired(depth, right, height)
 end
 
 function digCuboid(turtle, options)
+	function replaceLiquid(turtle, dir)
+
+		local success, detail
+		if dir == 'down' then success, detail = turtle.inspectDown()
+		else  success, detail = turtle.inspectUp() end
+
+		if success and (detail.name == lava or detail.name == water) and detail.state.level == 0 then
+			if not selectItem(turtle, canReplaceLiquid) then
+				return
+			end
+
+			if dir == 'down' then success, detail = turtle.placeDown()
+			else success, detail = turtle.placeUp() end
+
+			if dir == 'down' then success, detail = turtle.digDown()
+			else success, detail = turtle.digUp() end
+
+			turtle.select(1)
+		end
+	end
 	function dig()
 		while turtle.dig() do end
 	end
 	function digDown()
 		while turtle.digDown() do end
+		replaceLiquid(turtle, 'down')
 	end
 	function digUp()
 		while turtle.digUp() do end
+		replaceLiquid(turtle, 'up')
 	end
 
 	if turtle.getFuelLevel() < digCuboidFuelRequired(options.depth, options.right, options.height) then
