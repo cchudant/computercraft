@@ -64,18 +64,18 @@ function placeTurtle(side, depth, right, height, turn)
 			turtle.turnLeft()
 		end
 
-		mine2.digCuboid(turtle, {
-			depth = depth, right = right, height = height,
-			prepareSameLevel = function() end,
-			prepareUpOne = function(funcs)
-				if isDownwards then digDown() 
-				else digUp() end
-				funcs.up()
-				if isDownwards then digDown() 
-				else digUp() end
-			end,
-			finish = function() end
-		})
+		-- mine2.digCuboid(turtle, {
+		-- 	depth = depth, right = right, height = height,
+		-- 	prepareSameLevel = function() end,
+		-- 	prepareUpOne = function(funcs)
+		-- 		if isDownwards then digDown() 
+		-- 		else digUp() end
+		-- 		funcs.up()
+		-- 		if isDownwards then digDown() 
+		-- 		else digUp() end
+		-- 	end,
+		-- 	finish = function() end
+		-- })
 	end
 end
 
