@@ -1,8 +1,8 @@
 os.loadAPI("/firmware/apis/mine2.lua")
 
-local depth, right, height = ...
+local depth, right, height, facing = ...
 if depth == nil or right == nil or height == nil then
-	print("usage: metamine <depth> <right> <height>")
+	print("usage: metamine <depth> <right> <height> <facing>")
 	return
 end
 
@@ -34,7 +34,7 @@ end
 
 print("I have " .. nTurtles .. " turtles.")
 
-function placeTurtle(side, depth, right, height, turn)
+function placeTurtle(side, depth, right, height)
 	selectTurtle()
 	if side == 'front' then while not turtle.place() do end
 	elseif side == 'top' then while not turtle.placeUp() do end
@@ -48,6 +48,19 @@ function placeTurtle(side, depth, right, height, turn)
 	t.turnOn()
 	local id = t.getID()
 
+	local success, detail = turtle.inspect()
+	if not success then error(detail) end
+
+	local facings = {
+		south = 0,
+		east = 1,
+		north = 2,
+		west = 3,
+	}
+
+	local nLeft = facings[facing] - detail.state.facing
+	print(facing, detail.state.facing, nLeft)
+
 	return function()
 		while not controlApi.waitForReady(id, 1) do
 			print("waiting for " .. id)
@@ -55,12 +68,7 @@ function placeTurtle(side, depth, right, height, turn)
 
 		local control = controlApi.connectControl(id)
 		local turtle = control.turtle
-		if turn == 'left' then
-			turtle.turnLeft()
-		elseif turn == 'right' then
-			turtle.turnRight()
-		elseif turn == 'back' then
-			turtle.turnLeft()
+		for i = 1,nLeft do
 			turtle.turnLeft()
 		end
 
@@ -176,7 +184,7 @@ for ch = nChunksHeight, 1, -1 do
 
 		turtle.back()
 		-- place forward
-		table.insert(turtles, placeTurtle('front', depth, gnForChunkRight(nChunksRight), nForChunkHeight, 'right'))
+		table.insert(turtles, placeTurtle('front', depth, gnForChunkRight(nChunksRight), nForChunkHeight))
 		--
 		
 		for cr = nChunksRight-1, 2, -1 do
@@ -185,7 +193,7 @@ for ch = nChunksHeight, 1, -1 do
 				turtle.back()
 			end
 			-- place forward
-			table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight, 'right'))
+			table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight))
 			--
 		end
 		local nForChunkRight = gnForChunkRight(1)
@@ -199,7 +207,7 @@ for ch = nChunksHeight, 1, -1 do
 	if ch ~= 1 then
 		turtle.down()
 		-- place up
-		table.insert(turtles, placeTurtle('top', depth, gnForChunkRight(1), nForChunkHeight, 'front'))
+		table.insert(turtles, placeTurtle('top', depth, gnForChunkRight(1), nForChunkHeight))
 		--
 	end
 end
@@ -208,7 +216,7 @@ local nForChunkHeight = gnForChunkHeight(1)
 
 turtle.back()
 -- place forward
-table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight, 'back'))
+table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight))
 --
 
 print("Running turtles...")
