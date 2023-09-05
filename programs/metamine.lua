@@ -48,15 +48,11 @@ function placeTurtle(side, depth, right, height, turn)
 	t.turnOn()
 	local id = t.getID()
 
-	print("place", depth, right, height)
-	os.sleep(2)
-
 	return function()
 		while not controlApi.waitForReady(id, 1) do
 			print("waiting for " .. id)
 		end
 
-		print(side, depth, right, height)
 		local control = controlApi.connectControl(id)
 		local turtle = control.turtle
 		if turn == 'left' then
@@ -70,7 +66,7 @@ function placeTurtle(side, depth, right, height, turn)
 
 		print(id .. ' started')
 
-		-- control.shellRun("/firmware/programs/metamineCb " .. depth .. " " .. right .. " " .. height)
+		control.shellRun("/firmware/programs/metamineCb " .. depth .. " " .. right .. " " .. height)
 
 		-- turtle.turnLeft()
 		-- turtle.turnLeft()
@@ -180,7 +176,6 @@ for ch = nChunksHeight, 1, -1 do
 
 		turtle.back()
 		-- place forward
-		print('cr', nChunksRight, 'ch', ch)
 		table.insert(turtles, placeTurtle('front', depth, gnForChunkRight(nChunksRight), nForChunkHeight, 'right'))
 		--
 		
@@ -190,7 +185,6 @@ for ch = nChunksHeight, 1, -1 do
 				turtle.back()
 			end
 			-- place forward
-			print('cr', cr, 'ch', ch)
 			table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight, 'right'))
 			--
 		end
@@ -205,7 +199,6 @@ for ch = nChunksHeight, 1, -1 do
 	if ch ~= 1 then
 		turtle.down()
 		-- place up
-		print('cr', 1, 'ch', ch)
 		table.insert(turtles, placeTurtle('top', depth, gnForChunkRight(1), nForChunkHeight, 'front'))
 		--
 	end
@@ -215,10 +208,9 @@ local nForChunkHeight = gnForChunkHeight(1)
 
 turtle.back()
 -- place forward
-print('cr', 1, 'ch', 1)
 table.insert(turtles, placeTurtle('front', depth, nForChunkRight, nForChunkHeight, 'back'))
 --
 
 print("Running turtles...")
 
--- parallel.waitForAll(unpack(turtles))
+parallel.waitForAll(unpack(turtles))
