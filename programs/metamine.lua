@@ -40,24 +40,25 @@ function placeTurtle(side, depth, right, height, turn)
 	elseif side == 'top' then while not turtle.placeUp() do end
 	else while not turtle.placeDown() do end end
 
-	-- local t
-	-- repeat
-	-- 	sleep(0.1)
-	-- 	t = peripheral.wrap(side)
-	-- until t ~= nil 
-	-- t.turnOn()
-	-- local id = t.getID()
+	local t
+	repeat
+		print("waiting for " .. side)
+		sleep(0.1)
+		t = peripheral.wrap(side)
+	until t ~= nil 
+	t.turnOn()
+	local id = t.getID()
 
 	print(side, depth, right, height)
-	-- turtle = controlApi.connectControl(id).turtle
-	-- if turn == 'left' then
-	-- 	turtle.turnLeft()
-	-- elseif turn == 'right' then
-	-- 	turtle.turnRight()
-	-- elseif turn == 'back' then
-	-- 	turtle.turnLeft()
-	-- 	turtle.turnLeft()
-	-- end
+	local turtle = controlApi.connectControl(id).turtle
+	if turn == 'left' then
+		turtle.turnLeft()
+	elseif turn == 'right' then
+		turtle.turnRight()
+	elseif turn == 'back' then
+		turtle.turnLeft()
+		turtle.turnLeft()
+	end
 
 	return function()
 		mine2.digCuboid(turtle, {
@@ -160,12 +161,12 @@ for ch = nChunksHeight, 1, -1 do
 	turtle.back()
 	-- place forward
 	table.insert(turtles, placeTurtle('front', depth, gnForChunkRight(nChunksRight), nForChunkHeight, 'left'))
-
+	--
 	local nForChunkRight = gnForChunkRight(1)
 	for k = 2, nForChunkRight do
 		turtle.back()
 	end
-	--
+
 	for cr = nChunksRight-1, 2, -1 do
 		local nForChunkRight = gnForChunkRight(cr)
 		turtle.back()
