@@ -69,20 +69,22 @@ function removeUselessItems(turtle)
 			break
 		end
 	end
-	for slot=1,16 do
-		local detail = turtle.getItemDetail(slot)
-		local found = false
-		if detail ~= nil then
-			for _,v in ipairs(_toRemove) do
-				if v == detail.name then
-					found = true
-					break
+	if needToRemove then
+		for slot=1,16 do
+			local detail = turtle.getItemDetail(slot)
+			local found = false
+			if detail ~= nil then
+				for _,v in ipairs(_toRemove) do
+					if v == detail.name then
+						found = true
+						break
+					end
 				end
 			end
-		end
-		if found then
-			turtle.select(slot)
-			turtle.dropDown()
+			if found then
+				turtle.select(slot)
+				turtle.dropDown()
+			end
 		end
 	end
 end
