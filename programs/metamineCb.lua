@@ -15,17 +15,17 @@ height = tonumber(height)
 
 print(offsetDepth, offsetRight, offsetHeight, depth, right, height)
 
-for d in 1,offsetDepth do
+for d = 1,offsetDepth do
 	mine2.protectedDig('front')
 	while not turtle.forward() do end
 end
-for d in 1,offsetHeight do
+for d = 1,offsetHeight do
 	mine2.protectedDig('up')
 	while not turtle.up() do end
 end
 if offsetRight > 0 then
 	turtle.turnRight()
-	for d in 1,offsetRight do
+	for d = 1,offsetRight do
 		mine2.protectedDig('front')
 		while not turtle.forward() do end
 	end
