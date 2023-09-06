@@ -343,14 +343,14 @@ end
 
 function digCuboid(turtle, options)
 	function dig()
-		protectedDig('front')
+		while protectedDig('front') do end
 	end
 	function digDown()
-		protectedDig('down')
+		while protectedDig('down') do end
 		replaceLiquid(turtle, 'down')
 	end
 	function digUp()
-		protectedDig('up')
+		while protectedDig('up') do end
 		replaceLiquid(turtle, 'up')
 	end
 

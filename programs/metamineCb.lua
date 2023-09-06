@@ -16,17 +16,17 @@ height = tonumber(height)
 print(offsetDepth, offsetRight, offsetHeight, depth, right, height)
 
 for d = 1,offsetDepth do
-	mine2.protectedDig('front')
+	while mine2.protectedDig('front') do end
 	while not turtle.forward() do end
 end
 for d = 1,offsetHeight do
-	mine2.protectedDig('up')
+	while mine2.protectedDig('up') do end
 	while not turtle.up() do end
 end
 if offsetRight > 0 then
 	turtle.turnRight()
 	for d = 1,offsetRight do
-		mine2.protectedDig('front')
+		while mine2.protectedDig('front') do end
 		while not turtle.forward() do end
 	end
 	turtle.turnLeft()
@@ -38,11 +38,11 @@ mine2.digCuboid(turtle, {
 	depth = depth, right = right, height = height,
 	prepareSameLevel = function() end,
 	prepareUpOne = function(funcs, isDownwards)
-		if isDownwards then mine2.protectedDig('down')
+		if isDownwards then while mine2.protectedDig('down') do end
 		else mine2.protectedDig('up') end
 		funcs.up()
-		if isDownwards then mine2.protectedDig('down')
-		else mine2.protectedDig('up') end
+		if isDownwards then while mine2.protectedDig('down') do end
+		else while mine2.protectedDig('up') do end end
 	end,
 	finish = function() mine2.removeUselessItems(turtle, true) end
 })
@@ -56,17 +56,17 @@ print("backing")
 if offsetRight > 0 then
 	turtle.turnLeft()
 	for d = 1,offsetRight do
-		mine2.protectedDig('front')
+		while mine2.protectedDig('front') do end
 		while not turtle.forward() do end
 	end
 	turtle.turnRight()
 end
 for d = 1,offsetHeight do
-	mine2.protectedDig('up')
+	while mine2.protectedDig('up') do end
 	while not turtle.up() do end
 end
 for d = 1,offsetDepth do
-	mine2.protectedDig('front')
+	while mine2.protectedDig('front') do end
 	while not turtle.forward() do end
 end
 
