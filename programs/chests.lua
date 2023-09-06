@@ -228,13 +228,13 @@ function redraw(term)
 	term.write(shown)
 
 	blinkCusorPosX, blinkCusorPosY = term.getCursorPos()
-	term.setBackgroundColor(colors.black)
 
 	local line = 1
 	local tab = 1
 	for _,v in ipairs(foundItems) do
 		local item, number = unpack(v)
 
+		term.setBackgroundColor(colors.black)
 		if arrayAll(selected, function(el) return el[1] == tab and el[2] == line end) then
 			term.setBackgroundColor(colors.lightGray)
 		end
@@ -289,7 +289,7 @@ function eventsTask()
 
 		selected = {{tab, line}}
 		redrawAll()
-		os.sleep(0.1)
+		os.sleep(0.5)
 		selected = {}
 		redrawAll()
 	end
