@@ -162,15 +162,17 @@ function startTask()
 	end
 end
 
-function launchTurtlesTask(functions)
+function launchTurtlesTask(functions, finishLimit)
 	local coroutines = {}
 	local filters = {}
+
+	local finished = 0
 
 	for _, func in ipairs(functions) do
 		table.insert(coroutines, coroutine.create(func))
 	end
 
-	while #coroutines > 0 do
+	while finishLimit > finished do
 		print("Coroutines", #coroutines)
 
 		local bag = {os.pullEvent()}
@@ -191,10 +193,12 @@ function launchTurtlesTask(functions)
 					error(filter, 0)
 				end
 				filters[i] = filter
-				print("Remove", i)
 				if coroutine.status(co) == 'dead' then
 					table.remove(coroutines, i)
 					table.remove(filters, i)
+
+					finished = finished + 1
+					print("Remove", i, finished)
 				else
 					i = i + 1
 				end
@@ -206,6 +210,6 @@ function launchTurtlesTask(functions)
 	end
 end
 
-launchTurtlesTask({startTask})
+launchTurtlesTask({startTask}, nChunksHeight * nChunksRight + 1)
 
 parallel.waitForAll(unpack(turtles))
