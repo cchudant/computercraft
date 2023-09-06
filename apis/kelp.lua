@@ -18,8 +18,6 @@ function suckLine(turtle, length)
     end
 end
 
-p
-
 function digRectangle(turtle, depth, right)
     for i = 1, right do
         digLine(turtle, depth)
