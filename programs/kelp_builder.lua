@@ -24,7 +24,6 @@ end
 function mineKelp(turtle, depth, right, height)
 	digRectangle(turtle, depth, right)
 	placeInChest(turtle)
-	for i=1, 1
 	for i=1,height do
 		turtle.up()
 	end
