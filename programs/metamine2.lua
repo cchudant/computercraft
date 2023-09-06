@@ -28,6 +28,18 @@ if nTurtles == 0 then
 	return
 end
 
+function turtleTask(nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height)
+	for i = 1,nLeft do
+		remoteTurtle.turnLeft()
+	end
+
+	print(id .. ' started')
+
+	control.shellRun("/firmware/programs/metamineCb "..offsetDepth.." "..offsetRight.." "..offsetHeight.." "..depth.." "..right.." "..height)
+	
+	print(id .. ' finished')
+end
+
 function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, height)
 	print(offsetDepth, offsetRight, offsetHeight, depth, right, height)
 	while not mine2.selectItem(turtle, {TURTLE1, TURTLE2}) do
@@ -72,17 +84,7 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 	end
 
 	local nLeft = (facings[facing] - facings[detail.state.facing]) % 4
-	return function()
-		for i = 1,nLeft do
-			remoteTurtle.turnLeft()
-		end
-
-		print(id .. ' started')
-
-		control.shellRun("/firmware/programs/metamineCb "..offsetDepth.." "..offsetRight.." "..offsetHeight.." "..depth.." "..right.." "..height)
-		
-		print(id .. ' finished')
-	end
+	return { nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height }
 end
 
 function findBest(nChunksRight, nChunksHeight)
@@ -151,9 +153,8 @@ function startTask()
 				local nForChunkRight = gnForChunkRight(i)
 				offsetRight = offsetRight + nForChunkRight
 			end
-			turtleFunc = placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, gnForChunkRight(cr), gnForChunkHeight(ch))
-			print("metamine:newTurtle", 1)
-			os.queueEvent("metamine:newTurtle", 1)
+			local turtleObj = placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, gnForChunkRight(cr), gnForChunkHeight(ch))
+			os.queueEvent("metamine:newTurtle", turtleObj)
 		end
 	end
 end
@@ -169,10 +170,8 @@ function launchTurtlesTask(functions)
 	while #coroutines > 0 do
 
 		local bag = {os.pullEvent()}
-		print(bag[1])
-		print(bag[2])
 		if bag[1] == "metamine:newTurtle" then
-			table.insert(coroutines, coroutine.create(bag[2]))
+			table.insert(coroutines, coroutine.create(turtleTask(unpack(bag[2])))
 		end
 
 		local i = 1
