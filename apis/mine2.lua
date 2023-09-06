@@ -306,6 +306,7 @@ function digCuboidFuelRequired(depth, right, height)
 	return math.ceil(depth / 3) * right * height + 200
 end
 function protectedDig(side)
+	local messageShown = 0
 	while true do
 		local success, detail
 		if dir == 'down' then success, detail = turtle.inspectDown()
@@ -314,17 +315,24 @@ function protectedDig(side)
 
 		if success then
 			if arrayContains(turtlesIds, detail.name) then
-				print("turtle in front")
+				if messageShown < 3 then
+					print("turtle in front")
+					messageShown = messageShown + 1
+				end
+
 				os.sleep(0.1)
 			else
 				if dir == 'down' then turtle.digDown()
 				elseif dir == 'up' then turtle.digUp()
 				else turtle.dig() end
-				return
+				break
 			end
 		else
-			return
+			break
 		end
+	end
+	if messageShown > 0 then
+		print("turtle has gone away :)")
 	end
 end
 
