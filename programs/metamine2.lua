@@ -171,6 +171,7 @@ function launchTurtlesTask(functions)
 	end
 
 	while #coroutines > 0 do
+		print("Coroutines", #coroutines)
 
 		local bag = {os.pullEvent()}
 		if bag[1] == "metamine:newTurtle" then
@@ -190,6 +191,7 @@ function launchTurtlesTask(functions)
 					error(filter, 0)
 				end
 				filters[i] = filter
+				print("Remove", i)
 				if coroutine.status(co) == 'dead' then
 					table.remove(coroutines, i)
 					table.remove(filters, i)
