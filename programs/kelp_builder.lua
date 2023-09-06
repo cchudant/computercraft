@@ -48,8 +48,8 @@ for i = 0,1 do
 			kelp.digLine(2)
 		end
 		turtle.turnLeft()
-		exit()
 		mineKelp(turtle, 2, 2, height)
+		exit()
 		turtle.turnLeft()
 		for k =1,j do
 			if k== 1 then
