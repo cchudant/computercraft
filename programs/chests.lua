@@ -83,7 +83,7 @@ function push()
 		for periph, inv in pairs(fullInv) do
 			for i, el in pairs(inv) do
 				if el.name == retEl.name then
-					local stackLimit = retrieve_.getItemLimit(i)
+					local stackLimit = retrieve_.getItemLimit(retI)
 					local toPush = stackLimit - math.max(el.count + retEl.count, stackLimit)
 
 					peripheral.wrap(retrieveChest).pushItems(periph, retI, toPush, i)
