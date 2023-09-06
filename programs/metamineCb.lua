@@ -19,12 +19,12 @@ local FUEL = 'minecraft:dried_kelp_block'
 while turtle.getFuelLevel() < targetFuelLevel do
 	print("refueling")
 	if not mine2.selectItem(turtle, FUEL) then
-		controlApi.protocolSend(snd, 'metamine:refuelGive', nil, nonce)
+		controlApi.protocolBroadcast('metamine:refuelGive', nil, nonce)
 		os.sleep(0.1)
 	end
 	turtle.refuel(1)
 end
-controlApi.protocolSend(snd, 'metamine:refuelDone', nil, nonce)
+controlApi.protocolBroadcast('metamine:refuelDone', nil, nonce)
 local targetFuelLevel, _, snd, nonce = controlApi.protocolReceive('metamine:start')
 
 print(offsetDepth, offsetRight, offsetHeight, depth, right, height)
