@@ -26,7 +26,7 @@ function calcTotalCount()
 	for el, n in pairs(totalCountMap) do
 		table.insert(totalCountList, { el, n })
 	end
-	table.sort(totalCountList, function (a, b) return a[2] > b[2] end)
+	table.sort(totalCountList, function (a, b) return a[2] < b[2] end)
 	totalCount = totalCountList
 end
 
