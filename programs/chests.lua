@@ -12,18 +12,26 @@ for _,v in ipairs(peripherals) do
 	fullInv[v] = items
 end
 
-local totalCount = {}
 function calcTotalCount()
+	local totalCountMap = {}
 	for periph, inv in pairs(fullInv) do
 		for i, el in pairs(inv) do
-			if totalCount[el.name] == nil then
-				totalCount[el.name] = 0
+			if totalCountMap[el.name] == nil then
+				totalCountMap[el.name] = 0
 			end
-			totalCount[el.name] = totalCount[el.name] + el.count
+			totalCountMap[el.name] = totalCountMap[el.name] + el.count
 		end
 	end
+	local totalCountList = {}
+	for el, n in pairs(totalCountMap)
+		table.insert(totalCountList, { el, n })
+	end
+	table.sort(totalCountList, function (a, b) return a[2] > b[2] end
+	totalCount = totalCountList
 end
 
 calcTotalCount()
+
+
 print(textutils.serialize(totalCount))
 
