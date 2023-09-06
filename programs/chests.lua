@@ -58,6 +58,7 @@ function demand(item, count)
 	local got = 0
 	for periph, inv in pairs(fullInv) do
 		for i, el in pairs(inv) do
+			print(el.name, el.count)
 			if el.name == item then
 				local toPush = count - got
 				
