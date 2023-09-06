@@ -174,7 +174,9 @@ function launchTurtlesTask(functions)
 
 		local bag = {os.pullEvent()}
 		if bag[1] == "metamine:newTurtle" then
-			table.insert(coroutines, coroutine.create(turtleTask(unpack(bag[2]))))
+			table.insert(coroutines, coroutine.create(function()
+				turtleTask(unpack(bag[2]))
+			end))
 		end
 
 		local i = 1
