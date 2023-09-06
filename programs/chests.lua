@@ -188,13 +188,13 @@ function displayTo(term)
 		for _ = width - 22 + 7, width do
 			term.write(' ')
 		end
-		term.setBackgroundColor(colors.gray)
+		term.setBackgroundColor(colors.black)
 
 		local line = 2
 		local tab = 1
 		for _,v in ipairs(totalCount) do
 			local item, number = unpack(v)
-			term.setCursorPos(tab, line)
+			term.setCursorPos((tab-1) * tabSize + 1, line)
 
 			local shown = strLimitSize(stripped(item), sizeLimit)
 			term.write(shown)
