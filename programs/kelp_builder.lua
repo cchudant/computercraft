@@ -34,6 +34,7 @@ end
 
 for i = 0,1 do
 	for j = 0,1 do
+		turtle.forward()
 		for k =1,i do
 			if k== 1 then
 				turtle.dig()
@@ -59,7 +60,7 @@ for i = 0,1 do
 			end
 			kelp.digLine(8)
 		end
-		turtle.turnRight()
+		turtle.turnLeft()
 		for k =1,i do
 			if k== 1 then
 				turtle.dig()
@@ -67,8 +68,10 @@ for i = 0,1 do
 			end
 			kelp.digLine(8)
 		end
-		turtle.turnLeft()
-		turtle.turnLeft()
+		turtle.forward()
+		placeInChest(turtle)
+		turtle.turnRight()
+        turtle.turnRight()
 	end
 end
 		
