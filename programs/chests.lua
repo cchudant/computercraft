@@ -2,6 +2,8 @@ local retrieveChest = 'minecraft:chest_13'
 
 local item, amount = ...
 
+amount = tonumber(amount)
+
 local peripherals = {}
 for _,v in ipairs(peripheral.getNames()) do
 	local ignore = v == 'top' or v == 'left' or v == 'front' or v == 'bottom' or v == 'right' or v == 'back'
