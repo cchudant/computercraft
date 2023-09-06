@@ -208,13 +208,14 @@ function displayTo(term)
 		term.setCursorPos(width - 22, 1)
 		term.setBackgroundColor(colors.gray)
 		term.write('Search:')
-		term.setCursorPos(width - 22 + 7, 1)
 		term.setBackgroundColor(colors.lightGray)
 
+		term.setCursorPos(width - 22 + 7, 1)
 		for _ = width - 22 + 7, width do
 			term.write(' ')
 		end
 
+		term.setCursorPos(width - 22 + 7, 1)
 		local shown = string.sub(typed, string.len(typed) - (22-7), string.len(typed))
 		term.write(shown)
 
