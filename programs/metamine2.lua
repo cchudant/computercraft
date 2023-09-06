@@ -29,7 +29,6 @@ if nTurtles == 0 then
 end
 
 function turtleFinishTask(id)
-	print(id .. ' backing')
 	controlApi.waitForReady(id, -1, 'metamine:back')
 
 	print(id .. ' break')
