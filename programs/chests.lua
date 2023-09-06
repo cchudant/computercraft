@@ -164,12 +164,14 @@ function displayTo(term)
 		term.setCursorPos(width - 22, 1)
 		term.setBackgroundColor(colors.gray)
 		term.write('Search:')
-		term.setCursorPos(width - 22 + 8, 1)
+		term.setCursorPos(width - 22 + 7, 1)
 		term.setBackgroundColor(colors.lightGray)
-		for _ = width - 22 + 8, width do
+		for _ = width - 22 + 7, width do
 			term.write(' ')
 		end
 		term.setBackgroundColor(colors.black)
+		term.setCursorPos(width - 22 + 7, 1)
+		term.setCursorBlink(true)
 		os.sleep(1)
 	end
 	
