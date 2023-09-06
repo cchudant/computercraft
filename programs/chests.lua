@@ -90,6 +90,8 @@ function _findEmptySlot()
 end
 
 function push()
+	local totalPushed = 0
+
 	local retrieve_ = peripheral.wrap(retrieveChest)
 	for retI, retEl in pairs(retrieve_.list()) do
 		local retCount = retEl.count
@@ -105,6 +107,7 @@ function push()
 					calcTotalCount()
 
 					itemsPushed = itemsPushed + toPush
+					totalPushed = totalPushed + toPush
 				end
 				if itemsPushed >= retCount then
 					break
@@ -122,12 +125,16 @@ function push()
 			peripheral.wrap(retrieveChest).pushItems(periph, retI, toPush, i)
 			fullInv[periph][i] = retEl
 			fullInv[periph][i].count = toPush
+			totalPushed = totalPushed + toPush
 		end
 	end
+
+	return totalPushed
 end
 
 if item == nil then
-	push()
+	local amount = push()
+	print("Pushed "..amount.." items")
 else
 	if amount == nil then amount = 64 end
 	
@@ -135,12 +142,15 @@ else
 		return string.gsub(string.lower(string.gsub(s, '_', ' ')), 'minecraft:', '')
 	end
 
+	local realItem = item
+
 	for k,_ in pairs(totalCountMap) do
 		if stripped(k) == stripped(item) then
-			item = item
+			realItem = k
 			break
 		end
 	end
 
-	retrieve(item, amount)
+	local amount = retrieve(realItem, amount)
+	print("Got "..amount.." of "..realItem)
 end
