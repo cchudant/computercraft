@@ -309,8 +309,8 @@ function protectedDig(side)
 	local messageShown = 0
 	while true do
 		local success, detail
-		if dir == 'down' then success, detail = turtle.inspectDown()
-		elseif dir == 'up' then success, detail = turtle.inspectUp()
+		if side == 'down' then success, detail = turtle.inspectDown()
+		elseif side == 'up' then success, detail = turtle.inspectUp()
 		else success, detail = turtle.inspect() end
 
 		if success then
@@ -322,8 +322,8 @@ function protectedDig(side)
 
 				os.sleep(0.1)
 			else
-				if dir == 'down' then turtle.digDown()
-				elseif dir == 'up' then turtle.digUp()
+				if side == 'down' then turtle.digDown()
+				elseif side == 'up' then turtle.digUp()
 				else turtle.dig() end
 				break
 			end
