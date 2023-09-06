@@ -169,6 +169,7 @@ function displayTo(term)
 		for _ = width - 22 - 8, width do
 			term.write(' ')
 		end
+		term.setBackgroundColor(colors.black)
 		os.sleep(1)
 	end
 	
