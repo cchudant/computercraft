@@ -292,6 +292,8 @@ function eventsTask()
 		if y == 1 then
 			if x >= 5 and x < 5+6 then
 				push()
+				updateFoundItems()
+				redrawAll()
 			end
 			return
 		end
@@ -310,6 +312,7 @@ function eventsTask()
 
 			retrieve(item[1], 64)
 			updateFoundItems()
+			redrawAll()
 			os.sleep(0.5)
 			selected = {}
 			redrawAll()
