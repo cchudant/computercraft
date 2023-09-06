@@ -1,8 +1,8 @@
 local retrieveChest = 'minecraft:chest_13'
 
-local item, amount = ...
+-- local item, amount = ...
 
-amount = tonumber(amount)
+-- amount = tonumber(amount)
 
 local peripherals = {}
 for _,v in ipairs(peripheral.getNames()) do
@@ -131,25 +131,44 @@ function push()
 	return totalPushed
 end
 
-if item == nil then
-	local amount = push()
-	print("Pushed "..amount.." items")
-else
-	if amount == nil then amount = 64 end
+-- if item == nil then
+-- 	local amount = push()
+-- 	print("Pushed "..amount.." items")
+-- else
+-- 	if amount == nil then amount = 64 end
 	
-	function stripped(s)
-		return string.gsub(string.gsub(string.lower(string.gsub(s, '_', ' ')), 'minecraft:', ''), 'computercraft:', '')
+-- 	function stripped(s)
+-- 		return string.gsub(string.gsub(string.lower(string.gsub(s, '_', ' ')), 'minecraft:', ''), 'computercraft:', '')
+-- 	end
+
+-- 	local realItem = item
+
+-- 	for k,_ in pairs(totalCountMap) do
+-- 		if stripped(k) == stripped(item) then
+-- 			realItem = k
+-- 			break
+-- 		end
+-- 	end
+
+-- 	local amount = retrieve(realItem, amount)
+-- 	print("Got "..amount.." of "..realItem)
+-- end
+
+
+
+function displayTo(term)
+	local width, height = term.getSize()
+
+	while true do
+		term.clear()
+		term.setCursorPos(width - 22, 1)
+		term.write('Search:')
+
+		os.sleep(1)
 	end
+	
 
-	local realItem = item
 
-	for k,_ in pairs(totalCountMap) do
-		if stripped(k) == stripped(item) then
-			realItem = k
-			break
-		end
-	end
-
-	local amount = retrieve(realItem, amount)
-	print("Got "..amount.." of "..realItem)
 end
+
+displayTo(term)
