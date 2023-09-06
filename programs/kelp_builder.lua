@@ -23,7 +23,6 @@ end
 
 function mineKelp(turtle, depth, right, height)
 	kelp.digRectangle(turtle, depth, right)
-	placeInChest(turtle)
 	for i=1,height do
 		turtle.up()
 	end
@@ -31,7 +30,45 @@ function mineKelp(turtle, depth, right, height)
 	for i=1,height do
 		turtle.down()
 	end
-	placeInChest(turtle)
 end
 
-mineKelp(turtle, depth, right, height)
+for i = 0,1 do
+	for j = 0,1 do
+		for k =1,i do
+			if k== 1 then
+				turtle.dig()
+				turtle.forward()
+			end
+			kelp.digLine(2)
+		end
+		turtle.turnRight()
+		for k =1,j do
+			if k== 1 then
+				turtle.dig()
+				turtle.forward()
+			end
+			kelp.digLine(2)
+		end
+		turtle.turnLeft()
+		mineKelp(turtle, 2, 2, height)
+		turtle.turnLeft()
+		for k =1,j do
+			if k== 1 then
+				turtle.dig()
+				turtle.forward()
+			end
+			kelp.digLine(8)
+		end
+		turtle.turnRight()
+		for k =1,i do
+			if k== 1 then
+				turtle.dig()
+				turtle.forward()
+			end
+			kelp.digLine(8)
+		end
+		turtle.turnLeft()
+		turtle.turnLeft()
+	end
+end
+		
