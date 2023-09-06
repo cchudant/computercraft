@@ -173,11 +173,11 @@ function displayTo(term)
 		term.clear()
 
 		-- seach bar
-		term.setCursorPos(width - 22, 1)
-		term.setBackgroundColor(colors.gray)
-		term.write('Search:')
-		term.setCursorPos(width - 22 + 7, 1)
-		term.setBackgroundColor(colors.lightGray)
+		-- term.setCursorPos(width - 22, 1)
+		-- term.setBackgroundColor(colors.gray)
+		-- term.write('Search:')
+		-- term.setCursorPos(width - 22 + 7, 1)
+		-- term.setBackgroundColor(colors.lightGray)
 		for _ = width - 22 + 7, width do
 			term.write(' ')
 		end
@@ -188,14 +188,14 @@ function displayTo(term)
 			local item, number = unpack(v)
 			print(item, number)
 			local sizeLimit = 40 
-			term.setCursorPos(1, line)
+			-- term.setCursorPos(1, line)
 
 			local shown = strLimitSize(stripped(item), sizeLimit)
-			term.write(shown)
+			-- term.write(shown)
 
 			local snumber = formatAmount(number)
-			term.setCursorPos(sizeLimit - string.len(snumber), line)
-			term.write(snumber)
+			-- term.setCursorPos(sizeLimit - string.len(snumber), line)
+			-- term.write(snumber)
 
 			line = line + 1
 			if line > height then break end
@@ -206,9 +206,9 @@ function displayTo(term)
 
 
 
-		term.setBackgroundColor(colors.black)
-		term.setCursorPos(width - 22 + 7, 1)
-		term.setCursorBlink(true)
+		-- term.setBackgroundColor(colors.black)
+		-- term.setCursorPos(width - 22 + 7, 1)
+		-- term.setCursorBlink(true)
 		os.sleep(1)
 	end
 	
