@@ -4,7 +4,8 @@ local item, amount = ...
 
 local peripherals = {}
 for _,v in ipairs(peripheral.getNames()) do
-	if peripheral.hasType(v, 'inventory') then
+	local ignore = v == 'top' or v == 'left' or v == 'front' or v == 'bottom' or v == 'right' or v == 'back'
+	if not ignore and peripheral.hasType(v, 'inventory') then
 		table.insert(peripherals, v)
 	end
 end
