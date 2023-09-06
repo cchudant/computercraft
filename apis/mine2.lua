@@ -316,7 +316,7 @@ function protectedDig(side)
 		if success then
 			if arrayContains(turtlesIds, detail.name) then
 				if messageShown < 3 then
-					print("turtle in front")
+					print("turtle in " .. side)
 					messageShown = messageShown + 1
 				end
 
