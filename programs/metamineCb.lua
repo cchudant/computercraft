@@ -48,6 +48,8 @@ mine2.digCuboid(turtle, {
 
 local _, _, snd, nonce = controlApi.protocolReceive('metamine:back')
 
+print("backing")
+
 if offsetRight > 0 then
 	turtle.turnLeft()
 	for d = 1,offsetRight do
@@ -64,5 +66,7 @@ for d = 1,offsetDepth do
 	mine2.protectedDig('front')
 	while not turtle.forward() do end
 end
+
+print("back!")
 
 controlApi.protocolSend(snd, 'metamine:backRep', nil, nonce)

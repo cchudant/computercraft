@@ -29,6 +29,7 @@ if nTurtles == 0 then
 end
 
 function turtleFinishTask(id)
+	print('back ' .. id)
 	controlApi.protocolSend(id, 'metamine:back')
 
 	controlApi.protocolReceive('metamine:backRep', id)
