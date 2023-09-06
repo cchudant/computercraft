@@ -323,17 +323,15 @@ function protectedDig(side)
 
 				os.sleep(0.1)
 			else
-				if side == 'down' then turtle.digDown()
-				elseif side == 'up' then turtle.digUp()
-				else turtle.dig() end
-				ret = true
+				if side == 'down' then ret = turtle.digDown()
+				elseif side == 'up' then ret = turtle.digUp()
+				else ret = turtle.dig() end
 				break
 			end
 		else
-			if side == 'down' then turtle.digDown()
-			elseif side == 'up' then turtle.digUp()
-			else turtle.dig() end
-			ret = false
+			if side == 'down' then ret = turtle.digDown()
+			elseif side == 'up' then ret = turtle.digUp()
+			else ret = turtle.dig() end
 			break
 		end
 	end
