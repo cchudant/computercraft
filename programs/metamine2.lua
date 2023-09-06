@@ -39,6 +39,10 @@ function turtleFinishTask(id)
 	else
 		print("Error: " .. id .. " not where expected")
 	end
+
+	while mine2.selectItem(turtle, {TURTLE1, TURTLE2}) do
+		turtle.dropUp()
+	end
 end
 
 function turtleTask(id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height)
