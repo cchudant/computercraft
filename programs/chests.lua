@@ -4,6 +4,15 @@ local retrieveChest = 'minecraft:chest_13'
 
 -- amount = tonumber(amount)
 
+function arrayAll(tab, fn)
+	for _, v in ipairs(tab) do
+		if fn(v) then
+			return true
+		end
+	end
+	return false
+end
+
 local peripherals = {}
 for _,v in ipairs(peripheral.getNames()) do
 	local ignore = v == 'top' or v == 'left' or v == 'front' or v == 'bottom' or v == 'right' or v == 'back'
@@ -170,6 +179,8 @@ end
 
 local typed = ''
 local foundItems
+
+local selected = {}
 function updateFoundItems()
 	if typed == '' then
 		foundItems = totalCount
@@ -187,9 +198,10 @@ function updateFoundItems()
 end
 updateFoundItems()
 
+sizeLimit = 25
+
 function redraw(term)
 	local width, height = term.getSize()
-	local sizeLimit = 25
 
 	local nTabs = math.floor(width / sizeLimit)
 	local tabSize = math.floor(width / nTabs)
@@ -218,17 +230,27 @@ function redraw(term)
 	blinkCusorPosX, blinkCusorPosY = term.getCursorPos()
 	term.setBackgroundColor(colors.black)
 
-	local line = 2
+	local line = 1
 	local tab = 1
 	for _,v in ipairs(foundItems) do
 		local item, number = unpack(v)
-		term.setCursorPos((tab-1) * tabSize + 1, line)
 
-		local shown = strLimitSize(stripped(item), sizeLimit)
+		if arrayAll(selected, function(el) return el[1] == tab and el[2] == line end) then
+			term.setBackgroundColor(colors.lightGray)
+		end
+
+		term.setCursorPos((tab-1) * tabSize + 1, line + 1)
+		for _ = 1, tabSize do
+			term.write(' ')
+		end
+
+		term.setCursorPos((tab-1) * tabSize + 1, line + 1)
+
+		local shown = strLimitSize(stripped(item), tabSize)
 		term.write(shown)
 
 		local snumber = formatAmount(number)
-		term.setCursorPos(tab * tabSize - string.len(snumber), line)
+		term.setCursorPos(tab * tabSize - string.len(snumber), line + 1)
 		term.write(snumber)
 
 		if tab == nTabs then
@@ -237,7 +259,7 @@ function redraw(term)
 		else
 			tab = tab + 1
 		end
-		if line > height then break end
+		if line + 1 > height then break end
 	end
 
 	term.setBackgroundColor(colors.black)
@@ -246,7 +268,7 @@ function redraw(term)
 end
 
 function redrawAll()
-	redraw(term)
+	-- redraw(term)
 	local monitor = peripheral.find('monitor')
 	if monitor ~= nil then
 		monitor.setTextScale(0.7)
@@ -255,6 +277,23 @@ function redrawAll()
 end
 
 function eventsTask()
+	function handleClick(x, y, w, h)
+		if y < 1 then return end
+
+		local nTabs = math.floor(w / sizeLimit)
+		local tabSize = math.floor(w / nTabs)
+
+		local tab = math.floor(x / w * nTabs) + 1
+		local line = y - 1
+
+		selected = {{tab, line}}
+		redrawAll()
+		os.sleep(0.1)
+		selected = {}
+		redrawAll()
+	end
+
+
 	parallel.waitForAll(
 		function()
 			while true do
@@ -272,6 +311,20 @@ function eventsTask()
 					updateFoundItems()
 					redrawAll()
 				end
+			end
+		end,
+		function()
+			while true do
+				local _, x, y = os.pullEvent('monitor_touch')
+				local w, h = peripheral.find('monitor').getSize()
+				handleClick(x, y, w, h)
+			end
+		end,
+		function()
+			while true do
+				_, x, y = os.pullEvent('mouse_click')
+				local w, h = term.getSize()
+				handleClick(x, y, w, h)
 			end
 		end
 	)
