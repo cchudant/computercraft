@@ -51,6 +51,11 @@ calcTotalCount()
 
 local demanded = 'minecraft:obsidian'
 
+for _, el in ipairs(totalCount) do
+	local item, n = unpack(el)
+	print(item, n)
+end
+
 function demand(item, count)
 		print("ad", totalCountMap[item])
 	if totalCountMap[item] == nil or totalCountMap[item] < count then
