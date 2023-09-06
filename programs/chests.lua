@@ -264,5 +264,6 @@ parallel.waitForAll(
 			monitor.setTextScale(0.7)
 			displayTo(monitor)
 		end
-	end
+	end,
+	eventsTask,
 )
