@@ -179,6 +179,7 @@ end
 
 local typed = ''
 local foundItems
+local scrollOffset = 0
 
 local selected = {}
 function updateFoundItems()
@@ -186,6 +187,7 @@ function updateFoundItems()
 		foundItems = totalCount
 		return
 	end
+	scrollOffset = 1
 
 	local found = {}
 	for _,v in ipairs(totalCount) do
@@ -240,6 +242,7 @@ function redraw(term)
 
 	blinkCusorPosX, blinkCusorPosY = term.getCursorPos()
 
+	print(scrollOffset)
 	local line = 1
 	local tab = 1
 	for _,v in ipairs(foundItems) do
@@ -351,6 +354,16 @@ function eventsTask()
 				local _, _, x, y = os.pullEvent('mouse_click')
 				local w, h = term.getSize()
 				handleClick(x, y, w, h)
+			end
+		end,
+		function()
+			while true do
+				local _, amount = os.pullEvent('mouse_scroll')
+				local w, h = term.getSize()
+				local nTabs = math.floor(w / sizeLimit)
+				local nLines = math.ceil(table.getn(foundItems) / nTabs)
+
+				scrollOffset = math.min(math.max(scrollOffset + amount, 1), nLines - 1)
 			end
 		end
 	)
