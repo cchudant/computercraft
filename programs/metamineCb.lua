@@ -6,6 +6,21 @@ if offsetDepth == nil or offsetRight == nil or offsetHeight == nil or depth == n
 	return
 end
 
+local FUEL = 'minecraft:dried_kelp_block'
+
+while turtle.getFuelLevel() < targetFuelLevel do
+	print("refueling")
+	if not mine2.selectItem(turtle, FUEL) then
+		controlApi.protocolSend(snd, 'metamine:refuelGive', nil, nonce)
+		os.sleep(0.1)
+	end
+	turtle.drop(1)
+	mine2.selectItem(remoteTurtle, FUEL)
+	remoteTurtle.refuel(1)
+end
+controlApi.protocolSend(snd, 'metamine:refuelDone', nil, nonce)
+local targetFuelLevel, _, snd, nonce = controlApi.protocolReceive('metamine:start')
+
 offsetDepth = tonumber(offsetDepth)
 offsetRight = tonumber(offsetRight)
 offsetHeight = tonumber(offsetHeight)

@@ -52,7 +52,7 @@ function turtleTask(id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, ri
 	for i = 1,nLeft do
 		remoteTurtle.turnLeft()
 	end
-	controlApi.protocolSend(id, 'shellRun', "/firmware/programs/metamineCb "..offsetDepth.." "..offsetRight.." "..offsetHeight.." "..depth.." "..right.." "..height)
+	controlApi.protocolSend(id, 'metamine:start')
 
 	print(id .. ' started')
 end
@@ -90,15 +90,26 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 
 	local fuelRequired = mine2.digCuboidFuelRequired(depth, right, height) + (depth + right + height)*2 + 100
 
-	while remoteTurtle.getFuelLevel() < fuelRequired do
-		print("refueling " .. id)
-		while not mine2.selectItem(turtle, FUEL) do
-			os.sleep(0.1)
-			print("please provide fuel")
+	controlApi.protocolSend(id, 'shellRun', "/firmware/programs/metamineCb "..offsetDepth.." "..offsetRight.." "..offsetHeight.." "..depth.." "..right.." "..height)
+	
+	function receiveGive()
+		while true do
+			controlApi.protocolReceive('metamine:refuelGive', id)
+
+			print("refueling " .. id)
+			local displayed = 1
+			while not mine2.selectItem(turtle, FUEL) do
+				os.sleep(0.1)
+				if displayed < 3 then
+					print("please provide fuel")
+					displayed = displayed + 1
+				end
+				turtle.drop(1)
+			end
 		end
-		turtle.drop(1)
-		mine2.selectItem(remoteTurtle, FUEL)
-		remoteTurtle.refuel(1)
+	end
+	function receiveGive()
+		controlApi.protocolReceive('metamine:refuelDone', id)
 	end
 
 	local nLeft = (facings[facing] - facings[detail.state.facing]) % 4
