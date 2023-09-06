@@ -51,7 +51,7 @@ function calcTotalCount()
 	for el, n in pairs(totalCountMap) do
 		table.insert(totalCount, { el, n })
 	end
-	table.sort(totalCount, function (a, b) return a[2] < b[2] end)
+	table.sort(totalCount, function (a, b) return a[2] - b[2] end)
 end
 calcTotalCount()
 
