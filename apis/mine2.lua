@@ -20,6 +20,11 @@ function selectItem(turtle, items)
 	return false
 end
 
+
+local turtlesIds = {
+	"computercraft:turtle_normal",
+	"computercraft:turtle_advanced"
+}
 local lava = "minecraft:lava"
 local water = "minecraft:water"
 -- no gravel
@@ -32,7 +37,6 @@ local canReplaceLiquid = {
 	"minecraft:diorite",
 	"minecraft:stone",
 	"minecraft:deepslate",
-	"minecraft:flint",
 	"minecraft:tuff",
 	"minecraft:dirt",
 	"minecraft:netherrack",
@@ -65,19 +69,14 @@ function removeUselessItems(turtle, force)
 	if not force then
 		for slot=1,16 do
 			local detail = turtle.getItemDetail(slot)
-			if detail ~= nil then
-				for _,v in ipairs(toRemove) do
-					if v == detail.name then
-						nStacks = nStacks + 1
-						break
-					end
-				end
+			if detail ~= nil and arrayContains(toRemove, detail.name) then
+				nStacks = nStacks + 1
 			end
 		end
 	end
 	if nStacks > 3 or force then
 		local removed = 0
-		for slot=1,16 do
+		for slot=16,1,-1 do
 			local detail = turtle.getItemDetail(slot)
 			local found = false
 			if detail ~= nil and arrayContains(toRemove, detail.name) then
@@ -110,13 +109,16 @@ function travelCuboid(turtle, options)
 		if options.right < 0 then turtle.turnRight()
 		else turtle.turnLeft() end
 	end
+	function forward()
+		while not turtle.forward() do end
+	end
 	function up()
-		if options.height < 0 then turtle.down()
-		else turtle.up() end
+		if options.height < 0 then while not turtle.down() do end
+		else while not turtle.up() do end end
 	end
 	function down()
-		if options.height < 0 then turtle.up()
-		else turtle.down() end
+		if options.height < 0 then while not turtle.up() do end
+		else while not turtle.down() do end end
 	end
 
 	funcs = {
@@ -124,6 +126,7 @@ function travelCuboid(turtle, options)
 		turnLeft = turnLeft,
 		up = up,
 		down = down,
+		forward = forward,
 	}
 
 	defaultArgs(options, {
@@ -133,10 +136,10 @@ function travelCuboid(turtle, options)
 		runBeforeEveryStep = function(funcs) end,
 		runAfterEveryStep = function(funcs, bottom, up) end,
 		prepareSameLevel = function(funcs, firstBottom, firstUp)
-			turtle.forward()
+			funcs.forward()
 		end,
 		prepareUpOne = function(func, isDownwards)
-			turtle.forward()
+			funcs.forward()
 			funcs.up()
 		end,
 		runBeforeHeightStep = function(funcs, isDownwards) end,
@@ -168,7 +171,7 @@ function travelCuboid(turtle, options)
 	function line(x, bottom, up)
 	    for i = 1,x do
 	        options.runBeforeEveryStep(funcs, bottom, up)
-	        turtle.forward()
+	        funcs.forward()
 	    	options.runAfterEveryStep(funcs, bottom, up)
 	    end
 	end
@@ -302,8 +305,36 @@ end
 function digCuboidFuelRequired(depth, right, height)
 	return math.ceil(depth / 3) * right * height + 200
 end
+function protectedDig(side)
+	repeat
+		local success, detail
+		if dir == 'down' then success, detail = turtle.inspectDown()
+		elseif dir == 'up' then success, detail = turtle.inspectUp()
+		else success, detail = turtle.inspect() end
+
+		if success and not arrayContains(turtlesIds, detail.name) then
+			if dir == 'down' then digDown()
+			elseif dir == 'up' then digUp()
+			else digUp() end
+		else
+			os.sleep(0.1)
+		end
+	until not success
+end
 
 function digCuboid(turtle, options)
+	function dig()
+		protectedDig('front')
+	end
+	function digDown()
+		protectedDig('down')
+		replaceLiquid(turtle, 'down')
+	end
+	function digUp()
+		protectedDig('up')
+		replaceLiquid(turtle, 'up')
+	end
+
 	function replaceLiquid(turtle, dir)
 		local success, detail
 		if dir == 'down' then success, detail = turtle.inspectDown()
@@ -314,25 +345,14 @@ function digCuboid(turtle, options)
 				return
 			end
 
-			if dir == 'down' then success, detail = turtle.placeDown()
-			else success, detail = turtle.placeUp() end
+			if dir == 'down' then turtle.placeDown()
+			else turtle.placeUp() end
 
-			if dir == 'down' then success, detail = turtle.digDown()
-			else success, detail = turtle.digUp() end
+			if dir == 'down' then digDown()
+			else digUp() end
 
 			turtle.select(1)
 		end
-	end
-	function dig()
-		while turtle.dig() do end
-	end
-	function digDown()
-		while turtle.digDown() do end
-		replaceLiquid(turtle, 'down')
-	end
-	function digUp()
-		while turtle.digUp() do end
-		replaceLiquid(turtle, 'up')
 	end
 
 	if turtle.getFuelLevel() < digCuboidFuelRequired(options.depth, options.right, options.height) then
@@ -357,7 +377,7 @@ function digCuboid(turtle, options)
 		end,
 		prepareSameLevel = function(funcs, bottom, up)
 			dig()
-			turtle.forward()
+			funcs.forward()
 			if bottom then
 				digDown()
 			end
@@ -367,7 +387,7 @@ function digCuboid(turtle, options)
 		end,
 		prepareUpOne = function(funcs, isDownwards)
 			dig()
-			turtle.forward()
+			funcs.forward()
 			if isDownwards then digDown() 
 			else digUp() end
 			funcs.up()
