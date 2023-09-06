@@ -84,7 +84,7 @@ function push()
 			for i, el in pairs(inv) do
 				if el.name == retEl.name then
 					local stackLimit = retrieve_.getItemLimit(retI)
-					local toPush = stackLimit - math.max(el.count + retEl.count, stackLimit)
+					local toPush = stackLimit - el.count + retEl.count
 
 					print(el.name, el.count, retEl.count, toPush)
 
