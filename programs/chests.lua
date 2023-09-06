@@ -212,6 +212,11 @@ function redraw(term)
 	term.clear()
 	local blinkCusorPosX, blinkCusorPosY = 1, 1
 
+	-- push button
+	term.setCursorPos(2, 1)
+	term.setBackgroundColor(colors.gray)
+	term.write(' Push ')
+
 	-- seach bar
 	term.setCursorPos(width - 22, 1)
 	term.setBackgroundColor(colors.gray)
@@ -278,8 +283,12 @@ end
 
 function eventsTask()
 	function handleClick(x, y, w, h)
-		print(x, y, w, h)
-		if y < 1 then return end
+		if y == 1 then
+			if x >= 2 and x < 2+6 then
+				push()
+			end
+			return
+		end
 
 		local nTabs = math.floor(w / sizeLimit)
 		local tabSize = math.floor(w / nTabs)
@@ -288,13 +297,10 @@ function eventsTask()
 		local line = y - 1
 
 		local index = (line-1) * nTabs + (tab-1)+1
-		print(line, tab, index, nTabs)
 		local item = foundItems[index]
 		if item ~= nil then
 			selected = {{tab, line}}
 			redrawAll()
-
-			print(unpack(item))
 
 			retrieve(item[1], 64)
 			updateFoundItems()
