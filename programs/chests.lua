@@ -260,6 +260,7 @@ function eventsTask()
 			while true do
 				_, char = os.pullEvent('char')
 				typed = typed .. char
+				updateFoundItems()
 				redrawAll()
 			end
 		end,
@@ -268,6 +269,7 @@ function eventsTask()
 				_, key = os.pullEvent('key')
 				if key == 259 then -- backspace
 					typed = string.sub(typed, 1, string.len(typed) - 1)
+					updateFoundItems()
 					redrawAll()
 				end
 			end
