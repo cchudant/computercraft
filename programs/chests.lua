@@ -1,5 +1,7 @@
 local retrieveChest = 'minecraft:chest_4'
 
+local item, amount = ...
+
 local peripherals = {}
 for _,v in ipairs(peripheral.getNames()) do
 	if peripheral.hasType(v, 'inventory') then
@@ -19,7 +21,6 @@ for _,v in ipairs(peripherals) do
 end
 
 function transferToRetreiveChest(periph, i, toPush)
-	print('transferToRetreiveChest', periph, i, toPush)
 	local amount = math.min(fullInv[periph][i].count, toPush)
 	peripheral.wrap(periph).pushItems(retrieveChest, i, amount)
 	fullInv[periph][i].count = fullInv[periph][i].count - amount
@@ -99,8 +100,6 @@ function push()
 					local stackLimit = retrieve_.getItemLimit(retI)
 					local toPush = math.min(el.count + retCount, stackLimit) - el.count
 
-					print(el.name, el.count, retCount, toPush)
-
 					peripheral.wrap(retrieveChest).pushItems(periph, retI, toPush, i)
 					fullInv[periph][i].count = fullInv[periph][i].count + toPush
 					calcTotalCount()
@@ -116,8 +115,6 @@ function push()
 			end
 		end
 
-		print(itemsPushed, retCount)
-
 		if itemsPushed < retCount then
 			local periph, i = _findEmptySlot()
 			local toPush = retCount - itemsPushed
@@ -129,4 +126,21 @@ function push()
 	end
 end
 
-print(push())
+if item == nil then
+	push()
+else
+	if amount == nil then amount = 64 end
+	
+	function stripped(s)
+		return string.gsub(string.lower(string.gsub(s, '_', ' ')), 'minecraft:', '')
+	end
+
+	for k,_ in totalCountMap do
+		if stripped(k) == stripped(item) then
+			item = item
+			break
+		end
+	end
+
+	retrieve(item, amount)
+end
