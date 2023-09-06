@@ -7,12 +7,14 @@ for _,v in ipairs(peripheral.getNames()) do
 	end
 end
 
+local invSizes = {}
 local fullInv = {}
 
 for _,v in ipairs(peripherals) do
 	if v ~= retrieveChest then
-		local items = peripheral.wrap(v).list()
-		fullInv[v] = items
+		local p = peripheral.wrap(v)
+		fullInv[v] = p.list()
+		invSizes[v] = p.size()
 	end
 end
 
@@ -76,6 +78,16 @@ function retrieve(item, count)
 	return got
 end
 
+function _findEmptySlot()
+	for periph, inv in pairs(fullInv) do
+		for i = 1, invSizes[periph] do
+			if inv[i] == nil then
+				return periph, i
+			end
+		end
+	end
+end
+
 function push()
 	local retrieve_ = peripheral.wrap(retrieveChest)
 	for retI, retEl in pairs(retrieve_.list()) do
@@ -102,8 +114,16 @@ function push()
 				break
 			end
 		end
+
+		if itemsPushed < retEl.count then
+			local periph, i = _findEmptySlot()
+			local toPush = retEl.count - itemsPushed
+
+			peripheral.wrap(retrieveChest).pushItems(periph, retI, toPush, i)
+			fullInv[periph][i] = retEl
+			fullInv[periph][i].count = toPush
+		end
 	end
 end
 
--- print(retrieve(demanded, 38))
 print(push())
