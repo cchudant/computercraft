@@ -235,8 +235,7 @@ function displayTo(term)
 		local shown = string.sub(typed, string.len(typed) - (22-7), string.len(typed))
 		term.write(shown)
 
-		blinkCusorPosX = term.getCursorPos()
-		blinkCusorPosY = 1
+		blinkCusorPosX, blinkCusorPosY = term.getCursorPos()
 		term.setBackgroundColor(colors.black)
 
 		local line = 2
