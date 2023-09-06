@@ -91,14 +91,15 @@ end
 function push()
 	local retrieve_ = peripheral.wrap(retrieveChest)
 	for retI, retEl in pairs(retrieve_.list()) do
+		local retCount = retEl.count
 		local itemsPushed = 0
 		for periph, inv in pairs(fullInv) do
 			for i, el in pairs(inv) do
 				if el.name == retEl.name then
 					local stackLimit = retrieve_.getItemLimit(retI)
-					local toPush = stackLimit - el.count + retEl.count
+					local toPush = stackLimit - el.count + retCount
 
-					print(el.name, el.count, retEl.count, toPush)
+					print(el.name, el.count, retCount, toPush)
 
 					peripheral.wrap(retrieveChest).pushItems(periph, retI, toPush, i)
 					fullInv[periph][i].count = fullInv[periph][i].count + toPush
@@ -106,20 +107,20 @@ function push()
 
 					itemsPushed = itemsPushed + toPush
 				end
-				if itemsPushed >= retEl.count then
+				if itemsPushed >= retCount then
 					break
 				end
 			end
-			if itemsPushed >= retEl.count then
+			if itemsPushed >= retCount then
 				break
 			end
 		end
 
-		print(itemsPushed, retEl.count)
+		print(itemsPushed, retCount)
 
-		if itemsPushed < retEl.count then
+		if itemsPushed < retCount then
 			local periph, i = _findEmptySlot()
-			local toPush = retEl.count - itemsPushed
+			local toPush = retCount - itemsPushed
 
 			peripheral.wrap(retrieveChest).pushItems(periph, retI, toPush, i)
 			fullInv[periph][i] = retEl
