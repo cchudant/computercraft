@@ -275,9 +275,5 @@ function eventsTask()
 	)
 end
 
-parallel.waitForAll(
-	-- function()  end,
-	function()
-	end,
-	eventsTask
-)
+redrawAll()
+eventsTask()
