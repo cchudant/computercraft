@@ -288,7 +288,7 @@ function eventsTask()
 		local line = y - 1
 
 		local index = (line-1) * 2 + (tab-1)+1
-		print(line, tab, index)
+		print(line, tab, index, nTabs)
 		local item = foundItems[index]
 		if item ~= nil then
 			selected = {{tab, line}}
