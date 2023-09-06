@@ -173,8 +173,6 @@ function launchTurtlesTask(functions, finishLimit)
 	end
 
 	while finishLimit > finished do
-		print("Coroutines", #coroutines)
-
 		local bag = {os.pullEvent()}
 		if bag[1] == "metamine:newTurtle" then
 			table.insert(coroutines, coroutine.create(function()
