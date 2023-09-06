@@ -287,7 +287,7 @@ function eventsTask()
 		local tab = math.floor(x / w * nTabs) + 1
 		local line = y - 1
 
-		local index = (line-1) * 2 + (tab-1)+1
+		local index = (line-1) * nTabs + (tab-1)+1
 		print(line, tab, index, nTabs)
 		local item = foundItems[index]
 		if item ~= nil then
