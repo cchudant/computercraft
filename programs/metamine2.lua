@@ -88,7 +88,9 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 		print("waiting for " .. id)
 	until controlApi.waitForReady(id, 15)
 
-	while remoteTurtle.getFuelLevel() < mine2.digCuboidFuelRequired(depth, right, height) do
+	local fuelRequired = mine2.digCuboidFuelRequired(depth, right, height) + (depth + right + height)*2 + 100
+
+	while remoteTurtle.getFuelLevel() < fuelRequired do
 		print("refueling " .. id)
 		while not mine2.selectItem(turtle, FUEL) do
 			os.sleep(0.1)
