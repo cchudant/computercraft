@@ -361,18 +361,20 @@ function autoUpdate(timeout)
 	end
 end
 
-function waitForReady(sourceid, timeout)
+function waitForReady(sourceid, timeout, command)
+	if command == nil then command = 'identify' end
 	if timeout == nil then timeout = 1 end
+	if timeout == -1 then timeout = nil end
 	local nonce = newNonce()
 
 	local rep
 	function receive()
-		rep = protocolReceive('identifyRep', sourceid, timeout, nonce)
+		rep = protocolReceive(command .. 'Rep', sourceid, timeout, nonce)
 	end
 
 	function send()
 		while true do
-			protocolSend(sourceid, 'identify', args, nonce)
+			protocolSend(sourceid, command, args, nonce)
 			os.sleep(1)
 		end
 	end

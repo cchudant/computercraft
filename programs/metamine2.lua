@@ -29,10 +29,8 @@ if nTurtles == 0 then
 end
 
 function turtleFinishTask(id)
-	print('back ' .. id)
-	controlApi.protocolSend(id, 'metamine:back')
-
-	controlApi.protocolReceive('metamine:backRep', id)
+	print(id .. ' backing')
+	controlApi.waitForReady(id, -1, 'metamine:back')
 
 	print(id .. ' break')
 	print(turtle.inspect())
