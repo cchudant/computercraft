@@ -51,7 +51,6 @@ function turtleTask(id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, ri
 end
 
 function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, height)
-	print(offsetDepth, offsetRight, offsetHeight, depth, right, height)
 	while not mine2.selectItem(turtle, {TURTLE1, TURTLE2}) do
 		turtle.suckUp()
 	end

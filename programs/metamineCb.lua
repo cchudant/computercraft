@@ -32,6 +32,8 @@ if offsetRight > 0 then
 	turtle.turnLeft()
 end
 
+print("starting")
+
 mine2.digCuboid(turtle, {
 	depth = depth, right = right, height = height,
 	prepareSameLevel = function() end,
