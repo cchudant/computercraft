@@ -282,7 +282,7 @@ function redraw(term)
 end
 
 function redrawAll()
-	redraw(term)
+	-- redraw(term)
 	local monitor = peripheral.find('monitor')
 	if monitor ~= nil then
 		monitor.setTextScale(0.7)
@@ -362,8 +362,10 @@ function eventsTask()
 				local w, h = term.getSize()
 				local nTabs = math.floor(w / sizeLimit)
 				local nLines = math.ceil(table.getn(foundItems) / nTabs)
+				print(nLines, nTabs, scrollOffset)
 
 				scrollOffset = math.min(math.max(scrollOffset + amount, 1), nLines - 1)
+				print(scrollOffset)
 			end
 		end
 	)
