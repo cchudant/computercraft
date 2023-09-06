@@ -28,7 +28,10 @@ if nTurtles == 0 then
 	return
 end
 
-function turtleTask(nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height)
+function turtleTask(id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height)
+	local control = controlApi.connectControl(id)
+	local remoteTurtle = control.turtle
+
 	for i = 1,nLeft do
 		remoteTurtle.turnLeft()
 	end
@@ -84,7 +87,7 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 	end
 
 	local nLeft = (facings[facing] - facings[detail.state.facing]) % 4
-	return { nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height }
+	return { id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height }
 end
 
 function findBest(nChunksRight, nChunksHeight)
