@@ -277,10 +277,10 @@ function _handleIdentify(arg, x, y, z)
 	return arg
 end
 
-function _broadcastCommandRoundtrip(command, args, timeout)
+function broadcastCommandRoundtrip(command, args, timeout)
 	if timeout == nil then timeout = 1 end
 
-	local nonce = tostring(math.floor(math.random() * 10000000))
+	local nonce = newNonce()
 
 	protocolBroadcast(command, args, nonce)
 
@@ -299,15 +299,18 @@ function _broadcastCommandRoundtrip(command, args, timeout)
 	end
 	return reps
 end
-function _sendRoundtrip(sourceid, command, arg)
-	local nonce = tostring(math.floor(math.random() * 10000000))
+function newNonce()
+	return tostring(math.floor(math.random() * 10000000))
+end
+function sendRoundtrip(sourceid, command, arg)
+	local nonce = newNonce()
 	protocolSend(sourceid, command, arg, nonce)
 	local ret = protocolReceive(command .. 'Rep', sourceid, nil, nonce)
 	return ret
 end
 
 function listAvailable(timeout)
-	local reps = _broadcastCommandRoundtrip('identify', nil, timeout)
+	local reps = broadcastCommandRoundtrip('identify', nil, timeout)
 
 	local x, y, z = nil --_getLocation()
 	local available = {}
@@ -322,7 +325,7 @@ end
 
 -- this function may reboot
 function autoUpdate(timeout)
-	local reps = _broadcastCommandRoundtrip('currentUpdate', nil, timeout)
+	local reps = broadcastCommandRoundtrip('currentUpdate', nil, timeout)
 
 	local maxVer = {versionMajor = VERSION_MAJOR, versionMinor = VERSION_MINOR}
 	for _,rep in ipairs(reps) do
@@ -335,7 +338,7 @@ function autoUpdate(timeout)
 
 	if _isVersionGreater(maxVer.versionMajor, maxVer.versionMinor, VERSION_MAJOR, VERSION_MINOR) then
 		-- need to update
-		local rep = _sendRoundtrip(maxVer.id, 'getUpdate')
+		local rep = sendRoundtrip(maxVer.id, 'getUpdate')
 
 		-- apply update
 		for k,v in pairs(rep.files) do
@@ -360,7 +363,7 @@ end
 
 function waitForReady(sourceid, timeout)
 	if timeout == nil then timeout = 1 end
-	local nonce = tostring(math.floor(math.random() * 10000000))
+	local nonce = newNonce()
 
 	local rep
 	function receive()
@@ -392,7 +395,7 @@ function connectControl(sourceid)
 	local turtle = { id = sourceid }
 	for _,method in ipairs(turtleFunctions) do
 		turtle[method] = function(...)
-			local ret = _sendRoundtrip(sourceid, 'turtle', {
+			local ret = sendRoundtrip(sourceid, 'turtle', {
 				method = method,
 				args = {...},
 			})
@@ -404,13 +407,13 @@ function connectControl(sourceid)
 	return {
 		id = sourceid,
 		identify = function() 
-			local args = _sendRoundtrip(sourceid, 'identify')
+			local args = sendRoundtrip(sourceid, 'identify')
 			local x, y, z = nil --_getLocation()
 			return _handleIdentify(args, x, y, z)
 		end,
-		shutdown = function() _sendRoundtrip(sourceid, 'shutdown') end,
-		reboot = function() _sendRoundtrip(sourceid, 'reboot') end,
-		shellRun = function(command) return _sendRoundtrip(sourceid, 'shellRun', command) end,
+		shutdown = function() sendRoundtrip(sourceid, 'shutdown') end,
+		reboot = function() sendRoundtrip(sourceid, 'reboot') end,
+		shellRun = function(command) return sendRoundtrip(sourceid, 'shellRun', command) end,
 		turtle = turtle
 	}
 end

@@ -44,3 +44,25 @@ mine2.digCuboid(turtle, {
 	end,
 	finish = function() mine2.removeUselessItems(turtle, true) end
 })
+
+
+local _, _, snd, nonce = controlApi.protocolReceive('metamine:back')
+
+if offsetRight > 0 then
+	turtle.turnLeft()
+	for d = 1,offsetRight do
+		mine2.protectedDig('front')
+		while not turtle.forward() do end
+	end
+	turtle.turnRight()
+end
+for d = 1,offsetHeight do
+	mine2.protectedDig('up')
+	while not turtle.up() do end
+end
+for d = 1,offsetDepth do
+	mine2.protectedDig('front')
+	while not turtle.forward() do end
+end
+
+controlApi.protocolSend(snd, 'metamine:backRep', nil, nonce)

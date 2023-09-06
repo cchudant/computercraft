@@ -22,10 +22,21 @@ end
 local TURTLE1 = "computercraft:turtle_normal"
 local TURTLE2 = "computercraft:turtle_advanced"
 
-print("I have " .. nTurtles .. " turtles.")
+-- print("I have " .. nTurtles .. " turtles.")
 if nTurtles == 0 then
 	print("Not enough turtles, need at least one")
 	return
+end
+
+function turtleFinishTask(id)
+	controlApi.protocolSend(id, 'metamine:back')
+
+	controlApi.protocolReceive('metamine:backRep', id)
+
+	print(id .. ' break')
+	print(turtle.inspect())
+	turtle.dig()
+	print(id .. ' finished')
 end
 
 function turtleTask(id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height)
@@ -35,12 +46,9 @@ function turtleTask(id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, ri
 	for i = 1,nLeft do
 		remoteTurtle.turnLeft()
 	end
+	controlApi.protocolSend(id, 'shellRun', "/firmware/programs/metamineCb "..offsetDepth.." "..offsetRight.." "..offsetHeight.." "..depth.." "..right.." "..height)
 
 	print(id .. ' started')
-
-	control.shellRun("/firmware/programs/metamineCb "..offsetDepth.." "..offsetRight.." "..offsetHeight.." "..depth.." "..right.." "..height)
-	
-	print(id .. ' finished')
 end
 
 function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, height)
@@ -139,6 +147,7 @@ function gnForChunkRight(cr)
 	return nForChunkRight
 end
 
+local allTurtles = {}
 function startTask()
 	while turtle.dig() do end
 	mine2.removeUselessItems(turtle, true)
@@ -157,6 +166,7 @@ function startTask()
 				offsetRight = offsetRight + nForChunkRight
 			end
 			local turtleObj = placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, gnForChunkRight(cr), gnForChunkHeight(ch))
+			table.insert(allTurtles, turtleObj)
 			os.queueEvent("metamine:newTurtle", turtleObj)
 		end
 	end
@@ -196,7 +206,6 @@ function launchTurtlesTask(functions, finishLimit)
 					table.remove(filters, i)
 
 					finished = finished + 1
-					print("Remove", i, finished)
 				else
 					i = i + 1
 				end
@@ -210,4 +219,6 @@ end
 
 launchTurtlesTask({startTask}, nChunksHeight * nChunksRight + 1)
 
-parallel.waitForAll(unpack(turtles))
+for _, turtle in ipairs(allTurtles) do
+	turtleFinishTask(unpack(turtle))
+end
