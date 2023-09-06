@@ -137,9 +137,9 @@ end
 -- else
 -- 	if amount == nil then amount = 64 end
 	
--- 	function stripped(s)
--- 		return string.gsub(string.gsub(string.lower(string.gsub(s, '_', ' ')), 'minecraft:', ''), 'computercraft:', '')
--- 	end
+	function stripped(s)
+		return string.gsub(string.gsub(string.lower(string.gsub(s, '_', ' ')), 'minecraft:', ''), 'computercraft:', '')
+	end
 
 -- 	local realItem = item
 
@@ -189,7 +189,7 @@ function displayTo(term)
 			local sizeLimit = 40 
 			term.setCursorPos(1, line)
 
-			local shown = strLimitSize(v, sizeLimit)
+			local shown = strLimitSize(stripped(item), sizeLimit)
 			term.write(shown)
 
 			local snumber = formatAmount(number)
