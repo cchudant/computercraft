@@ -176,6 +176,7 @@ function displayTo(term)
 	local tabSize = math.floor(width / nTabs)
 
 	while true do
+		term.setTextColor(colors.white)
 		term.setBackgroundColor(colors.black)
 		term.clear()
 
@@ -189,7 +190,6 @@ function displayTo(term)
 			term.write(' ')
 		end
 		term.setBackgroundColor(colors.black)
-		term.setTextColor(colors.gray)
 
 		local line = 2
 		local tab = 1
