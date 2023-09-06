@@ -47,6 +47,7 @@ mine2.digCuboid(turtle, {
 	finish = function() mine2.removeUselessItems(turtle, true) end
 })
 
+print("finished")
 
 local _, _, snd, nonce = controlApi.protocolReceive('metamine:back')
 

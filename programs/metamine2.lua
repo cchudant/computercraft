@@ -226,6 +226,11 @@ end
 
 launchTurtlesTask({startTask}, nChunksHeight * nChunksRight + 1)
 
+tasks = {}
 for _, turtle in ipairs(allTurtles) do
-	turtleFinishTask(unpack(turtle))
+	tabe.insert(tasks, function() turtleFinishTask(unpack(turtle)) end)
 end
+
+parallel.waitForAll(unpack(tasks))
+
+print("all done")
