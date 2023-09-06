@@ -33,9 +33,12 @@ function turtleFinishTask(id)
 	controlApi.waitForReady(id, -1, 'metamine:back')
 
 	print(id .. ' break')
-	print(turtle.inspect())
-	turtle.dig()
-	print(id .. ' finished')
+	success, detail = turtle.inspect()
+	if success and (detail.name == TURTLE1 or detail.name == TURTLE2) and turtle.dig() then
+		print(id .. ' finished')
+	else
+		print("Error: " .. id .. " not where expected")
+	end
 end
 
 function turtleTask(id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height)
