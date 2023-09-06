@@ -29,6 +29,7 @@ function transferToRetreiveChest(periph, i, toPush)
 	return amount	
 end
 
+local totalCount
 function calcTotalCount()
 	local totalCountMap = {}
 	for periph, inv in pairs(fullInv) do
@@ -51,7 +52,7 @@ calcTotalCount()
 local demanded = 'minecraft:obsidian'
 
 function demand(item, count)
-		print("ad")
+		print("ad", totalCount[item])
 	if totalCount[item] == nil or totalCount[item] < count then
 		return 0
 	end
