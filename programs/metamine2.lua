@@ -103,7 +103,7 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 					print("please provide fuel")
 					displayed = displayed + 1
 				end
-				turtle.drop()
+				turtle.drop(64)
 			end
 		end
 	end
