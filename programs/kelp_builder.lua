@@ -34,4 +34,4 @@ function mineKelp(turtle, depth, right, height)
 	placeInChest(turtle)
 end
 
-mineKelp(turle, depth, right, height)
+mineKelp(turtle, depth, right, height)

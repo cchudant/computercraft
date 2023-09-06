@@ -1,7 +1,6 @@
 
 
 function digLine(turtle, length)
-    print(turtle)
     for i = 1,length do
         turtle.dig()
         if i ~= length then
@@ -21,7 +20,6 @@ end
 
 function digRectangle(turtle, depth, right)
     for i = 1, right do
-        print(turtle)
         digLine(turtle, depth)
         turtle.turnRight()
         turtle.turnRight()
