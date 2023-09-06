@@ -265,5 +265,5 @@ parallel.waitForAll(
 			displayTo(monitor)
 		end
 	end,
-	eventsTask,
+	eventsTask
 )
