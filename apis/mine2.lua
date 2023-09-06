@@ -313,9 +313,9 @@ function protectedDig(side)
 		else success, detail = turtle.inspect() end
 
 		if success and not arrayContains(turtlesIds, detail.name) then
-			if dir == 'down' then digDown()
-			elseif dir == 'up' then digUp()
-			else digUp() end
+			if dir == 'down' then turtle.digDown()
+			elseif dir == 'up' then turtle.digUp()
+			else turtle.dig() end
 		else
 			os.sleep(0.1)
 		end
