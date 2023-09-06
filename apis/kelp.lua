@@ -1,31 +1,55 @@
-function placeLine(turtle, length)
+
+
+function digLine(turtle, length)
     for i = 1,length do
-        turtle.placeDown()
-        turtle.forward()
+        turtle.dig()
+        if i ~= length then
+            turtle.forward()
+        end
     end
-    turtle.placeDown()
 end
 
-function border(turtle, depth, right)
-    placeLine(turtle, depth)
-    turtle.turnRight()
-    placeLine(turtle, right)
-    turtle.turnRight()
-    placeLine(turtle, depth)
-    turtle.turnRight()
-    placeLine(turtle, right)
+function suckLine(turtle, length)
+    for i = 1,length do
+        turtle.suckDown()
+        if i ~= length then
+            turtle.forward()
+        end
+    end
 end
 
-function flatRectangle(turtle, depth, right)
+p
+
+function digRectangle(turtle, depth, right)
     for i = 1, right do
-        placeLine(turtle, depth)
+        digLine(turtle, depth)
         turtle.turnRight()
         turtle.turnRight()
-        placeLine(turtle, depth)
+        digLine(turtle, depth)
         turtle.turnLeft()
         if i ~= right then
             turtle.forward()
         end
         turtle.turnLeft()
     end
+    turtle.turnLeft()
+    digLine(turtle, right)
+    turtle.turnRight()
+end
+
+function suckRectangle(turtle, depth, right)
+    for i = 1, right do
+        suckLine(turtle, depth)
+        turtle.turnRight()
+        turtle.turnRight()
+        suckLine(turtle, depth)
+        turtle.turnLeft()
+        if i ~= right then
+            turtle.forward()
+        end
+        turtle.turnLeft()
+    end
+    turtle.turnLeft()
+    suckLine(turtle, right)
+    turtle.turnRight()
 end

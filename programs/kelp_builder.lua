@@ -9,3 +9,30 @@ end
 depth = tonumber(depth)
 right = tonumber(right)
 height = tonumber(height)
+
+function placeInChest(turtle)
+	turtle.turnLeft()
+	turtle.turnLeft()
+	for i=1,16 do
+		turtle.select(i)
+		turtle.drop()
+	end
+	turtle.turnLeft()
+	turtle.turnLeft()
+end
+
+function mineKelp(turtle, depth, right, height)
+	digRectangle(turtle, depth, right)
+	placeInChest(turtle)
+	for i=1, 1
+	for i=1,height do
+		turtle.up()
+	end
+	suckRectangle(turtle, depth, right)
+	for i=1,height do
+		turtle.down()
+	end
+	placeInChest(turtle)
+end
+
+mineKelp(turle, depth, right, height)
