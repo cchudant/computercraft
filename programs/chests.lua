@@ -287,11 +287,17 @@ function eventsTask()
 		local tab = math.floor(x / w * nTabs) + 1
 		local line = y - 1
 
-		selected = {{tab, line}}
-		redrawAll()
-		os.sleep(0.5)
-		selected = {}
-		redrawAll()
+		local index = (line-1) * 2 + (tab-1)+1
+		local item = foundItems[index]
+		if item ~= nil then
+			selected = {{tab, line}}
+			redrawAll()
+
+			retrieve(item[1], 64)
+			os.sleep(0.5)
+			selected = {}
+			redrawAll()
+		end
 	end
 
 
