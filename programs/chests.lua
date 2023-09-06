@@ -189,6 +189,7 @@ function displayTo(term)
 			term.write(' ')
 		end
 		term.setBackgroundColor(colors.black)
+		term.setTextColoro(colors.gray)
 
 		local line = 2
 		local tab = 1
@@ -222,4 +223,12 @@ function displayTo(term)
 
 end
 
-displayTo(term)
+parallel.waitForAll(
+	function() displayTo(term) end,
+	function()
+		local monitor = peripheral.find('monitor')
+		if monitor ~= nil then
+			displayTo(monitor)
+		end
+	end
+)
