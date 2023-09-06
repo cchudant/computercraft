@@ -279,7 +279,7 @@ function redraw(term)
 end
 
 function redrawAll()
-	-- redraw(term)
+	redraw(term)
 	local monitor = peripheral.find('monitor')
 	if monitor ~= nil then
 		monitor.setTextScale(0.7)
