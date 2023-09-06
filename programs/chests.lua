@@ -172,8 +172,8 @@ function displayTo(term)
 	local width, height = term.getSize()
 	local sizeLimit = 25
 
-	local nTabs = math.floor(height / sizeLimit)
-	local tabSize = math.floor(height / nTabs)
+	local nTabs = math.floor(width / sizeLimit)
+	local tabSize = math.floor(width / nTabs)
 
 	while true do
 		term.setBackgroundColor(colors.black)
