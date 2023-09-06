@@ -72,4 +72,6 @@ end
 
 print("back!")
 
+mine2.removeUselessItems(turtle, true)
+
 controlApi.protocolSend(snd, 'metamine:backRep', nil, nonce)
