@@ -268,7 +268,7 @@ function redraw(term)
 end
 
 function redrawAll()
-	redraw(term)
+	-- redraw(term)
 	local monitor = peripheral.find('monitor')
 	if monitor ~= nil then
 		monitor.setTextScale(0.7)
@@ -288,10 +288,13 @@ function eventsTask()
 		local line = y - 1
 
 		local index = (line-1) * 2 + (tab-1)+1
+		print(line, tab, index)
 		local item = foundItems[index]
 		if item ~= nil then
 			selected = {{tab, line}}
 			redrawAll()
+
+			print(unpack(item))
 
 			retrieve(item[1], 64)
 			os.sleep(0.5)
