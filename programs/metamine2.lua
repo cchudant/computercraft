@@ -109,10 +109,10 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 	end
 	function receiveDone()
 		controlApi.protocolReceive('metamine:refuelDone', id)
-		while turtle.suck() do end
 	end
 
 	parallel.waitForAny(receiveDone, receiveGive)
+	while turtle.suck() do end
 
 	local nLeft = (facings[facing] - facings[detail.state.facing]) % 4
 	return { id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height }
