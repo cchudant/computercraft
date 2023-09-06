@@ -26,7 +26,7 @@ function transferToRetreiveChest(periph, i, toPush)
 		fullInv[periph][i] = nil
 	end
 	calcTotalCount()
-	return amount	
+	return amount
 end
 
 local totalCountMap
@@ -51,29 +51,18 @@ calcTotalCount()
 
 local demanded = 'minecraft:obsidian'
 
-for _, el in ipairs(totalCount) do
-	local item, n = unpack(el)
-	print(item, n)
-end
-
-function demand(item, count)
-		print("ad", totalCountMap[item])
+function retrieve(item, count)
 	if totalCountMap[item] == nil or totalCountMap[item] < count then
 		return 0
 	end
-		print("add")
 
 	local got = 0
 	for periph, inv in pairs(fullInv) do
-		print("a")
 		for i, el in pairs(inv) do
-			print(el.name, el.count)
 			if el.name == item then
 				local toPush = count - got
 				
-				transferToRetreiveChest(periph, i, toPush)
-
-				got = got + el.count
+				got = got + transferToRetreiveChest(periph, i, toPush)
 				if got >= count then
 					break
 				end
@@ -87,4 +76,32 @@ function demand(item, count)
 	return got
 end
 
-print(demand(demanded, 38))
+function push()
+	local retrieve_ = peripheral.wrap(retrieveChest)
+	for retI, retEl in pairs(retrieve_.list()) do
+		local itemsPushed = 0
+		for periph, inv in pairs(fullInv) do
+			for i, el in pairs(inv) do
+				if el.name == retEl.item then
+					local stackLimit = retrieve_.getItemLimit(i)
+					local toPush = stackLimit - math.max(el.count + retEl, stackLimit)
+
+					peripheral.wrap(retrieveChest).pushItems(periph, retI, toPush, i)
+					fullInv[periph][i].count = fullInv[periph][i].count + toPush
+					calcTotalCount()
+
+					itemsPushed = itemsPushed + toPush
+				end
+				if itemsPushed >= retEl.count then
+					break
+				end
+			end
+			if itemsPushed >= retEl.count then
+				break
+			end
+		end
+	end
+	return got
+end
+
+print(retrieve(demanded, 38))
