@@ -18,7 +18,7 @@ end
 
 function transferToRetreiveChest(periph, i, toPush)
 	print('transferToRetreiveChest', periph, i, toPush)
-	local amount = math.max(fullInv[periph][i].count - toPush, 0)
+	local amount = math.min(fullInv[periph][i].count, toPush)
 	peripheral.wrap(periph).pushItems(retrieveChest, i, amount)
 	fullInv[periph][i].count = fullInv[periph][i].count - amount
 
