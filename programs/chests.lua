@@ -187,7 +187,7 @@ function updateFoundItems()
 		foundItems = totalCount
 		return
 	end
-	scrollOffset = 1
+	scrollOffset = 0
 
 	local found = {}
 	for _,v in ipairs(totalCount) do
@@ -242,38 +242,39 @@ function redraw(term)
 
 	blinkCusorPosX, blinkCusorPosY = term.getCursorPos()
 
-	print(scrollOffset)
 	local line = 1
 	local tab = 1
-	for _,v in ipairs(foundItems) do
-		local item, number = unpack(v)
+	for i,v in ipairs(foundItems) do
+		if i > scrollOffset * nTabs then
+			local item, number = unpack(v)
 
-		term.setBackgroundColor(colors.black)
-		if arrayAll(selected, function(el) return el[1] == tab and el[2] == line end) then
-			term.setBackgroundColor(colors.lightGray)
+			term.setBackgroundColor(colors.black)
+			if arrayAll(selected, function(el) return el[1] == tab and el[2] == line end) then
+				term.setBackgroundColor(colors.lightGray)
+			end
+
+			term.setCursorPos((tab-1) * tabSize + 1, line + 1)
+			for _ = 1, tabSize do
+				term.write(' ')
+			end
+
+			term.setCursorPos((tab-1) * tabSize + 1, line + 1)
+
+			local shown = strLimitSize(stripped(item), tabSize)
+			term.write(shown)
+
+			local snumber = formatAmount(number)
+			term.setCursorPos(tab * tabSize - string.len(snumber), line + 1)
+			term.write(snumber)
+
+			if tab == nTabs then
+				tab = 1
+				line = line + 1
+			else
+				tab = tab + 1
+			end
+			if line + 1 > height then break end
 		end
-
-		term.setCursorPos((tab-1) * tabSize + 1, line + 1)
-		for _ = 1, tabSize do
-			term.write(' ')
-		end
-
-		term.setCursorPos((tab-1) * tabSize + 1, line + 1)
-
-		local shown = strLimitSize(stripped(item), tabSize)
-		term.write(shown)
-
-		local snumber = formatAmount(number)
-		term.setCursorPos(tab * tabSize - string.len(snumber), line + 1)
-		term.write(snumber)
-
-		if tab == nTabs then
-			tab = 1
-			line = line + 1
-		else
-			tab = tab + 1
-		end
-		if line + 1 > height then break end
 	end
 
 	term.setBackgroundColor(colors.black)
