@@ -228,6 +228,7 @@ parallel.waitForAll(
 	function()
 		local monitor = peripheral.find('monitor')
 		if monitor ~= nil then
+			monitor.setTextScale(0.7)
 			displayTo(monitor)
 		end
 	end
