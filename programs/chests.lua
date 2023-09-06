@@ -138,7 +138,7 @@ end
 -- 	if amount == nil then amount = 64 end
 	
 function stripped(s)
-	return string.gsub(string.gsub(string.lower(string.gsub(s, '_', ' ')), 'minecraft:', ''), 'computercraft:', '')
+	return string.gsub(string.gsub(string.gsub(string.lower(string.gsub(s, '_', ' ')), 'minecraft:', ''), 'computercraft:', ''), 'chunkloaders:', '')
 end
 
 -- 	local realItem = item
@@ -169,13 +169,30 @@ function formatAmount(amount)
 end
 
 local typed = ''
+local foundItems
+function updateFoundItems()
+	if typed == '' then
+		foundItems = totalCount
+		return
+	end
+
+	local found = {}
+	for _,v in ipairs(totalCount) do
+		local item, number = unpack(v)
+		if string.sub(stripped(item), 1, string.len(typed)) == stripped(typed) then
+			table.insert(found, v)
+		end
+	end
+	foundItems = found
+end
+updateFoundItems()
+
 function eventsTask()
 	parallel.waitForAll(
 		function()
 			while true do
 				_, char = os.pullEvent('char')
 				typed = typed .. char
-				print("typed!")
 			end
 		end,
 		function()
@@ -183,7 +200,6 @@ function eventsTask()
 				_, key = os.pullEvent('key')
 				if key == 259 then -- backspace
 					typed = string.sub(typed, 1, string.len(typed) - 1)
-					print("backspace!")
 				end
 			end
 		end
@@ -218,8 +234,6 @@ function displayTo(term)
 		term.setCursorPos(width - 22 + 7, 1)
 		local shown = string.sub(typed, string.len(typed) - (22-7), string.len(typed))
 		term.write(shown)
-
-		print(shown, typed)
 
 		blinkCusorPosX = term.getCursorPos()
 		blinkCusorPosY = 1
