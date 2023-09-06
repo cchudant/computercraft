@@ -278,6 +278,7 @@ end
 
 function eventsTask()
 	function handleClick(x, y, w, h)
+		print(x, y, w, h)
 		if y < 1 then return end
 
 		local nTabs = math.floor(w / sizeLimit)
@@ -315,14 +316,14 @@ function eventsTask()
 		end,
 		function()
 			while true do
-				local _, x, y = os.pullEvent('monitor_touch')
+				local _, _, x, y = os.pullEvent('monitor_touch')
 				local w, h = peripheral.find('monitor').getSize()
 				handleClick(x, y, w, h)
 			end
 		end,
 		function()
 			while true do
-				_, x, y = os.pullEvent('mouse_click')
+				local _, _, x, y = os.pullEvent('mouse_click')
 				local w, h = term.getSize()
 				handleClick(x, y, w, h)
 			end
