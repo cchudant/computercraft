@@ -297,6 +297,7 @@ function eventsTask()
 			print(unpack(item))
 
 			retrieve(item[1], 64)
+			updateFoundItems()
 			os.sleep(0.5)
 			selected = {}
 			redrawAll()
