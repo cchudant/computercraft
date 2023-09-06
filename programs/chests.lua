@@ -58,15 +58,13 @@ calcTotalCount()
 local demanded = 'minecraft:obsidian'
 
 function retrieve(item, count)
-	if totalCountMap[item] == nil or totalCountMap[item] < count then
-		return 0
-	end
-
 	local got = 0
 	for periph, inv in pairs(fullInv) do
 		for i, el in pairs(inv) do
 			if el.name == item then
 				local toPush = count - got
+
+				print(count, got, toPush)
 				
 				got = got + transferToRetreiveChest(periph, i, toPush)
 				if got >= count then
