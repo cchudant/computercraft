@@ -34,12 +34,9 @@ end
 
 for i = 0,1 do
 	for j = 0,1 do
+		turtle.dig()
 		turtle.forward()
 		for k =1,i do
-			if k== 1 then
-				turtle.dig()
-				turtle.forward()
-			end
 			kelp.digLine(2)
 		end
 		turtle.turnRight()
@@ -51,6 +48,7 @@ for i = 0,1 do
 			kelp.digLine(2)
 		end
 		turtle.turnLeft()
+		exit()
 		mineKelp(turtle, 2, 2, height)
 		turtle.turnLeft()
 		for k =1,j do
