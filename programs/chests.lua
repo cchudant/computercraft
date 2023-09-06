@@ -154,13 +154,25 @@ end
 -- 	print("Got "..amount.." of "..realItem)
 -- end
 
+function strLimitSize(str, limit)
+	return string.sub(str, 1, limit)
+end
 
+function formatAmount(amount)
+	if amount < 1000 then
+		return tostring(math.floor(amount / 1000)) + "K"
+	elseif amount < 1000000 then
+		return tostring(math.floor(amount / 1000000)) + "M"
+	end
+end
 
 function displayTo(term)
 	local width, height = term.getSize()
 
 	while true do
 		term.clear()
+
+		-- seach bar
 		term.setCursorPos(width - 22, 1)
 		term.setBackgroundColor(colors.gray)
 		term.write('Search:')
@@ -169,6 +181,30 @@ function displayTo(term)
 		for _ = width - 22 + 7, width do
 			term.write(' ')
 		end
+
+
+		local line = 2
+		for _,v in totalCount do
+			local item, number = unpack(v)
+			local sizeLimit = 40 
+			term.setCursorPos(1, line)
+
+			local shown = strLimitSize(v, sizeLimit)
+			term.write(shown)
+
+			local snumber = formatAmount(number)
+			term.setCursorPos(sizeLimit - string.len(snumber), line)
+			term.write(snumber)
+
+			line = line + 1
+			if line > height then break end
+		end
+
+
+
+
+
+
 		term.setBackgroundColor(colors.black)
 		term.setCursorPos(width - 22 + 7, 1)
 		term.setCursorBlink(true)
