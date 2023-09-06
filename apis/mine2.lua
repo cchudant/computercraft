@@ -306,6 +306,7 @@ function digCuboidFuelRequired(depth, right, height)
 	return math.ceil(depth / 3) * right * height + 200
 end
 function protectedDig(side)
+	print(side)
 	local messageShown = 0
 	while true do
 		local success, detail
