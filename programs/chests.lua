@@ -189,7 +189,7 @@ function displayTo(term)
 			term.write(' ')
 		end
 		term.setBackgroundColor(colors.black)
-		term.setTextColoro(colors.gray)
+		term.setTextColor(colors.gray)
 
 		local line = 2
 		local tab = 1
