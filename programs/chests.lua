@@ -1,4 +1,4 @@
-local retrieveChest = 'minecraft:chest_4'
+local retrieveChest = 'minecraft:chest_13'
 
 local item, amount = ...
 
