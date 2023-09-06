@@ -23,10 +23,10 @@ function calcTotalCount()
 		end
 	end
 	local totalCountList = {}
-	for el, n in pairs(totalCountMap)
+	for el, n in pairs(totalCountMap) do
 		table.insert(totalCountList, { el, n })
 	end
-	table.sort(totalCountList, function (a, b) return a[2] > b[2] end
+	table.sort(totalCountList, function (a, b) return a[2] > b[2] end)
 	totalCount = totalCountList
 end
 
