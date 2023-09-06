@@ -51,7 +51,7 @@ function calcTotalCount()
 	for el, n in pairs(totalCountMap) do
 		table.insert(totalCount, { el, n })
 	end
-	table.sort(totalCount, function (a, b) return a[2] - b[2] end)
+	table.sort(totalCount, function (a, b) return a[2] > b[2] end)
 end
 calcTotalCount()
 
@@ -137,9 +137,9 @@ end
 -- else
 -- 	if amount == nil then amount = 64 end
 	
-	function stripped(s)
-		return string.gsub(string.gsub(string.lower(string.gsub(s, '_', ' ')), 'minecraft:', ''), 'computercraft:', '')
-	end
+function stripped(s)
+	return string.gsub(string.gsub(string.lower(string.gsub(s, '_', ' ')), 'minecraft:', ''), 'computercraft:', '')
+end
 
 -- 	local realItem = item
 
@@ -170,7 +170,7 @@ end
 
 function displayTo(term)
 	local width, height = term.getSize()
-	local sizeLimit = 25 
+	local sizeLimit = 25
 
 	while true do
 		term.setBackgroundColor(colors.black)
@@ -185,7 +185,7 @@ function displayTo(term)
 		for _ = width - 22 + 7, width do
 			term.write(' ')
 		end
-
+		term.setBackgroundColor(colors.gray)
 
 		local line = 2
 		for _,v in ipairs(totalCount) do
