@@ -152,6 +152,7 @@ function startTask()
 				offsetRight = offsetRight + nForChunkRight
 			end
 			turtleFunc = placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, gnForChunkRight(cr), gnForChunkHeight(ch))
+			print(turtleFunc)
 			os.queueEvent("metamine:newTurtle", turtleFunc)
 		end
 	end
@@ -168,6 +169,8 @@ function launchTurtlesTask(functions)
 	while #coroutines > 0 do
 
 		local bag = {os.pullEvent()}
+		print(bag[1])
+		print(bag[2])
 		if bag[1] == "metamine:newTurtle" then
 			table.insert(coroutines, coroutine.create(bag[2]))
 		end
