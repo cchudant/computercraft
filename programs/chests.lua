@@ -168,6 +168,28 @@ function formatAmount(amount)
 	end
 end
 
+local typed = ''
+function eventsTask()
+	parallel.waitForAll(
+		function()
+			while true do
+				_, char = os.pullEvent('char')
+				typed = typed .. char
+				print("typed!")
+			end
+		end,
+		function()
+			while true do
+				_, key = os.pullEvent('key')
+				if key == 259 then -- backspace
+					typed = string.sub(typed, 1, string.len(typed) - 1)
+					print("backspace!")
+				end
+			end
+		end
+	)
+end
+
 function displayTo(term)
 	local width, height = term.getSize()
 	local sizeLimit = 25
@@ -178,7 +200,9 @@ function displayTo(term)
 	while true do
 		term.setTextColor(colors.white)
 		term.setBackgroundColor(colors.black)
+		term.setCursorBlink(false)
 		term.clear()
+		local blinkCusorPosX, blinkCusorPosY = 1, 1
 
 		-- seach bar
 		term.setCursorPos(width - 22, 1)
@@ -186,9 +210,18 @@ function displayTo(term)
 		term.write('Search:')
 		term.setCursorPos(width - 22 + 7, 1)
 		term.setBackgroundColor(colors.lightGray)
-		for _ = width - 22 + 7, width do
-			term.write(' ')
-		end
+
+		local shown = string.sub(typed, string.len(typed) - (22-7), 22-7)
+		term.write(shown)
+
+		print(shown, typed)
+
+		blinkCusorPosX = width - 22 + 7
+		blinkCusorPosY = 1
+
+		-- for _ = width - 22 + 7, width do
+		-- 	term.write(' ')
+		-- end
 		term.setBackgroundColor(colors.black)
 
 		local line = 2
@@ -224,7 +257,7 @@ function displayTo(term)
 end
 
 parallel.waitForAll(
-	function() displayTo(term) end,
+	-- function() displayTo(term) end,
 	function()
 		local monitor = peripheral.find('monitor')
 		if monitor ~= nil then
