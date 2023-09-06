@@ -172,6 +172,7 @@ function displayTo(term)
 	local width, height = term.getSize()
 
 	while true do
+		term.setBackgroundColor(colors.black)
 		term.clear()
 
 		-- seach bar
@@ -207,9 +208,9 @@ function displayTo(term)
 
 
 
-		-- term.setBackgroundColor(colors.black)
-		-- term.setCursorPos(width - 22 + 7, 1)
-		-- term.setCursorBlink(true)
+		term.setBackgroundColor(colors.black)
+		term.setCursorPos(width - 22 + 7, 1)
+		term.setCursorBlink(true)
 		os.sleep(1)
 	end
 	
