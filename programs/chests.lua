@@ -135,7 +135,7 @@ else
 		return string.gsub(string.lower(string.gsub(s, '_', ' ')), 'minecraft:', '')
 	end
 
-	for k,_ in totalCountMap do
+	for k,_ in pairs(totalCountMap) do
 		if stripped(k) == stripped(item) then
 			item = item
 			break
