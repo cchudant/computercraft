@@ -26,6 +26,7 @@ function digRectangle(turtle, depth, right)
         digLine(turtle, depth)
         turtle.turnLeft()
         if i ~= right then
+            turtle.dig()
             turtle.forward()
         end
         turtle.turnLeft()
