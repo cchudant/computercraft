@@ -153,7 +153,7 @@ function startTask()
 				local nForChunkRight = gnForChunkRight(i)
 				offsetRight = offsetRight + nForChunkRight
 			end
-			turtleFunc = placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, gnForChunkRight(cr), gnForChunkHeight(i))
+			turtleFunc = placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, gnForChunkRight(cr), gnForChunkHeight(ch))
 			os.queueEvent("metamine:newTurtle", turtleFunc)
 		end
 	end
