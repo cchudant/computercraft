@@ -190,7 +190,7 @@ function updateFoundItems()
 	local found = {}
 	for _,v in ipairs(totalCount) do
 		local item, number = unpack(v)
-		if string.sub(stripped(item), 1, string.len(typed)) == stripped(typed) then
+		if string.match(stripped(item), stripped(typed)) then
 			table.insert(found, v)
 		end
 	end
