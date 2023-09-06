@@ -211,17 +211,17 @@ function displayTo(term)
 		term.setCursorPos(width - 22 + 7, 1)
 		term.setBackgroundColor(colors.lightGray)
 
-		local shown = string.sub(typed, string.len(typed) - (22-7), 22-7)
+		for _ = width - 22 + 7, width do
+			term.write(' ')
+		end
+
+		local shown = string.sub(typed, string.len(typed) - (22-7), string.len(typed))
 		term.write(shown)
 
 		print(shown, typed)
 
 		blinkCusorPosX = width - 22 + 7
 		blinkCusorPosY = 1
-
-		-- for _ = width - 22 + 7, width do
-		-- 	term.write(' ')
-		-- end
 		term.setBackgroundColor(colors.black)
 
 		local line = 2
