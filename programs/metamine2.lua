@@ -152,7 +152,7 @@ function startTask()
 				offsetRight = offsetRight + nForChunkRight
 			end
 			turtleFunc = placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, gnForChunkRight(cr), gnForChunkHeight(ch))
-			print(turtleFunc)
+			print("metamine:newTurtle", turtleFunc)
 			os.queueEvent("metamine:newTurtle", turtleFunc)
 		end
 	end
