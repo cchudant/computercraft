@@ -221,7 +221,7 @@ function displayTo(term)
 
 		print(shown, typed)
 
-		blinkCusorPosX = width - 22 + 7
+		blinkCusorPosX = term.getCursorPos()
 		blinkCusorPosY = 1
 		term.setBackgroundColor(colors.black)
 
