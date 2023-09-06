@@ -18,7 +18,7 @@ end
 
 function transferToRetreiveChest(periph, i, toPush)
 	print('transferToRetreiveChest', periph, i, toPush)
-	local amount = math.max(fullInv[periph][i].count - toPush, 0)
+	local amount = math.min(fullInv[periph][i].count, toPush)
 	peripheral.wrap(periph).pushItems(retrieveChest, i, amount)
 	fullInv[periph][i].count = fullInv[periph][i].count - amount
 
@@ -29,9 +29,10 @@ function transferToRetreiveChest(periph, i, toPush)
 	return amount	
 end
 
+local totalCountMap
 local totalCount
 function calcTotalCount()
-	local totalCountMap = {}
+	totalCountMap = {}
 	for periph, inv in pairs(fullInv) do
 		for i, el in pairs(inv) do
 			if totalCountMap[el.name] == nil then
@@ -40,20 +41,24 @@ function calcTotalCount()
 			totalCountMap[el.name] = totalCountMap[el.name] + el.count
 		end
 	end
-	local totalCountList = {}
+	totalCount = {}
 	for el, n in pairs(totalCountMap) do
-		table.insert(totalCountList, { el, n })
+		table.insert(totalCount, { el, n })
 	end
-	table.sort(totalCountList, function (a, b) return a[2] < b[2] end)
-	totalCount = totalCountList
+	table.sort(totalCount, function (a, b) return a[2] < b[2] end)
 end
 calcTotalCount()
 
 local demanded = 'minecraft:obsidian'
 
+for _, el in ipairs(totalCount) do
+	local item, n = unpack(el)
+	print(item, n)
+end
+
 function demand(item, count)
-		print("ad", totalCount[item])
-	if totalCount[item] == nil or totalCount[item] < count then
+		print("ad", totalCountMap[item])
+	if totalCountMap[item] == nil or totalCountMap[item] < count then
 		return 0
 	end
 		print("add")
