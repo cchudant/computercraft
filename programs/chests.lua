@@ -170,6 +170,7 @@ end
 
 function displayTo(term)
 	local width, height = term.getSize()
+	local sizeLimit = 25 
 
 	while true do
 		term.setBackgroundColor(colors.black)
@@ -189,7 +190,6 @@ function displayTo(term)
 		local line = 2
 		for _,v in ipairs(totalCount) do
 			local item, number = unpack(v)
-			local sizeLimit = 40 
 			term.setCursorPos(1, line)
 
 			local shown = strLimitSize(stripped(item), sizeLimit)
