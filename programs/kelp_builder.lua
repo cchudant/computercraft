@@ -22,12 +22,12 @@ function placeInChest(turtle)
 end
 
 function mineKelp(turtle, depth, right, height)
-	digRectangle(turtle, depth, right)
+	kelp.digRectangle(turtle, depth, right)
 	placeInChest(turtle)
 	for i=1,height do
 		turtle.up()
 	end
-	suckRectangle(turtle, depth, right)
+	kelp.suckRectangle(turtle, depth, right)
 	for i=1,height do
 		turtle.down()
 	end
