@@ -187,12 +187,80 @@ function updateFoundItems()
 end
 updateFoundItems()
 
+function redraw(term)
+	local width, height = term.getSize()
+	local sizeLimit = 25
+
+	local nTabs = math.floor(width / sizeLimit)
+	local tabSize = math.floor(width / nTabs)
+
+	term.setTextColor(colors.white)
+	term.setBackgroundColor(colors.black)
+	term.setCursorBlink(false)
+	term.clear()
+	local blinkCusorPosX, blinkCusorPosY = 1, 1
+
+	-- seach bar
+	term.setCursorPos(width - 22, 1)
+	term.setBackgroundColor(colors.gray)
+	term.write('Search:')
+	term.setBackgroundColor(colors.lightGray)
+
+	term.setCursorPos(width - 22 + 7, 1)
+	for _ = width - 22 + 7, width do
+		term.write(' ')
+	end
+
+	term.setCursorPos(width - 22 + 7, 1)
+	local shown = string.sub(typed, string.len(typed) - (22-7), string.len(typed))
+	term.write(shown)
+
+	blinkCusorPosX, blinkCusorPosY = term.getCursorPos()
+	term.setBackgroundColor(colors.black)
+
+	local line = 2
+	local tab = 1
+	for _,v in ipairs(foundItems) do
+		local item, number = unpack(v)
+		term.setCursorPos((tab-1) * tabSize + 1, line)
+
+		local shown = strLimitSize(stripped(item), sizeLimit)
+		term.write(shown)
+
+		local snumber = formatAmount(number)
+		term.setCursorPos(tab * tabSize - string.len(snumber), line)
+		term.write(snumber)
+
+		if tab == nTabs then
+			tab = 1
+			line = line + 1
+		else
+			tab = tab + 1
+		end
+		if line > height then break end
+	end
+
+	term.setBackgroundColor(colors.black)
+	term.setCursorPos(blinkCusorPosX, blinkCusorPosY)
+	term.setCursorBlink(true)
+end
+
+function redrawAll()
+	redraw(term)
+	local monitor = peripheral.find('monitor')
+	if monitor ~= nil then
+		monitor.setTextScale(0.7)
+		redraw(monitor)
+	end
+end
+
 function eventsTask()
 	parallel.waitForAll(
 		function()
 			while true do
 				_, char = os.pullEvent('char')
 				typed = typed .. char
+				redrawAll()
 			end
 		end,
 		function()
@@ -200,84 +268,16 @@ function eventsTask()
 				_, key = os.pullEvent('key')
 				if key == 259 then -- backspace
 					typed = string.sub(typed, 1, string.len(typed) - 1)
+					redrawAll()
 				end
 			end
 		end
 	)
 end
 
-function displayTo(term)
-	local width, height = term.getSize()
-	local sizeLimit = 25
-
-	local nTabs = math.floor(width / sizeLimit)
-	local tabSize = math.floor(width / nTabs)
-
-	while true do
-		term.setTextColor(colors.white)
-		term.setBackgroundColor(colors.black)
-		term.setCursorBlink(false)
-		term.clear()
-		local blinkCusorPosX, blinkCusorPosY = 1, 1
-
-		-- seach bar
-		term.setCursorPos(width - 22, 1)
-		term.setBackgroundColor(colors.gray)
-		term.write('Search:')
-		term.setBackgroundColor(colors.lightGray)
-
-		term.setCursorPos(width - 22 + 7, 1)
-		for _ = width - 22 + 7, width do
-			term.write(' ')
-		end
-
-		term.setCursorPos(width - 22 + 7, 1)
-		local shown = string.sub(typed, string.len(typed) - (22-7), string.len(typed))
-		term.write(shown)
-
-		blinkCusorPosX, blinkCusorPosY = term.getCursorPos()
-		term.setBackgroundColor(colors.black)
-
-		local line = 2
-		local tab = 1
-		for _,v in ipairs(totalCount) do
-			local item, number = unpack(v)
-			term.setCursorPos((tab-1) * tabSize + 1, line)
-
-			local shown = strLimitSize(stripped(item), sizeLimit)
-			term.write(shown)
-
-			local snumber = formatAmount(number)
-			term.setCursorPos(tab * tabSize - string.len(snumber), line)
-			term.write(snumber)
-
-			if tab == nTabs then
-				tab = 1
-				line = line + 1
-			else
-				tab = tab + 1
-			end
-			if line > height then break end
-		end
-
-		term.setBackgroundColor(colors.black)
-		term.setCursorPos(width - 22 + 7, 1)
-		term.setCursorBlink(true)
-		os.sleep(1)
-	end
-	
-
-
-end
-
 parallel.waitForAll(
-	-- function() displayTo(term) end,
+	-- function()  end,
 	function()
-		local monitor = peripheral.find('monitor')
-		if monitor ~= nil then
-			monitor.setTextScale(0.7)
-			displayTo(monitor)
-		end
 	end,
 	eventsTask
 )
