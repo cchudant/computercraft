@@ -115,6 +115,8 @@ function push()
 			end
 		end
 
+		print(itemsPushed, retEl.count)
+
 		if itemsPushed < retEl.count then
 			local periph, i = _findEmptySlot()
 			local toPush = retEl.count - itemsPushed
