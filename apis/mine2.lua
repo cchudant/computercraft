@@ -307,6 +307,7 @@ function digCuboidFuelRequired(depth, right, height)
 end
 function protectedDig(side)
 	local messageShown = 0
+	local ret
 	while true do
 		local success, detail
 		if side == 'down' then success, detail = turtle.inspectDown()
@@ -325,15 +326,21 @@ function protectedDig(side)
 				if side == 'down' then turtle.digDown()
 				elseif side == 'up' then turtle.digUp()
 				else turtle.dig() end
+				ret = true
 				break
 			end
 		else
+			if side == 'down' then turtle.digDown()
+			elseif side == 'up' then turtle.digUp()
+			else turtle.dig() end
+			ret = false
 			break
 		end
 	end
 	if messageShown > 0 then
 		print("turtle has gone away :)")
 	end
+	return ret
 end
 
 function digCuboid(turtle, options)
