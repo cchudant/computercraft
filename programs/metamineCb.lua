@@ -36,11 +36,11 @@ mine2.digCuboid(turtle, {
 	depth = depth, right = right, height = height,
 	prepareSameLevel = function() end,
 	prepareUpOne = function(funcs, isDownwards)
-		if isDownwards then digDown() 
-		else digUp() end
+		if isDownwards then mine2.protectedDig('down')
+		else mine2.protectedDig('up') end
 		funcs.up()
-		if isDownwards then digDown() 
-		else digUp() end
+		if isDownwards then mine2.protectedDig('down')
+		else mine2.protectedDig('up') end
 	end,
 	finish = function() mine2.removeUselessItems(turtle, true) end
 })
