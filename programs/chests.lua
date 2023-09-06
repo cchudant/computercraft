@@ -172,6 +172,9 @@ function displayTo(term)
 	local width, height = term.getSize()
 	local sizeLimit = 25
 
+	local nTabs = math.floor(height / sizeLimit)
+	local tabSize = math.floor(height / nTabs)
+
 	while true do
 		term.setBackgroundColor(colors.black)
 		term.clear()
@@ -188,25 +191,26 @@ function displayTo(term)
 		term.setBackgroundColor(colors.gray)
 
 		local line = 2
+		local tab = 1
 		for _,v in ipairs(totalCount) do
 			local item, number = unpack(v)
-			term.setCursorPos(1, line)
+			term.setCursorPos(tab, line)
 
 			local shown = strLimitSize(stripped(item), sizeLimit)
 			term.write(shown)
 
 			local snumber = formatAmount(number)
-			term.setCursorPos(sizeLimit - string.len(snumber), line)
+			term.setCursorPos(tab * tabSize - string.len(snumber), line)
 			term.write(snumber)
 
-			line = line + 1
+			if tab == nTabs then
+				tab = 1
+				line = line + 1
+			else
+				tab = tab + 1
+			end
 			if line > height then break end
 		end
-
-
-
-
-
 
 		term.setBackgroundColor(colors.black)
 		term.setCursorPos(width - 22 + 7, 1)
