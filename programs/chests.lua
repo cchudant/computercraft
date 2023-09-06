@@ -101,7 +101,7 @@ function push()
 			end
 		end
 	end
-	return got
 end
 
-print(retrieve(demanded, 38))
+-- print(retrieve(demanded, 38))
+print(push())
