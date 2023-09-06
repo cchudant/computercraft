@@ -64,8 +64,6 @@ function retrieve(item, count)
 			if el.name == item then
 				local toPush = count - got
 
-				print(count, got, toPush)
-				
 				got = got + transferToRetreiveChest(periph, i, toPush)
 				if got >= count then
 					break
@@ -140,7 +138,7 @@ else
 	if amount == nil then amount = 64 end
 	
 	function stripped(s)
-		return string.gsub(string.lower(string.gsub(s, '_', ' ')), 'minecraft:', '')
+		return string.gsub(string.gsub(string.lower(string.gsub(s, '_', ' ')), 'minecraft:', ''), 'computercraft:', '')
 	end
 
 	local realItem = item
