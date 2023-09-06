@@ -1,10 +1,18 @@
 os.loadAPI("/firmware/apis/mine2.lua")
 
-local offsetDepth, offsetRight, offsetHeight, depth, right, height = ...
-if offsetDepth == nil or offsetRight == nil or offsetHeight == nil or depth == nil or right == nil or height == nil then
-	print("usage: metamine <offsetDepth> <offsetRight> <offsetHeight> <depth> <right> <height>")
+local offsetDepth, offsetRight, offsetHeight, depth, right, height, targetFuelLevel = ...
+if offsetDepth == nil or offsetRight == nil or offsetHeight == nil or depth == nil or right == nil or height == nil or targetFuelLevel == nil then
+	print("usage: metamine <offsetDepth> <offsetRight> <offsetHeight> <depth> <right> <height> <targetFuelLevel>")
 	return
 end
+
+offsetDepth = tonumber(offsetDepth)
+offsetRight = tonumber(offsetRight)
+offsetHeight = tonumber(offsetHeight)
+depth = tonumber(depth)
+right = tonumber(right)
+height = tonumber(height)
+targetFuelLevel = tonumber(targetFuelLevel)
 
 local FUEL = 'minecraft:dried_kelp_block'
 
@@ -14,19 +22,10 @@ while turtle.getFuelLevel() < targetFuelLevel do
 		controlApi.protocolSend(snd, 'metamine:refuelGive', nil, nonce)
 		os.sleep(0.1)
 	end
-	turtle.drop(1)
-	mine2.selectItem(remoteTurtle, FUEL)
-	remoteTurtle.refuel(1)
+	turtle.refuel(1)
 end
 controlApi.protocolSend(snd, 'metamine:refuelDone', nil, nonce)
 local targetFuelLevel, _, snd, nonce = controlApi.protocolReceive('metamine:start')
-
-offsetDepth = tonumber(offsetDepth)
-offsetRight = tonumber(offsetRight)
-offsetHeight = tonumber(offsetHeight)
-depth = tonumber(depth)
-right = tonumber(right)
-height = tonumber(height)
 
 print(offsetDepth, offsetRight, offsetHeight, depth, right, height)
 

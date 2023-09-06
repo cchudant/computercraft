@@ -90,8 +90,7 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 
 	local fuelRequired = mine2.digCuboidFuelRequired(depth, right, height) + (depth + right + height)*2 + 100
 
-	controlApi.protocolSend(id, 'shellRun', "/firmware/programs/metamineCb "..offsetDepth.." "..offsetRight.." "..offsetHeight.." "..depth.." "..right.." "..height)
-	
+	controlApi.protocolSend(id, 'shellRun', "/firmware/programs/metamineCb "..offsetDepth.." "..offsetRight.." "..offsetHeight.." "..depth.." "..right.." "..height.." "..fuelRequired)
 	function receiveGive()
 		while true do
 			controlApi.protocolReceive('metamine:refuelGive', id)
@@ -104,13 +103,16 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 					print("please provide fuel")
 					displayed = displayed + 1
 				end
-				turtle.drop(1)
+				turtle.drop()
 			end
 		end
 	end
-	function receiveGive()
+	function receiveDone()
 		controlApi.protocolReceive('metamine:refuelDone', id)
+		while turtle.suck() do end
 	end
+
+	parallel.waitForAny(receiveDone, receiveGive)
 
 	local nLeft = (facings[facing] - facings[detail.state.facing]) % 4
 	return { id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height }
