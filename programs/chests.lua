@@ -1,5 +1,7 @@
 local retrieveChest = 'minecraft:chest_4'
 
+local item, amount = ...
+
 local peripherals = {}
 for _,v in ipairs(peripheral.getNames()) do
 	if peripheral.hasType(v, 'inventory') then
@@ -19,7 +21,6 @@ for _,v in ipairs(peripherals) do
 end
 
 function transferToRetreiveChest(periph, i, toPush)
-	print('transferToRetreiveChest', periph, i, toPush)
 	local amount = math.min(fullInv[periph][i].count, toPush)
 	peripheral.wrap(periph).pushItems(retrieveChest, i, amount)
 	fullInv[periph][i].count = fullInv[periph][i].count - amount
@@ -89,6 +90,8 @@ function _findEmptySlot()
 end
 
 function push()
+	local totalPushed = 0
+
 	local retrieve_ = peripheral.wrap(retrieveChest)
 	for retI, retEl in pairs(retrieve_.list()) do
 		local retCount = retEl.count
@@ -99,13 +102,12 @@ function push()
 					local stackLimit = retrieve_.getItemLimit(retI)
 					local toPush = math.min(el.count + retCount, stackLimit) - el.count
 
-					print(el.name, el.count, retCount, toPush)
-
 					peripheral.wrap(retrieveChest).pushItems(periph, retI, toPush, i)
 					fullInv[periph][i].count = fullInv[periph][i].count + toPush
 					calcTotalCount()
 
 					itemsPushed = itemsPushed + toPush
+					totalPushed = totalPushed + toPush
 				end
 				if itemsPushed >= retCount then
 					break
@@ -116,8 +118,6 @@ function push()
 			end
 		end
 
-		print(itemsPushed, retCount)
-
 		if itemsPushed < retCount then
 			local periph, i = _findEmptySlot()
 			local toPush = retCount - itemsPushed
@@ -125,8 +125,32 @@ function push()
 			peripheral.wrap(retrieveChest).pushItems(periph, retI, toPush, i)
 			fullInv[periph][i] = retEl
 			fullInv[periph][i].count = toPush
+			totalPushed = totalPushed + toPush
 		end
 	end
+
+	return totalPushed
 end
 
-print(push())
+if item == nil then
+	local amount = push()
+	print("Pushed "..amount.." items")
+else
+	if amount == nil then amount = 64 end
+	
+	function stripped(s)
+		return string.gsub(string.lower(string.gsub(s, '_', ' ')), 'minecraft:', '')
+	end
+
+	local realItem = item
+
+	for k,_ in pairs(totalCountMap) do
+		if stripped(k) == stripped(item) then
+			realItem = k
+			break
+		end
+	end
+
+	local amount = retrieve(realItem, amount)
+	print("Got "..amount.." of "..realItem)
+end
