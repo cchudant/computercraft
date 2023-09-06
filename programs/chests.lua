@@ -188,7 +188,6 @@ function displayTo(term)
 		local line = 2
 		for _,v in ipairs(totalCount) do
 			local item, number = unpack(v)
-			print(item, number)
 			local sizeLimit = 40 
 			term.setCursorPos(1, line)
 
