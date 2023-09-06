@@ -213,9 +213,15 @@ function redraw(term)
 	local blinkCusorPosX, blinkCusorPosY = 1, 1
 
 	-- push button
-	term.setCursorPos(2, 1)
+	term.setCursorPos(5, 1)
 	term.setBackgroundColor(colors.gray)
 	term.write(' Push ')
+
+	-- up/down arrows
+	term.setCursorPos(width - 26, 1)
+	term.setBackgroundColor(colors.gray)
+	term.write('v^')
+	term.setBackgroundColor(colors.lightGray)
 
 	-- seach bar
 	term.setCursorPos(width - 22, 1)
@@ -284,7 +290,7 @@ end
 function eventsTask()
 	function handleClick(x, y, w, h)
 		if y == 1 then
-			if x >= 2 and x < 2+6 then
+			if x >= 5 and x < 5+6 then
 				push()
 			end
 			return
