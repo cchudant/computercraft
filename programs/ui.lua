@@ -239,15 +239,55 @@ interface = Block:new {
         paddingTop = 1,
         paddingRight = 1,
         paddingBottom = 1,
-        paddingTop = 1,
+        paddingLeft = 1,
         backgroundColor = colors.yellow,
-        Text:new { text = "-> s" }
+        Text:new { text = "TEST 1" }
+    },
+    Block:new {
+        paddingTop = 1,
+        paddingRight = 1,
+        paddingBottom = 1,
+        paddingLeft = 1,
+        backgroundColor = colors.yellow,
+        Text:new { text = "TEST 1" }
+    },
+    Block:new {
+        paddingTop = 1,
+        paddingRight = 1,
+        paddingBottom = 1,
+        paddingLeft = 1,
+        backgroundColor = colors.yellow,
+        Text:new { text = "TEST 1" }
+    },
+    Block:new {
+        paddingTop = 1,
+        paddingRight = 1,
+        paddingBottom = 1,
+        paddingLeft = 1,
+        backgroundColor = colors.yellow,
+        Text:new { text = "TEST 1" }
+    },
+    Block:new {
+        paddingTop = 1,
+        paddingRight = 1,
+        paddingBottom = 1,
+        paddingLeft = 1,
+        backgroundColor = colors.yellow,
+        Text:new { text = "TEST 1" }
+    },
+    Block:new {
+        paddingTop = 1,
+        paddingRight = 1,
+        paddingBottom = 1,
+        paddingLeft = 1,
+        backgroundColor = colors.yellow,
+        Text:new { text = "TEST 1" }
     },
     -- Text:new { text = "-> " },
     Text:new { text = "h", backgroundColor = colors.gray }
 }
 
-monitor = peripheral.wrap('right')
+local monitor = peripheral.wrap('right')
 monitor.setCursorPos(1, 1)
 monitor.setBackgroundColor(colors.black)
 monitor.setTextColor(colors.white)
@@ -255,5 +295,6 @@ monitor.clear()
 monitor.setTextScale(0.7)
 monitor.defaultBackgroundColor = colors.black
 monitor.defaultTextColor = colors.white
-print(interface:getSize(monitor.getSize()))
-interface:draw(monitor, 1, 1, monitor.getSize())
+local w, h = 10, 10-- monitor.getSize()
+print(interface:getSize(w, h))
+interface:draw(monitor, 1, 1, w, h)
