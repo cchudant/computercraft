@@ -93,6 +93,9 @@ local function blockTiling(self, requestedW, requestedH, func)
             posX = posX + realW
         end
     end
+    if self.childrenDirection == 'right' then
+    	totalH = totalH + maxHeightThisLine
+    end
 
     local usedWidth = totalW + (self.paddingLeft or 0) + (self.paddingRight or 0)
     local usedHeight = totalH + (self.paddingTop or 0) + (self.paddingBottom or 0)
@@ -240,5 +243,5 @@ monitor.setTextScale(0.7)
 monitor.defaultBackgroundColor = colors.black
 monitor.defaultTextColor = colors.white
 local w, h = 10, 10-- monitor.getSize()
-print(interface:getSize(w, h))
+print(interface[1]:getSize(w, h))
 interface:draw(monitor, 1, 1, w, h)
