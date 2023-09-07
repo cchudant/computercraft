@@ -146,7 +146,6 @@ end
 function Block:draw(term, x, y, requestedW, requestedH)
     if self.transparent then return end
 
-    print(requestedW, requestedH)
     local width, height = self:getSize(requestedW, requestedH)
     if self.backgroundColor ~= nil then
         term.setBackgroundColor(self.backgroundColor)
@@ -168,6 +167,8 @@ function Block:draw(term, x, y, requestedW, requestedH)
         end
         print("drraw", x + posX, y + posY, availableW, availableH)
         child:draw(term, x + posX, y + posY, availableW, availableH)
+        term.setTextColor(term.defaultTextColor)
+        term.setBackgroundColor(term.defaultBackgroundColor)
     end)
 end
 
@@ -241,11 +242,11 @@ interface = Block:new {
     --     Text:new("-> sdds")
     -- },
     Block:new {
-        paddingTop = 1,
+        -- paddingTop = 1,
         backgroundColor = colors.gray,
         Text:new { text = "-> s" }
     },
-    Text:new { text = "-> " },
+    -- Text:new { text = "-> " },
     Text:new { text = "h" }
 }
 
@@ -254,5 +255,7 @@ monitor.setBackgroundColor(colors.black)
 monitor.setTextColor(colors.white)
 monitor.clear()
 monitor.setTextScale(0.7)
+monitor.defaultBackgroundColor = colors.black
+monitor.defaultTextColor = colors.white
 print(interface:getSize(monitor.getSize()))
 interface:draw(monitor, 1, 1, monitor.getSize())
