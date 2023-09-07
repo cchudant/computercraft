@@ -45,6 +45,8 @@ local function blockTiling(self, requestedW, requestedH, func)
         local availableW = blockWidth
         local availableH = blockHeight
 
+        local totalW, totalH = 0, 0
+
         local maxWidthThisLine = 0
         local maxHeightThisLine = 0
         if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, 1) end
@@ -70,6 +72,7 @@ local function blockTiling(self, requestedW, requestedH, func)
             if func ~= nil and not onlyOneLine then func(child, correctedX, correctedY, w, h) end
 
             maxWidthThisLine, maxHeightThisLine = math.max(maxWidthThisLine, w), math.max(maxHeightThisLine, h)
+            totalW, totalH = math.max(maxWidthThisLine, totalW), math.max(maxHeightThisLine, totalH)
 
             if self.childrenDirection == 'bottom' then
                 posX = posX + w + (child.marginLeft or 0) + (child.marginRight or 0)
@@ -103,7 +106,8 @@ local function blockTiling(self, requestedW, requestedH, func)
 
         if onlyOneLine then return maxWidthThisLine, maxHeightThisLine end
 
-        local usedWidth, usedHeight = requestedW - availableW, requestedH - availableH
+        local usedWidth, usedHeight = blockWidth - totalW, blockHeight - totalH
+
         if self.minWidth ~= nil then usedWidth = math.max(usedWidth, self.minWidth) end
         if self.maxWidth ~= nil then usedWidth = math.min(usedWidth, self.maxWidth) end
         if self.minHeight ~= nil then usedHeight = math.max(usedHeight, self.minHeight) end
