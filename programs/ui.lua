@@ -130,6 +130,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
 
     local width, height = self:getSize(requestedW, requestedH)
     if self.backgroundColor ~= nil then
+    	print(self.backgroundColor, self[1])
         term.setBackgroundColor(self.backgroundColor)
 
         print("Got", requestedW, requestedH, width, height)
