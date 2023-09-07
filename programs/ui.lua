@@ -178,9 +178,8 @@ Text = UIObject:new {
     backgroundColor = nil,
     textColor = nil,
 }
-function Text:new(text)
-    Block.new(self, {})
-    self.text = text
+function Text:new(obj)
+    Block.new(self, obj)
     self.width, self.height = stringDisplaySize(self.text)
     return self
 end
@@ -229,8 +228,8 @@ interface = Block:new {
     --     backgroundColor = colors.gray,
     --     Text:new("-> s")
     -- },
-    Text:new("-> dddddddddd2d"),
-    Text:new("-> dddddddddddddd")
+    Text:new { text = "-> dddddddddd2d" },
+    Text:new { text = "-> dddddddddddddd" }
 }
 
 monitor = peripheral.wrap('right')
