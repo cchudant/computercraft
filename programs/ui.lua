@@ -49,8 +49,6 @@ local function blockTiling(self, requestedW, requestedH, func)
         local maxHeightThisLine = 0
         if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, 1) end
 
-        print("hi?", start or 1, #self)
-
         for i = start or 1, #self do
             local child = self[i]
             local w, h = child:getSize(availableW, availableH)
@@ -68,7 +66,6 @@ local function blockTiling(self, requestedW, requestedH, func)
                 end
             end
 
-            print("RUN")
             if func ~= nil then func(child, correctedX, correctedY, w, h) end
 
             maxWidthThisLine, maxHeightThisLine = math.max(maxWidthThisLine, w), math.max(maxHeightThisLine, h)
@@ -138,7 +135,6 @@ function Block:draw(term, x, y, requestedW, requestedH)
         if self.backgroundColor ~= nil then
             term.setBackgroundColor(self.backgroundColor)
         end
-        print("child draw!")
         child:draw(term, x + posX, y + posY, availableW, availableH)
     end)
 end
