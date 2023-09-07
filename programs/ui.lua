@@ -66,7 +66,7 @@ local function blockTiling(self, requestedW, requestedH, func)
                 end
             end
 
-            if func ~= nil then func(child, correctedX, correctedY, w, h) end
+            if func ~= nil and not onlyOneLine then func(child, correctedX, correctedY, w, h) end
 
             maxWidthThisLine, maxHeightThisLine = math.max(maxWidthThisLine, w), math.max(maxHeightThisLine, h)
 
