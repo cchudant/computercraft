@@ -144,9 +144,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
     if self.backgroundColor ~= nil then
         term.setBackgroundColor(self.backgroundColor)
 
-
         for i = 0, height-1 do
-        	print('one line', x, y + i, width)
             term.setCursorPos(x, y + i)
             for _ = 1, width do
                 term.write(" ")
@@ -155,6 +153,8 @@ function Block:draw(term, x, y, requestedW, requestedH)
     end
 
     blockTiling(self, requestedW, requestedH, function(child, posX, posY, availableW, availableH)
+        term.setTextColor(term.defaultTextColor)
+        term.setBackgroundColor(term.defaultBackgroundColor)
         if self.textColor ~= nil then
             term.setTextColor(self.textColor)
         end
@@ -236,7 +236,7 @@ interface = Block:new {
     --     Text:new("-> sdds")
     -- },
     Block:new {
-        -- paddingTop = 1,
+        paddingTop = 1,
         backgroundColor = colors.yellow,
         Text:new { text = "-> s" }
     },
