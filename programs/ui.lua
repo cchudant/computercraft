@@ -167,6 +167,7 @@ Text = UIObject:new {
 function Text:new(text)
     Block.new(self, {})
     self.text = text
+    print(self.width, self.height)
     self.width, self.height = stringDisplaySize(self.text)
     return self
 end
@@ -223,4 +224,4 @@ monitor.setBackgroundColor(colors.black)
 monitor.setTextColor(colors.white)
 monitor.clear()
 monitor.setTextScale(0.7)
-interface:draw(monitor, 1, 1, monitor.getSize())
+-- interface:draw(monitor, 1, 1, monitor.getSize())
