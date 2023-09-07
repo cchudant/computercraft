@@ -54,20 +54,22 @@ local function blockTiling(self, requestedW, requestedH, func)
             local child = self[i]
             local w, h = child:getSize(availableW, availableH)
 
-            maxWidthThisLine, maxHeightThisLine = math.max(maxWidthThisLine, w), math.max(maxHeightThisLine, h)
+            local realW = w + (child.marginRight or 0) + (child.marginLeft or 0)
+            local realH = h + (child.marginTop or 0) + (child.marginBottom or 0)
+            maxWidthThisLine, maxHeightThisLine = math.max(maxWidthThisLine, realW), math.max(maxHeightThisLine, realH)
 
             posX, posY = posX + (child.marginLeft or 0), posY + (child.marginTop or 0)
             if self.childrenDirection == 'right' then
-	            availableW = availableW - (child.marginLeft or 0) - (child.marginRight or 0) - w
+	            availableW = availableW - realW
 	            totalW = totalW + w
 	            print(totalW, i, availableW)
                 if availableW <= 0 and i ~= 1 then
                 	-- wrap
 	            	totalH = totalH + maxHeightThisLine
                     posX = self.paddingLeft or 0
-                    posY = posY + maxHeightThisLine + (child.marginTop or 0) + (child.marginBottom or 0)
+                    posY = posY + maxHeightThisLine
                     availableW = blockWidth
-                    availableH = availableH - h - (child.marginTop or 0) - (child.marginBottom or 0)
+                    availableH = availableH - realH
                     maxHeightThisLine = 0
                     totalW = requestedW
                     if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, i+1)
