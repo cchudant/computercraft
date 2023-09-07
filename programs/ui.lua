@@ -111,7 +111,7 @@ local function blockTiling(self, requestedW, requestedH, func)
         if self.width == 'fill' then usedWidth = math.min(requestedW, usedWidth) end
         if self.height == 'fill' then usedHeight = math.min(requestedH, usedHeight) end
 
-        print('end', requestedW, availableW, requestedH, availableW)
+        print('end', requestedW, availableW, requestedH, availableH)
 
         return usedWidth, usedHeight
     end
