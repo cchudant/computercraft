@@ -18,8 +18,8 @@ function UIObject:draw(term, x, y, requestedW, requestedH) end
 function UIObject:getSize(requestedW, requestedH) end
 
 Block = UIObject:new {
-    width = 'full',
-    height = 'full',
+    width = nil,
+    height = nil,
     backgroundColor = nil,
     textColor = nil,
     paddingLeft = 0,
