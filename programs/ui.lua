@@ -145,8 +145,8 @@ function Block:draw(term, x, y, requestedW, requestedH)
         term.setBackgroundColor(self.backgroundColor)
 
 
-        for i = 1, height do
-        	print('one line', x, y+i, width)
+        for i = 0, height-1 do
+        	print('one line', x, y + i, width)
             term.setCursorPos(x, y + i)
             for _ = 1, width do
                 term.write(" ")
