@@ -144,7 +144,7 @@ end
 
 local function stringDisplaySize(s)
     if string.len(s) == 0 then return 0, 0 end
-    local maxHeight, maxWidth = 1, 0
+    local maxWidth, maxHeight = 0, 1
     local currentWidth = 0
     for i = 1, string.len(s) do
         local c = s:sub(i, i)
@@ -168,7 +168,7 @@ function Text:new(text)
     Block.new(self, {})
     self.text = text
     self.width, self.height = stringDisplaySize(self.text)
-    print('d', self.width, self.height)
+    print('d', self.width, self.heightm text)
     return self
 end
 function Text:draw(term, x, y, parentW, parentH)
