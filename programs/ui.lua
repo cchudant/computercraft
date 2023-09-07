@@ -232,7 +232,7 @@ interface = Block:new {
         Text:new { text = "TEST 1" }
     },
     -- Text:new { text = "-> " },
-    Text:new { text = "h", backgroundColor = colors.gray }
+    -- Text:new { text = "h", backgroundColor = colors.gray }
 }
 
 local monitor = peripheral.wrap('right')
