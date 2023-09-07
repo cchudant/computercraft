@@ -88,7 +88,7 @@ local function blockTiling(self, requestedW, requestedH, func)
                     if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, i+1)
                     else return maxWidthThisLine, maxHeightThisLine end
                 end
-            else -- right
+            else -- bottom
                 posY = posY + w + (child.marginLeft or 0) + (child.marginRight or 0)
 
                 availableH = availableH - (child.marginTop or 0) - (child.marginBottom or 0) - h
@@ -233,7 +233,8 @@ interface = Block:new {
     Text:new { text = "-> dddddddddd2d" },
     Text:new { text = "hi" }
 }
-print(Text:new { text = "dddddddddd2d" }:getSize())
+print(interface[1]:getSize())
+print(interface[2]:getSize())
 
 
 monitor = peripheral.wrap('right')
