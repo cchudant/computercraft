@@ -110,7 +110,6 @@ local function blockTiling(self, requestedW, requestedH, func)
 end
 
 function Block:getSize(requestedW, requestedH)
-	print('getsize', requestedW, requestedH)
     return blockTiling(self, requestedW, requestedH)
 end
 
@@ -136,6 +135,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
         if self.backgroundColor ~= nil then
             term.setBackgroundColor(self.backgroundColor)
         end
+        print("child draw!")
         child:draw(x + posX, y + posY, availableW, availableH)
     end)
 end
