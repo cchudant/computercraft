@@ -75,8 +75,6 @@ local function blockTiling(self, requestedW, requestedH, func)
                     availableW = blockWidth
                     availableH = availableH - realH
                     maxHeightThisLine = 0
-                    if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, i+1)
-                    else return maxWidthThisLine, maxHeightThisLine end
                 end
 	        end
 
