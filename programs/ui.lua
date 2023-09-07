@@ -181,7 +181,7 @@ function Text:draw(term, x, y, parentW, parentH)
     term.setCursorPos(x, y)
     local offsetWidth, offsetHeight = 0, 0
     for i = 1, string.len(self.text) do
-        local c = s:sub(i, i)
+        local c = self.text:sub(i, i)
 
         if offsetWidth < parentW and offsetHeight < parentH then
         	term.write(c)
