@@ -45,8 +45,6 @@ local function blockTiling(self, requestedW, requestedH, func)
         local availableW = blockWidth
         local availableH = blockHeight
 
-        local totalW, totalH = 0, 0
-
         local maxWidthThisLine = 0
         local maxHeightThisLine = 0
         if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, 1) end
@@ -79,8 +77,7 @@ local function blockTiling(self, requestedW, requestedH, func)
 
                 availableW = availableW - (child.marginLeft or 0) - (child.marginRight or 0) - w
                 print("then ", availableW)
-                totalWLocal = totalWLocal + w
-            	totalW, totalH = math.max(totalW, totalWLocal) + w, math.max(maxHeightThisLine, totalH)
+            	totalH = math.max(maxHeightThisLine, totalH)
 
                 if availableW <= 0 then
                     posX = self.paddingLeft or 0
@@ -88,7 +85,7 @@ local function blockTiling(self, requestedW, requestedH, func)
                     availableW = blockWidth
                     availableH = availableH - h - (child.marginTop or 0) - (child.marginBottom or 0)
                     maxHeightThisLine = 0
-                    totalWLocal = 0
+                    totalW = requestedW
                     if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, i+1)
                     else return maxWidthThisLine, maxHeightThisLine end
                 end
@@ -97,8 +94,7 @@ local function blockTiling(self, requestedW, requestedH, func)
 
                 availableH = availableH - (child.marginTop or 0) - (child.marginBottom or 0) - h
                 print("then2 ", availableH)
-                totalHLocal = totalHLocal + h
-            	totalH, totalW = math.max(totalH, totalHLocal) + w, math.max(maxWidthThisLine, totalW)
+            	totalW = math.max(maxWidthThisLine, totalW)
 
                 if availableH <= 0 then
                     availableH = blockHeight
@@ -106,7 +102,7 @@ local function blockTiling(self, requestedW, requestedH, func)
                     posX = posX + maxWidthThisLine + (child.marginLeft or 0) + (child.marginRight or 0)
                     availableW = availableW - w - (child.marginLeft or 0) - (child.marginRight or 0)
                     maxWidthThisLine = 0
-                    totalHLocal = 0
+                    totalH = requestedH
                     if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, i+1)
                     else return maxWidthThisLine, maxHeightThisLine end
                 end
