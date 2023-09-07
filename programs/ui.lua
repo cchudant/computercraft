@@ -59,7 +59,7 @@ local function blockTiling(self, requestedW, requestedH, func)
 
             local realW = w + (child.marginRight or 0) + (child.marginLeft or 0)
             local realH = h + (child.marginTop or 0) + (child.marginBottom or 0)
-            maxWidthThisLine, maxHeightThisLine = math.max(maxWidthThisLine, realW), math.max(maxHeightThisLine, realH)
+            maxWidthThisLine, maxHeightThisLine = math.max(maxHeightThisLine, realW), math.max(maxWidthThisLine, realH)
 
             posX, posY = posX + (child.marginLeft or 0), posY + (child.marginTop or 0)
             if self.childrenDirection == 'right' then
