@@ -257,5 +257,5 @@ monitor.clear()
 monitor.setTextScale(0.7)
 monitor.defaultBackgroundColor = colors.black
 monitor.defaultTextColor = colors.white
-print(interface:getSize(monitor.getSize()))
-interface:draw(monitor, 1, 1, monitor.getSize())
+print(interface[1]:getSize(monitor.getSize()))
+-- interface:draw(monitor, 1, 1, monitor.getSize())
