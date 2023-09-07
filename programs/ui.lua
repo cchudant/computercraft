@@ -37,79 +37,75 @@ Block = UIObject:new {
 }
 
 local function blockTiling(self, requestedW, requestedH, func)
-    local function computeTiling(onlyOneLine, start)
-        local posX, posY = (self.paddingLeft or 0), (self.paddingTop or 0)
+    local posX, posY = (self.paddingLeft or 0), (self.paddingTop or 0)
 
-        local blockWidth = requestedW - (self.paddingLeft or 0) - (self.paddingRight or 0)
-        local blockHeight = requestedH - (self.paddingTop or 0) - (self.paddingBottom or 0)
-        local availableW = blockWidth
-        local availableH = blockHeight
+    local blockWidth = requestedW - (self.paddingLeft or 0) - (self.paddingRight or 0)
+    local blockHeight = requestedH - (self.paddingTop or 0) - (self.paddingBottom or 0)
+    local availableW = blockWidth
+    local availableH = blockHeight
 
-        local maxWidthThisLine, maxHeightThisLine = 0, 0
-        -- if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, 1) end
+    local maxWidthThisLine, maxHeightThisLine = 0, 0
+    -- if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, 1) end
 
-        local totalW, totalH = 0, 0
+    local totalW, totalH = 0, 0
 
-        for i = start or 1, #self do
-            local child = self[i]
-            local w, h = child:getSize(
-            	availableW - (child.marginRight or 0) - (child.marginLeft or 0),
-            	availableH - (child.marginTop or 0) - (child.marginBottom or 0)
-            )
+    for i = start or 1, #self do
+        local child = self[i]
+        local w, h = child:getSize(
+        	availableW - (child.marginRight or 0) - (child.marginLeft or 0),
+        	availableH - (child.marginTop or 0) - (child.marginBottom or 0)
+        )
 
-            local realW = w + (child.marginRight or 0) + (child.marginLeft or 0)
-            local realH = h + (child.marginTop or 0) + (child.marginBottom or 0)
-            maxWidthThisLine, maxHeightThisLine = math.max(maxWidthThisLine, realW), math.max(maxHeightThisLine, realH)
+        local realW = w + (child.marginRight or 0) + (child.marginLeft or 0)
+        local realH = h + (child.marginTop or 0) + (child.marginBottom or 0)
+        maxWidthThisLine, maxHeightThisLine = math.max(maxWidthThisLine, realW), math.max(maxHeightThisLine, realH)
 
-            posX, posY = posX + (child.marginLeft or 0), posY + (child.marginTop or 0)
-            if self.childrenDirection == 'right' then
-	            availableW = availableW - realW
-	            totalW = totalW + w
-	            print(totalW, i, availableW, realW, maxWidthThisLine, maxHeightThisLine)
-                if availableW <= 0 and i ~= 1 then
-                	-- wrap
-                    totalW = blockWidth
-	            	totalH = totalH + maxHeightThisLine
-                    posX = self.paddingLeft or 0
-                    posY = posY + maxHeightThisLine
-                    availableW = blockWidth
-                    availableH = availableH - realH
-                    maxHeightThisLine = 0
-                end
-	        end
-
-            -- local correctedX, correctedY = posX, posY
-            -- if self.centerItems then
-            --     if self.childrenDirection == 'bottom' then
-            --         local fatW = maxWidthThisLine - w
-            --         correctedX = correctedX + math.floor((fatW / 2) + 0.5) -- pseudo round
-            --     else
-            --         local fatH = maxHeightThisLine - h
-            --         correctedY = correctedY + math.floor((fatH / 2) + 0.5) -- pseudo round
-            --     end
-            -- end
-
-            if func ~= nil and not onlyOneLine then func(child, posX, posY, w, h) end
-            if self.childrenDirection == 'right' then
-                posX = posX + realW
+        posX, posY = posX + (child.marginLeft or 0), posY + (child.marginTop or 0)
+        if self.childrenDirection == 'right' then
+            availableW = availableW - realW
+            totalW = totalW + w
+            print(totalW, i, availableW, realW, maxWidthThisLine, maxHeightThisLine)
+            if availableW <= 0 and i ~= 1 then
+            	-- wrap
+                totalW = blockWidth
+            	totalH = totalH + maxHeightThisLine
+                posX = self.paddingLeft or 0
+                posY = posY + maxHeightThisLine
+                availableW = blockWidth
+                availableH = availableH - realH
+                maxHeightThisLine = 0
             end
         end
 
-        local usedWidth = totalW + (self.paddingLeft or 0) + (self.paddingRight or 0)
-        local usedHeight = totalH + (self.paddingTop or 0) + (self.paddingBottom or 0)
+        -- local correctedX, correctedY = posX, posY
+        -- if self.centerItems then
+        --     if self.childrenDirection == 'bottom' then
+        --         local fatW = maxWidthThisLine - w
+        --         correctedX = correctedX + math.floor((fatW / 2) + 0.5) -- pseudo round
+        --     else
+        --         local fatH = maxHeightThisLine - h
+        --         correctedY = correctedY + math.floor((fatH / 2) + 0.5) -- pseudo round
+        --     end
+        -- end
 
-        if self.minWidth ~= nil then usedWidth = math.max(usedWidth, self.minWidth) end
-        if self.maxWidth ~= nil then usedWidth = math.min(usedWidth, self.maxWidth) end
-        if self.minHeight ~= nil then usedHeight = math.max(usedHeight, self.minHeight) end
-        if self.maxHeight ~= nil then usedHeight = math.min(usedHeight, self.maxHeight) end
-
-        if self.width == 'fill' then usedWidth = math.min(requestedW, usedWidth) end
-        if self.height == 'fill' then usedHeight = math.min(requestedH, usedHeight) end
-
-        return usedWidth, usedHeight
+        if func ~= nil then func(child, posX, posY, w, h) end
+        if self.childrenDirection == 'right' then
+            posX = posX + realW
+        end
     end
 
-    return computeTiling()
+    local usedWidth = totalW + (self.paddingLeft or 0) + (self.paddingRight or 0)
+    local usedHeight = totalH + (self.paddingTop or 0) + (self.paddingBottom or 0)
+
+    if self.minWidth ~= nil then usedWidth = math.max(usedWidth, self.minWidth) end
+    if self.maxWidth ~= nil then usedWidth = math.min(usedWidth, self.maxWidth) end
+    if self.minHeight ~= nil then usedHeight = math.max(usedHeight, self.minHeight) end
+    if self.maxHeight ~= nil then usedHeight = math.min(usedHeight, self.maxHeight) end
+
+    if self.width == 'fill' then usedWidth = math.min(requestedW, usedWidth) end
+    if self.height == 'fill' then usedHeight = math.min(requestedH, usedHeight) end
+
+    return usedWidth, usedHeight
 end
 
 function Block:getSize(requestedW, requestedH)
@@ -244,5 +240,5 @@ monitor.setTextScale(0.7)
 monitor.defaultBackgroundColor = colors.black
 monitor.defaultTextColor = colors.white
 local w, h = 10, 10-- monitor.getSize()
-print(interface:getSize(w, h))
-interface:draw(monitor, 1, 1, w, h)
+print(interface[1]:getSize(w, h))
+-- interface:draw(monitor, 1, 1, w, h)
