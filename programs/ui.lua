@@ -244,7 +244,7 @@ interface = Block:new {
     --     Text:new("-> s")
     -- },
     Text:new { text = "-> " },
-    Text:new { text = "hi" }
+    Text:new { text = "h" }
 }
 print(interface[1]:getSize())
 print(interface[2]:getSize())
