@@ -180,10 +180,10 @@ Text = UIObject:new {
 }
 function Text:new(obj)
     Block.new(self, obj)
-    print(self, obj)
-    self.text = obj.text
-    self.width, self.height = stringDisplaySize(self.text)
-    return self
+    print(obj, obj)
+    obj.text = obj.text
+    obj.width, obj.height = stringDisplaySize(obj.text)
+    return obj
 end
 function Text:draw(term, x, y, parentW, parentH)
     if self.transparent then return end
