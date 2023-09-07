@@ -215,26 +215,16 @@ function Text:getSize()
 end
 
 interface = Block:new {
-    Block:new {
-        -- width = 'fill',
-        height = 1,
-        Text:new { text = "Search:" }
-    },
-    Block:new {
-        paddingTop = 1,
-        backgroundColor = colors.gray,
-        Text:new { text = "-> sdds" }
-    },
+	width = 'full',
+	height = 'full',
     Block:new {
         paddingTop = 1,
         paddingRight = 1,
         paddingBottom = 1,
         paddingLeft = 1,
-        backgroundColor = colors.yellow,
-        Text:new { text = "TEST 1" }
+        backgroundColor = colors.gray,
+    	Text:new { text = "Hello!" }
     },
-    -- Text:new { text = "-> " },
-    -- Text:new { text = "h", backgroundColor = colors.gray }
 }
 
 local monitor = peripheral.wrap('right')
