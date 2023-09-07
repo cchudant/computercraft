@@ -78,7 +78,7 @@ local function blockTiling(self, requestedW, requestedH, func)
 
                 availableW = availableW - (child.marginLeft or 0) - (child.marginRight or 0) - w
                 print("then ", availableW)
-            	totalW = math.max(maxWidthThisLine, totalW)
+            	totalW = math.min(maxWidthThisLine, totalW + w)
             	totalH = math.max(totalH, h)
 
                 if availableW <= 0 then
@@ -96,7 +96,7 @@ local function blockTiling(self, requestedW, requestedH, func)
 
                 availableH = availableH - (child.marginTop or 0) - (child.marginBottom or 0) - h
                 print("then2 ", availableH)
-            	totalH = math.max(maxHeightThisLine, totalH)
+            	totalH = math.max(maxHeightThisLine, totalH + h)
             	totalW = math.max(totalW, w)
 
                 if availableH <= 0 then
