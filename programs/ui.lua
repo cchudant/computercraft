@@ -217,7 +217,7 @@ end
 interface = Block:new {
 	width = 'full',
 	height = 'full',
-       backgroundColor = colors.yellow,
+    backgroundColor = colors.yellow,
     Block:new {
         paddingTop = 1,
         paddingRight = 1,
