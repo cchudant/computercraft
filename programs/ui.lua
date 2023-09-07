@@ -146,12 +146,12 @@ function Block:draw(term, x, y, requestedW, requestedH)
 
         print("ddd", x, y, requestedW, requestedH, width, height)
 
-        for i = 1, height do
-            term.setCursorPos(x, y + i)
-            for _ = 1, width do
-                term.write(" ")
-            end
-        end
+        -- for i = 1, height do
+        --     term.setCursorPos(x, y + i)
+        --     for _ = 1, width do
+        --         term.write(" ")
+        --     end
+        -- end
     end
 
     blockTiling(self, requestedW, requestedH, function(child, posX, posY, availableW, availableH)
