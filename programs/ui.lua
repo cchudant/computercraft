@@ -169,6 +169,7 @@ function Text:new(text)
     Block.new(self, {})
     self.text = text
     self.width, self.height = stringDisplaySize(self.text)
+    return self
 end
 function Text:draw(term, x, y, parentW, parentH)
     if self.transparent then return end
