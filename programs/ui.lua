@@ -90,8 +90,7 @@ local function blockTiling(self, requestedW, requestedH, func)
             -- end
 
             if func ~= nil and not onlyOneLine then func(child, posX, posY, w, h) end
-            if self.childrenDirection == 'right' then
-                posX = posX + w + (child.marginRight or 0)
+                posX = posX + realW
             end
         end
 
