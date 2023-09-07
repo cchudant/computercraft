@@ -209,14 +209,14 @@ interface = Block:new {
     Block:new {
         paddingTop = 1,
         backgroundColor = colors.gray,
-        Text:new("-> Hello")
+        Text:new("-> sdds")
     },
     Block:new {
         paddingTop = 1,
         backgroundColor = colors.gray,
-        Text:new("-> Hello")
+        Text:new("-> s")
     },
-    Text:new("-> Hello")
+    Text:new("-> dddddddddddddd")
 }
 
 monitor = peripheral.wrap('right')
