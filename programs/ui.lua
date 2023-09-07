@@ -139,7 +139,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
             term.setBackgroundColor(self.backgroundColor)
         end
         print("child draw!")
-        child:draw(x + posX, y + posY, availableW, availableH)
+        child:draw(term, x + posX, y + posY, availableW, availableH)
     end)
 end
 
