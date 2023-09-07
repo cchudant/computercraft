@@ -72,6 +72,7 @@ local function blockTiling(self, requestedW, requestedH, func)
             if func ~= nil and not onlyOneLine then func(child, correctedX, correctedY, w, h) end
 
             maxWidthThisLine, maxHeightThisLine = math.max(maxWidthThisLine, w), math.max(maxHeightThisLine, h)
+            print(maxWidthThisLine, maxHeightThisLine)
             totalW, totalH = math.max(maxWidthThisLine, totalW), math.max(maxHeightThisLine, totalH)
 
             if self.childrenDirection == 'right' then
@@ -79,6 +80,8 @@ local function blockTiling(self, requestedW, requestedH, func)
 
                 availableW = availableW - (child.marginLeft or 0) - (child.marginRight or 0) - w
                 print("then ", availableW)
+
+
                 if availableW <= 0 then
                     posX = self.paddingLeft or 0
                     posY = posY + maxHeightThisLine + (child.marginTop or 0) + (child.marginBottom or 0)
