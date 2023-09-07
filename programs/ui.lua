@@ -201,4 +201,7 @@ interface = Block:new {
     Text:new("-> Hello")
 }
 
-interface:draw(term, 1, 1, term.getSize())
+monitor = peripheral.wrap('right')
+monitor.clear()
+monitor.setTextScale(0.7)
+interface:draw(monitor, 1, 1, monitor.getSize())
