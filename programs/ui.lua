@@ -239,11 +239,11 @@ interface = Block:new {
     --     backgroundColor = colors.gray,
     --     Text:new("-> sdds")
     -- },
-    -- Block:new {
-    --     paddingTop = 1,
-    --     backgroundColor = colors.gray,
-    --     Text:new("-> s")
-    -- },
+    Block:new {
+        paddingTop = 1,
+        backgroundColor = colors.gray,
+        Text:new("-> s")
+    },
     Text:new { text = "-> " },
     Text:new { text = "h" }
 }
