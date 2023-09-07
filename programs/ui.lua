@@ -55,6 +55,7 @@ local function blockTiling(self, requestedW, requestedH, func)
         else
         	totalW = maxWidthThisLine
         end
+        print(totalW, totalH)
 
         for i = start or 1, #self do
             local child = self[i]
