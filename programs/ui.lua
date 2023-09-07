@@ -110,6 +110,7 @@ local function blockTiling(self, requestedW, requestedH, func)
 end
 
 function Block:getSize(requestedW, requestedH)
+	print('getsize', requestedW, requestedH)
     return blockTiling(self, requestedW, requestedH)
 end
 
