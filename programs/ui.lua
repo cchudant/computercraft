@@ -55,7 +55,6 @@ local function blockTiling(self, requestedW, requestedH, func)
         else
         	totalW = maxWidthThisLine
         end
-        print(totalW, totalH)
 
         for i = start or 1, #self do
             local child = self[i]
@@ -131,7 +130,7 @@ local function blockTiling(self, requestedW, requestedH, func)
         if self.width == 'fill' then usedWidth = math.min(requestedW, usedWidth) end
         if self.height == 'fill' then usedHeight = math.min(requestedH, usedHeight) end
 
-        print('end', requestedW, availableW, requestedH, availableH)
+        print('end', usedWidth, usedHeight)
 
         return usedWidth, usedHeight
     end
