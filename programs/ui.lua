@@ -33,7 +33,7 @@ Block = UIObject:new {
     maxWidth = nil,
 
     childrenDirection = 'right',
-    centerElements = false
+    centerElements = false,
 }
 
 local function blockTiling(self, requestedW, requestedH, func)
@@ -132,9 +132,10 @@ function Block:draw(term, x, y, requestedW, requestedH)
     if self.backgroundColor ~= nil then
         term.setBackgroundColor(self.backgroundColor)
 
+        print("Got", requestedW, requestedH, width, height)
         for i = 0, height-1 do
             term.setCursorPos(x, y + i)
-            for _ = 1, width do
+            for _ = 0, width-1 do
                 term.write(" ")
             end
         end
