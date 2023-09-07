@@ -62,7 +62,7 @@ local function blockTiling(self, requestedW, requestedH, func)
             if self.childrenDirection == 'right' then
 	            availableW = availableW - realW
 	            totalW = totalW + w
-	            print(totalW, i, availableW)
+	            print(totalW, i, availableW, realW)
                 if availableW <= 0 and i ~= 1 then
                 	-- wrap
                     totalW = blockWidth
