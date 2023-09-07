@@ -243,7 +243,7 @@ interface = Block:new {
     -- },
     Block:new {
         -- paddingTop = 1,
-        backgroundColor = colors.gray,
+        backgroundColor = colors.yellow,
         Text:new { text = "-> s" }
     },
     -- Text:new { text = "-> " },
