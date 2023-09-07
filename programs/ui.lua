@@ -198,21 +198,21 @@ function Text:getSize()
 end
 
 interface = Block:new {
-    Block:new {
-        -- width = 'fill',
-        height = 1,
-        Text:new("Search:"),
-    },
-    Block:new {
-        paddingTop = 1,
-        backgroundColor = colors.gray,
-        Text:new("-> sdds")
-    },
-    Block:new {
-        paddingTop = 1,
-        backgroundColor = colors.gray,
-        Text:new("-> s")
-    },
+    -- Block:new {
+    --     -- width = 'fill',
+    --     height = 1,
+    --     Text:new("Search:"),
+    -- },
+    -- Block:new {
+    --     paddingTop = 1,
+    --     backgroundColor = colors.gray,
+    --     Text:new("-> sdds")
+    -- },
+    -- Block:new {
+    --     paddingTop = 1,
+    --     backgroundColor = colors.gray,
+    --     Text:new("-> s")
+    -- },
     Text:new("-> dddddddddddddd")
 }
 
@@ -221,4 +221,5 @@ monitor.setBackgroundColor(colors.black)
 monitor.setTextColor(colors.white)
 monitor.clear()
 monitor.setTextScale(0.7)
-interface:draw(monitor, 1, 1, monitor.getSize())
+print(interface:getSize())
+-- interface:draw(monitor, 1, 1, monitor.getSize())
