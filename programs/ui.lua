@@ -146,6 +146,7 @@ end
 function Block:draw(term, x, y, requestedW, requestedH)
     if self.transparent then return end
 
+    print(requestedW, requestedH)
     local width, height = self:getSize(requestedW, requestedH)
     if self.backgroundColor ~= nil then
         term.setBackgroundColor(self.backgroundColor)
@@ -247,9 +248,6 @@ interface = Block:new {
     Text:new { text = "-> " },
     Text:new { text = "h" }
 }
-print(interface[1]:getSize())
-print(interface[2]:getSize())
-
 
 monitor = peripheral.wrap('right')
 monitor.setBackgroundColor(colors.black)
