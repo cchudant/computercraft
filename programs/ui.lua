@@ -167,8 +167,8 @@ Text = UIObject:new {
 function Text:new(text)
     Block.new(self, {})
     self.text = text
-    print(self.width, self.height)
     self.width, self.height = stringDisplaySize(self.text)
+    print('d', self.width, self.height)
     return self
 end
 function Text:draw(term, x, y, parentW, parentH)
