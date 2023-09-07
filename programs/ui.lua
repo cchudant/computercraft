@@ -115,8 +115,8 @@ local function blockTiling(self, requestedW, requestedH, func)
     if self.minHeight ~= nil then usedHeight = math.max(usedHeight, self.minHeight) end
     if self.maxHeight ~= nil then usedHeight = math.min(usedHeight, self.maxHeight) end
 
-    if self.width == 'full' then usedWidth = math.min(requestedW, usedWidth) end
-    if self.height == 'full' then usedHeight = math.min(requestedH, usedHeight) end
+    if self.width == 'full' then usedWidth = math.max(requestedW, usedWidth) end
+    if self.height == 'full' then usedHeight = math.max(requestedH, usedHeight) end
 
     return usedWidth, usedHeight
 end
