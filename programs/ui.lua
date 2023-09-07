@@ -218,12 +218,12 @@ interface = Block:new {
     Block:new {
         -- width = 'fill',
         height = 1,
-        Text:new("Search:"),
+        Text:new { text = "Search:" }
     },
     Block:new {
         paddingTop = 1,
         backgroundColor = colors.gray,
-        Text:new("-> sdds")
+        Text:new { text = "-> sdds" }
     },
     Block:new {
         paddingTop = 1,
