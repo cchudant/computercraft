@@ -59,7 +59,6 @@ local function blockTiling(self, requestedW, requestedH, func)
         for i = start or 1, #self do
             local child = self[i]
             local w, h = child:getSize(availableW, availableH)
-        	print(availableW, availableH, w, h)
 
             posX, posY = posX + (child.marginLeft or 0), posY + (child.marginTop or 0)
 
@@ -82,7 +81,6 @@ local function blockTiling(self, requestedW, requestedH, func)
                 posX = posX + w + (child.marginLeft or 0)
 
                 availableW = availableW - (child.marginLeft or 0) - (child.marginRight or 0) - w
-                print("then ", availableW, maxWidthThisLine)
             	totalW = totalW + w + (child.marginLeft or 0) + (child.marginRight or 0)
 
                 if availableW <= 0 then
@@ -100,7 +98,6 @@ local function blockTiling(self, requestedW, requestedH, func)
                 posY = posY + w + (child.marginLeft or 0)
 
                 availableH = availableH - (child.marginTop or 0) - (child.marginBottom or 0) - h
-                print("then2 ", availableH)
             	totalH = totalH + h + (child.marginTop or 0) + (child.marginBottom or 0)
 
                 if availableH <= 0 then
@@ -130,8 +127,6 @@ local function blockTiling(self, requestedW, requestedH, func)
         if self.width == 'fill' then usedWidth = math.min(requestedW, usedWidth) end
         if self.height == 'fill' then usedHeight = math.min(requestedH, usedHeight) end
 
-        print('end', usedWidth, usedHeight)
-
         return usedWidth, usedHeight
     end
 
@@ -149,7 +144,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
     if self.backgroundColor ~= nil then
         term.setBackgroundColor(self.backgroundColor)
 
-        print("ddd", width, height)
+        print("ddd", x, y, requestedW, requestedH, width, height)
 
         for i = 1, height do
             term.setCursorPos(x, y + i)
@@ -166,7 +161,6 @@ function Block:draw(term, x, y, requestedW, requestedH)
         if self.backgroundColor ~= nil then
             term.setBackgroundColor(self.backgroundColor)
         end
-        print("drraw", x + posX, y + posY, availableW, availableH)
         child:draw(term, x + posX, y + posY, availableW, availableH)
         term.setTextColor(term.defaultTextColor)
         term.setBackgroundColor(term.defaultBackgroundColor)
