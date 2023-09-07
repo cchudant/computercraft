@@ -132,7 +132,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
     end
 
     blockTiling(self, requestedW, requestedH, function(child, posX, posY, availableW, availableH)
-    	print(posX, posY, availableW, availableH)
+    	print("call", posX, posY, availableW, availableH)
         term.setTextColor(term.defaultTextColor)
         term.setBackgroundColor(term.defaultBackgroundColor)
         if self.textColor ~= nil then
