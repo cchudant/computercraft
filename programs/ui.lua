@@ -231,38 +231,6 @@ interface = Block:new {
         backgroundColor = colors.yellow,
         Text:new { text = "TEST 1" }
     },
-    Block:new {
-        paddingTop = 1,
-        paddingRight = 1,
-        paddingBottom = 1,
-        paddingLeft = 1,
-        backgroundColor = colors.yellow,
-        Text:new { text = "TEST 1" }
-    },
-    Block:new {
-        paddingTop = 1,
-        paddingRight = 1,
-        paddingBottom = 1,
-        paddingLeft = 1,
-        backgroundColor = colors.yellow,
-        Text:new { text = "TEST 1" }
-    },
-    Block:new {
-        paddingTop = 1,
-        paddingRight = 1,
-        paddingBottom = 1,
-        paddingLeft = 1,
-        backgroundColor = colors.yellow,
-        Text:new { text = "TEST 1" }
-    },
-    Block:new {
-        paddingTop = 1,
-        paddingRight = 1,
-        paddingBottom = 1,
-        paddingLeft = 1,
-        backgroundColor = colors.yellow,
-        Text:new { text = "TEST 1" }
-    },
     -- Text:new { text = "-> " },
     Text:new { text = "h", backgroundColor = colors.gray }
 }
