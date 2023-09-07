@@ -60,7 +60,7 @@ local function blockTiling(self, requestedW, requestedH, func)
             if self.childrenDirection == 'right' then
 	            local newAvailableW = availableW - (child.marginLeft or 0) - (child.marginRight or 0) - w
 	            totalW = totalW + w
-	            print()
+	            print(totalW, i, newAvailableW)
                 if newAvailableW <= 0 and i ~= 1 then
                 	-- wrap
 	            	totalH = totalH + maxHeightThisLine
