@@ -18,8 +18,8 @@ function UIObject:draw(term, x, y, requestedW, requestedH) end
 function UIObject:getSize(requestedW, requestedH) end
 
 Block = UIObject:new {
-    width = 'fill',
-    height = 'fill',
+    width = 'full',
+    height = 'full',
     backgroundColor = nil,
     textColor = nil,
     paddingLeft = 0,
@@ -115,8 +115,8 @@ local function blockTiling(self, requestedW, requestedH, func)
     if self.minHeight ~= nil then usedHeight = math.max(usedHeight, self.minHeight) end
     if self.maxHeight ~= nil then usedHeight = math.min(usedHeight, self.maxHeight) end
 
-    if self.width == 'fill' then usedWidth = math.min(requestedW, usedWidth) end
-    if self.height == 'fill' then usedHeight = math.min(requestedH, usedHeight) end
+    if self.width == 'full' then usedWidth = math.min(requestedW, usedWidth) end
+    if self.height == 'full' then usedHeight = math.min(requestedH, usedHeight) end
 
     return usedWidth, usedHeight
 end
