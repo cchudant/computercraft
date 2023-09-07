@@ -166,7 +166,6 @@ function Text:new(text)
     Block.new(self, {})
     self.text = text
     self.width, self.height = stringDisplaySize(self.text)
-    print('d', self.width, self.height, self.text)
     return self
 end
 function Text:draw(term, x, y, parentW, parentH)
@@ -200,7 +199,7 @@ end
 
 interface = Block:new {
     Block:new {
-        width = 'fill',
+        -- width = 'fill',
         height = 1,
         Text:new("Search:"),
     },
