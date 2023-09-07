@@ -239,7 +239,7 @@ interface = Block:new {
     --     backgroundColor = colors.gray,
     --     Text:new("-> s")
     -- },
-    Text:new { text = "-> dddddddddd2d" },
+    Text:new { text = "-> " },
     Text:new { text = "hi" }
 }
 print(interface[1]:getSize())
