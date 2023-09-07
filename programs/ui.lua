@@ -180,6 +180,7 @@ Text = UIObject:new {
 }
 function Text:new(obj)
     Block.new(self, obj)
+    print(self, obj)
     self.width, self.height = stringDisplaySize(self.text)
     return obj
 end
