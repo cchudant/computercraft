@@ -150,9 +150,9 @@ local function stringDisplaySize(s)
         local c = s:sub(i, i)
 
         currentWidth = currentWidth + 1
+        maxWidth = math.max(maxWidth, currentWidth)
         print(currentWidth)
         if c == '\n' then
-            maxWidth = math.max(maxWidth, currentWidth)
             maxHeight = maxHeight + 1
             currentWidth = 0
         end
