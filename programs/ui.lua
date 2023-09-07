@@ -53,6 +53,8 @@ local function blockTiling(self, requestedW, requestedH, func)
             local child = self[i]
             local w, h = child:getSize(availableW, availableH)
 
+            print(w, h)
+
             posX, posY = posX + (child.marginLeft or 0), posY + (child.marginTop or 0)
 
             local correctedX, correctedY = posX, posY
@@ -170,14 +172,28 @@ function Text:new(text)
 end
 function Text:draw(term, x, y, parentW, parentH)
     if self.transparent then return end
-    term.setCursorPos(x, y)
     if self.backgroundColor ~= nil then
         term.setBackgroundColor(self.backgroundColor)
     end
     if self.textColor ~= nil then
         term.setTextColor(self.textColor)
     end
-    term.write(self.text)
+    term.setCursorPos(x, y)
+    local offsetWidth, offsetHeight = 0, 0
+    for i = 1, string.len(s) do
+        local c = s:sub(i, i)
+
+        if offsetWidth < parentW and offsetHeight < parentH then
+        	term.write(c)
+        end
+
+        offsetWidth = offsetWidth + 1
+        if c == '\n' then
+        	offsetWidth = 0
+        	offsetHeight = offsetHeight + 1
+        	term.setCursorPos(x + offsetWidth, y + offsetWidth)
+        end
+    end
 end
 function Text:getSize()
     return self.width, self.height
