@@ -55,7 +55,7 @@ function arrayFindIndex(arr, func)
 end
 
 function arrayFindLast(arr, func)
-    for i = table.getn(arr), 1, -1 do
+    for i = #arr, 1, -1 do
         local el = arr[i]
         if func(el, i, arr) then
             return el
@@ -65,7 +65,7 @@ function arrayFindLast(arr, func)
 end
 
 function arrayFindLastIndex(arr, func)
-    for i = table.getn(arr), 1, -1 do
+    for i = #arr, 1, -1 do
         local el = arr[i]
         if func(el, i, arr) then
             return i
@@ -137,7 +137,7 @@ function arrayIndexOf(arr, elem)
 end
 
 function arrayLastIndexOf(arr, elem)
-    for i = table.getn(arr), 1, -1 do
+    for i = #arr, 1, -1 do
         local el = arr[i]
         if elem == el then
             return i
@@ -169,7 +169,7 @@ function arrayMap(arr, func)
 end
 
 function arrayPop(arr)
-    return table.remove(arr, table.getn(arr))
+    return table.remove(arr, #arr)
 end
 
 function arrayPush(arr, el)
@@ -177,7 +177,7 @@ function arrayPush(arr, el)
 end
 
 function arrayLen(arr)
-    return table.getn(arr)
+    return #arr
 end
 
 function arrayReduce(arr, func, accumulator)
@@ -188,7 +188,7 @@ function arrayReduce(arr, func, accumulator)
 end
 
 function arrayReduceRight(arr, func, accumulator)
-    for i = table.getn(arr), 1, -1 do
+    for i = #arr, 1, -1 do
         local v = arr[i]
         accumulator = func(accumulator, v, i, arr)
     end
@@ -197,7 +197,7 @@ end
 
 function arrayReverse(arr)
     local newTable = {}
-    for i = table.getn(arr), 1, -1 do
+    for i = #arr, 1, -1 do
         local v = arr[i]
         table.insert(newTable, v)
     end
@@ -228,7 +228,7 @@ function arrayUnshift(arr, ...)
         table.insert(arr, v, index)
         index = index + 1
     end
-    return table.getn(arr)
+    return #arr
 end
 
 function objectEntries(obj)
@@ -242,7 +242,7 @@ end
 function objectFromEntries(entries)
     local obj = {}
     for _,v in ipairs(entries) do
-        local k,el = unpack(v)
+        local k,el = table.unpack(v)
         obj[k] = el
     end
     return obj
