@@ -88,6 +88,7 @@ local function blockTiling(self, requestedW, requestedH, func)
                     availableW = blockWidth
                     availableH = availableH - h - (child.marginTop or 0) - (child.marginBottom or 0)
                     maxHeightThisLine = 0
+                    totalWLocal = 0
                     if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, i+1)
                     else return maxWidthThisLine, maxHeightThisLine end
                 end
@@ -105,6 +106,7 @@ local function blockTiling(self, requestedW, requestedH, func)
                     posX = posX + maxWidthThisLine + (child.marginLeft or 0) + (child.marginRight or 0)
                     availableW = availableW - w - (child.marginLeft or 0) - (child.marginRight or 0)
                     maxWidthThisLine = 0
+                    totalHLocal = 0
                     if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, i+1)
                     else return maxWidthThisLine, maxHeightThisLine end
                 end
