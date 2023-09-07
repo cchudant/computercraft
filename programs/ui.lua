@@ -88,6 +88,7 @@ local function blockTiling(self, requestedW, requestedH, func)
                 posY = posY + w + (child.marginLeft or 0) + (child.marginRight or 0)
 
                 availableH = availableH - (child.marginTop or 0) - (child.marginBottom or 0) - w
+                print("then ", availableH)
                 if availableH <= 0 then
                     availableH = blockHeight
                     posY = self.paddingTop or 0
