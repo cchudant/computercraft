@@ -49,7 +49,7 @@ local function blockTiling(self, requestedW, requestedH, func)
         local maxHeightThisLine = 0
         if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, 1) end
 
-        local totalW, totalH = 1, 1
+        local totalW, totalH = 0, 0
         if self.childrenDirection == 'right' then
         	totalH = maxHeightThisLine
         else
