@@ -185,7 +185,7 @@ function Text:getSize()
     return self.width, self.height
 end
 
-local interface = Block:new {
+interface = Block:new {
     -- Block:new {
     --     width = 'fill',
     --     height = 1,
