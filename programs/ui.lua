@@ -151,7 +151,6 @@ local function stringDisplaySize(s)
 
         currentWidth = currentWidth + 1
         maxWidth = math.max(maxWidth, currentWidth)
-        print(currentWidth)
         if c == '\n' then
             maxHeight = maxHeight + 1
             currentWidth = 0
@@ -225,4 +224,4 @@ monitor.setBackgroundColor(colors.black)
 monitor.setTextColor(colors.white)
 monitor.clear()
 monitor.setTextScale(0.7)
--- interface:draw(monitor, 1, 1, monitor.getSize())
+interface:draw(monitor, 1, 1, monitor.getSize())
