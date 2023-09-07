@@ -247,7 +247,7 @@ interface = Block:new {
         Text:new { text = "-> s" }
     },
     -- Text:new { text = "-> " },
-    Text:new { text = "h" }
+    Text:new { text = "h", backgroundColor = colors.gray }
 }
 
 monitor = peripheral.wrap('right')
