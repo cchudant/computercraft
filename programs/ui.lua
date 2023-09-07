@@ -50,6 +50,7 @@ local function blockTiling(self, requestedW, requestedH, func)
         if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, 1) end
 
         for i = start or 1, #self do
+        	print(availableW, availableH)
             local child = self[i]
             local w, h = child:getSize(availableW, availableH)
 
