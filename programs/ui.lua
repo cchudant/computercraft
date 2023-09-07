@@ -38,7 +38,6 @@ Block = UIObject:new {
 
 local function blockTiling(self, requestedW, requestedH, func)
     local function computeTiling(onlyOneLine, start)
-    	print(requestedW, requestedH, onlyOneLine, start)
         local posX, posY = (self.paddingLeft or 0), (self.paddingTop or 0)
 
         local blockWidth = requestedW - (self.paddingLeft or 0) - (self.paddingRight or 0)
