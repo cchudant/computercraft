@@ -102,9 +102,7 @@ local function blockTiling(self, requestedW, requestedH, func)
 
         if onlyOneLine then return maxWidthThisLine, maxHeightThisLine end
 
-        posX, posY = posX + (self.paddingRight or 0), posY + (self.paddingBottom or 0)
-
-        return posX, posY
+        return requestedW - availableW, requestedH - availableH
     end
 
     return computeTiling()
