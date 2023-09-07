@@ -135,6 +135,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
         if self.backgroundColor ~= nil then
             term.setBackgroundColor(self.backgroundColor)
         end
+        print(x + posX, y + posY, availableW, availableH)
         child:draw(term, x + posX, y + posY, availableW, availableH)
     end)
 end
