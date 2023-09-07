@@ -71,17 +71,18 @@ local function blockTiling(self, requestedW, requestedH, func)
             	totalH = totalH + maxHeightThisLine
                 posX = self.paddingLeft or 0
                 posY = posY + maxHeightThisLine
-                availableW = blockWidth
-                availableH = availableH - realH
-                maxHeightThisLine = 0
 
 			    w, h = child:getSize(
 			    	availableW - (child.marginRight or 0) - (child.marginLeft or 0),
 			    	availableH - (child.marginTop or 0) - (child.marginBottom or 0)
 			    )
-
 			    realW = w + (child.marginRight or 0) + (child.marginLeft or 0)
 			    realH = h + (child.marginTop or 0) + (child.marginBottom or 0)
+
+                availableW = blockWidth
+                availableH = availableH - realH
+                maxHeightThisLine = 0
+
             end
         end
 
