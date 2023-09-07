@@ -106,7 +106,8 @@ local function blockTiling(self, requestedW, requestedH, func)
 
         if onlyOneLine then return maxWidthThisLine, maxHeightThisLine end
 
-        local usedWidth, usedHeight = blockWidth - totalW, blockHeight - totalH
+        local usedWidth = totalW + (self.paddingLeft or 0) + (self.paddingRight or 0)
+        local usedHeight = totalH + (self.paddingTop or 0) + (self.paddingBottom or 0)
 
         if self.minWidth ~= nil then usedWidth = math.max(usedWidth, self.minWidth) end
         if self.maxWidth ~= nil then usedWidth = math.min(usedWidth, self.maxWidth) end
