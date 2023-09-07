@@ -74,14 +74,15 @@ local function blockTiling(self, requestedW, requestedH, func)
             maxWidthThisLine, maxHeightThisLine = math.max(maxWidthThisLine, w), math.max(maxHeightThisLine, h)
             totalW, totalH = math.max(maxWidthThisLine, totalW), math.max(maxHeightThisLine, totalH)
 
-            if self.childrenDirection == 'bottom' then
+            if self.childrenDirection == 'right' then
                 posX = posX + w + (child.marginLeft or 0) + (child.marginRight or 0)
 
                 availableW = availableW - (child.marginLeft or 0) - (child.marginRight or 0) - w
+                print("then ", availableW)
                 if availableW <= 0 then
-                    availableW = blockWidth
                     posX = self.paddingLeft or 0
                     posY = posY + maxHeightThisLine + (child.marginTop or 0) + (child.marginBottom or 0)
+                    availableW = blockWidth
                     availableH = availableH - h - (child.marginTop or 0) - (child.marginBottom or 0)
                     maxHeightThisLine = 0
                     if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, i+1)
@@ -91,7 +92,6 @@ local function blockTiling(self, requestedW, requestedH, func)
                 posY = posY + w + (child.marginLeft or 0) + (child.marginRight or 0)
 
                 availableH = availableH - (child.marginTop or 0) - (child.marginBottom or 0) - h
-                print("then ", availableH)
                 if availableH <= 0 then
                     availableH = blockHeight
                     posY = self.paddingTop or 0
@@ -213,7 +213,6 @@ end
 function Text:getSize()
     return self.width, self.height
 end
-print(Text:new { text = "-> dddddddddddddd" })
 
 interface = Block:new {
     -- Block:new {
@@ -232,7 +231,7 @@ interface = Block:new {
     --     Text:new("-> s")
     -- },
     Text:new { text = "-> dddddddddd2d" },
-    Text:new { text = "-> dddddddddddddd" }
+    Text:new { text = "hi" }
 }
 
 
