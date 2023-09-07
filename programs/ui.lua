@@ -144,7 +144,9 @@ function Block:draw(term, x, y, requestedW, requestedH)
     if self.backgroundColor ~= nil then
         term.setBackgroundColor(self.backgroundColor)
 
+
         for i = 1, height do
+        	print('one line')
             term.setCursorPos(x, y + i)
             for _ = 1, width do
                 term.write(" ")
