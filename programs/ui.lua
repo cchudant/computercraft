@@ -233,6 +233,7 @@ interface = Block:new {
     Text:new { text = "-> dddddddddd2d" },
     Text:new { text = "hi" }
 }
+print(Text:new { text = "dddddddddd2d" }:getSize())
 
 
 monitor = peripheral.wrap('right')
