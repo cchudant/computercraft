@@ -49,7 +49,7 @@ local function blockTiling(self, requestedW, requestedH, func)
         local maxHeightThisLine = 0
         if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, 1) end
 
-        print("hi?")
+        print("hi?", start or 1, #self)
 
         for i = start or 1, #self do
             local child = self[i]
