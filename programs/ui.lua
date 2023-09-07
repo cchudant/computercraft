@@ -49,7 +49,12 @@ local function blockTiling(self, requestedW, requestedH, func)
         local maxHeightThisLine = 0
         if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, 1) end
 
-        local totalW, totalH = 0, 9
+        local totalW, totalH = 1, 1
+        if self.childrenDirection == 'right' then
+        	totalH = maxHeightThisLine
+        else
+        	totalW = maxWidthThisLine
+        end
 
         for i = start or 1, #self do
             local child = self[i]
@@ -74,14 +79,14 @@ local function blockTiling(self, requestedW, requestedH, func)
             maxWidthThisLine, maxHeightThisLine = math.max(maxWidthThisLine, w), math.max(maxHeightThisLine, h)
 
             if self.childrenDirection == 'right' then
-                posX = posX + w + (child.marginLeft or 0) + (child.marginRight or 0)
+                posX = posX + w + (child.marginLeft or 0)
 
                 availableW = availableW - (child.marginLeft or 0) - (child.marginRight or 0) - w
                 print("then ", availableW, maxWidthThisLine)
-            	totalW = math.min(maxWidthThisLine, totalW + w)
-            	totalH = math.max(totalH, h)
+            	totalW = totalW + w + (child.marginLeft or 0) + (child.marginRight or 0)
 
                 if availableW <= 0 then
+	            	totalH = totalH + maxHeightThisLine
                     posX = self.paddingLeft or 0
                     posY = posY + maxHeightThisLine + (child.marginTop or 0) + (child.marginBottom or 0)
                     availableW = blockWidth
@@ -92,14 +97,14 @@ local function blockTiling(self, requestedW, requestedH, func)
                     else return maxWidthThisLine, maxHeightThisLine end
                 end
             else -- bottom
-                posY = posY + w + (child.marginLeft or 0) + (child.marginRight or 0)
+                posY = posY + w + (child.marginLeft or 0)
 
                 availableH = availableH - (child.marginTop or 0) - (child.marginBottom or 0) - h
                 print("then2 ", availableH)
-            	totalH = math.max(maxHeightThisLine, totalH + h)
-            	totalW = math.max(totalW, w)
+            	totalH = totalH + h + (child.marginTop or 0) + (child.marginBottom or 0)
 
                 if availableH <= 0 then
+	            	totalW = totalW + maxWidthThisLine
                     availableH = blockHeight
                     posY = self.paddingTop or 0
                     posX = posX + maxWidthThisLine + (child.marginLeft or 0) + (child.marginRight or 0)
