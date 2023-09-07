@@ -65,13 +65,13 @@ local function blockTiling(self, requestedW, requestedH, func)
 	            print(totalW, i, availableW)
                 if availableW <= 0 and i ~= 1 then
                 	-- wrap
+                    totalW = blockWidth
 	            	totalH = totalH + maxHeightThisLine
                     posX = self.paddingLeft or 0
                     posY = posY + maxHeightThisLine
                     availableW = blockWidth
                     availableH = availableH - realH
                     maxHeightThisLine = 0
-                    totalW = requestedW
                     if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, i+1)
                     else return maxWidthThisLine, maxHeightThisLine end
                 end
