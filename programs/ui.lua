@@ -52,7 +52,10 @@ local function blockTiling(self, requestedW, requestedH, func)
 
         for i = start or 1, #self do
             local child = self[i]
-            local w, h = child:getSize(availableW, availableH)
+            local w, h = child:getSize(
+            	availableW - (child.marginRight or 0) - (child.marginLeft or 0),
+            	availableH - (child.marginTop or 0) - (child.marginBottom or 0)
+            )
 
             local realW = w + (child.marginRight or 0) + (child.marginLeft or 0)
             local realH = h + (child.marginTop or 0) + (child.marginBottom or 0)
