@@ -106,7 +106,7 @@ local function blockTiling(self, requestedW, requestedH, func)
         return posX, posY
     end
 
-    return computeTiling(func)
+    return computeTiling()
 end
 
 function Block:getSize(requestedW, requestedH)
