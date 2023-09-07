@@ -183,7 +183,7 @@ function Text:new(obj)
     print(self, obj)
     self.text = obj.text
     self.width, self.height = stringDisplaySize(self.text)
-    return obj
+    return self
 end
 function Text:draw(term, x, y, parentW, parentH)
     if self.transparent then return end
