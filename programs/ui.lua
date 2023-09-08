@@ -82,7 +82,6 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         if self.childrenDirection == 'right' then
             maxHeightThisLine = math.max(maxHeightThisLine, realH)
             
-            widthThisLine = widthThisLine + realW
             availableW = availableW - realW
 
             if availableW <= 0 and i ~= 1 then
@@ -109,7 +108,8 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
                 totalLines = totalLines + 1
                 iInLine = 1
             else
-                totalW = totalW + w
+           		widthThisLine = widthThisLine + realW
+                totalW = totalW + realW
                 iInLine = iInLine + 1
             end
         end
