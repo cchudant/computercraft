@@ -130,6 +130,8 @@ local function sizeFromContentSize(self, contentW, contentH, requestedW, request
     if self.width == 'full' then usedWidth = math.max(requestedW, usedWidth) end
     if self.height == 'full' then usedHeight = math.max(requestedH, usedHeight) end
 
+    print(contentW, contentH, requestedW, requestedH, usedWidth, usedHeight)
+
     return usedWidth, usedHeight
 end
 
@@ -167,7 +169,6 @@ local function calcSlackFromMiddle(max, nElems, i)
 end
 
 local function align(alignContent, slack, i, nElems)
-	print('align', alignContent, slack, i, nElems)
     if alignContent == 'begin' then
         return 0
     elseif alignContent == 'end' then
@@ -183,7 +184,6 @@ local function align(alignContent, slack, i, nElems)
         if i == 1 then return 0 end
 
         slack = calcSlackFromMiddle(slack, nElems - 1, i)
-        print('slack is', slackW)
         return slack
     end
     return 0
@@ -198,10 +198,8 @@ function Block:draw(term, x, y, requestedW, requestedH)
     local width, height = sizeFromContentSize(self, contentW, contentH, requestedW, requestedH)
 
     if self.backgroundColor ~= nil then
-        print(self.backgroundColor, self[1])
         term.setBackgroundColor(self.backgroundColor)
 
-        print("Got", requestedW, requestedH, width, height)
         for i = 0, height - 1 do
             term.setCursorPos(x, y + i)
             for _ = 0, width - 1 do
