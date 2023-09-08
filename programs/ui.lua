@@ -324,8 +324,7 @@ local function wrapTerm(term)
         blinkBackgroundColor = colors.black,
         blinkTextColor = colors.white,
     }
-    newTerm.__index = term
-    setmetatable(newTerm, term)
+    setmetatable(newTerm, {__index=term})
     return newTerm
 end
 
