@@ -350,6 +350,7 @@ function draw(obj, term)
     term.setTextScale(0.5)
     obj:draw(term, 1, 1, w, h)
     if term.blinkPositionX ~= nil and term.blinkPositionY ~= nil then
+    	print('blink territory')
         term.setCursorPos(term.blinkPositionX, term.blinkPositionY)
         term.setBackgroundColor(term.blinkBackgroundColor)
         term.setTextColor(term.blinkTextColor)
