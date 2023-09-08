@@ -68,12 +68,12 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
 
     for i = start or 1, #self do
         local child = self[i]
-        local childAvailableW = availableW - (child.marginRight or 0) - (child.marginLeft or 0)
-        local childAvailableH = availableH - (child.marginTop or 0) - (child.marginBottom or 0)
+        local childAvailableW = availableW - child.marginRight - child.marginLeft
+        local childAvailableH = availableH - child.marginTop - child.marginBottom
         local w, h = child:getSize(childAvailableW, childAvailableH)
 
-        local realW = w + (child.marginRight or 0) + (child.marginLeft or 0)
-        local realH = h + (child.marginTop or 0) + (child.marginBottom or 0)
+        local realW = w + child.marginRight + child.marginLeft
+        local realH = h + child.marginTop + child.marginBottom
 
         if self.childrenDirection == 'right' then
             widthThisLine = widthThisLine + realW
@@ -87,12 +87,12 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
                 availableW = blockWidth
                 availableH = availableH - realH
 
-                childAvailableW = availableW - (child.marginRight or 0) - (child.marginLeft or 0)
-                childAvailableH = availableH - (child.marginTop or 0) - (child.marginBottom or 0)
+                childAvailableW = availableW - child.marginRight - child.marginLeft
+                childAvailableH = availableH - child.marginTop - child.marginBottom
                 w, h = child:getSize(childAvailableW, childAvailableH)
 
-                realW = w + (child.marginRight or 0) + (child.marginLeft or 0)
-                realH = h + (child.marginTop or 0) + (child.marginBottom or 0)
+                realW = w + child.marginRight + child.marginLeft
+                realH = h + child.marginTop + child.marginBottom
 
                 maxHeightThisLine = 0
                 widthThisLine = 0
@@ -183,7 +183,7 @@ local function align(alignContent, slack, i, nElems)
         if i == 1 then return 0 end
 
         slack = calcSlackFromMiddle(slack, nElems - 1, i)
-        print('slack is', slack)
+        print('slack is', slackW)
         return slack
     end
     return 0
@@ -241,7 +241,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
 
         posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
         posY = posY + align(self.alignContentY, slackH, iLine, nLines)
-        drawChild(self, term, child, posX, posY, realW, realH)
+        drawChild(self, term, child, posX + child.marginLeft, posY + child.marginTop, realW, realH)
 
         if i ~= 1 and iInLine == 1 then
             posY = posY + lineWidth
