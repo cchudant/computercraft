@@ -79,8 +79,6 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         local realW = w + child.marginRight + child.marginLeft
         local realH = h + child.marginTop + child.marginBottom
 
-        local lmaxHeightThisLine = math.max(maxHeightThisLine, realH)
-
         if self.childrenDirection == 'right' then
             widthThisLine = widthThisLine + realW
             
@@ -102,7 +100,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
                 realW = w + child.marginRight + child.marginLeft
                 realH = h + child.marginTop + child.marginBottom
 
-                maxHeightThisLine = 0
+                maxHeightThisLine = realH
                 widthThisLine = 0
                 totalLines = totalLines + 1
                 iInLine = 1
@@ -115,7 +113,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         if i == 1 then totalLines = 1 end
 
         if func then
-            if not func(i, iInLine, totalLines, widthThisLine, lmaxHeightThisLine, child, realW, realH) then break end
+            if not func(i, iInLine, totalLines, widthThisLine, maxHeightThisLine, child, realW, realH) then break end
         end
     end
 
