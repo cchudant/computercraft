@@ -19,6 +19,12 @@ function UIObject:draw(term, x, y, requestedW, requestedH) end
 
 function UIObject:getSize(requestedW, requestedH) return 0, 0 end
 
+function UIObject:onMonitorTouch(x, y, requestedW, requestedH) end
+
+function UIObject:onClick(x, y, button, requestedW, requestedH) end
+
+function UIObject:onMouseClick(x, y, button, requestedW, requestedH) end
+
 ---@class Block: UIObject
 Block = {
     ---@type number|nil|'100%'
@@ -60,8 +66,8 @@ Block = UIObject:new(Block)
 
 ---@param self Block
 local function computeContent(self, blockWidth, blockHeight, start, func)
-	if blockWidth == nil then blockWidth = 0 end
-	if blockHeight == nil then blockHeight = 0 end
+    if blockWidth == nil then blockWidth = 0 end
+    if blockHeight == nil then blockHeight = 0 end
     local availableW = blockWidth
     local availableH = blockHeight
     local widthThisLine = 0
@@ -83,7 +89,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         local realW = w + child.marginRight + child.marginLeft
         local realH = h + child.marginTop + child.marginBottom
 
-        if self.childrenDirection == 'right' then            
+        if self.childrenDirection == 'right' then
             availableW = availableW - realW
 
             if availableW < 0 and i ~= 1 then
@@ -94,8 +100,8 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
                 childAvailableW = availableW - child.marginRight - child.marginLeft
                 childAvailableH = availableH - child.marginTop - child.marginBottom
                 w, h = child:getSize(childAvailableW, childAvailableH)
-		        if w == '100%' then w = blockWidth - child.marginRight - child.marginLeft end
-		        if h == '100%' then h = blockHeight - child.marginTop - child.marginBottom end
+                if w == '100%' then w = blockWidth - child.marginRight - child.marginLeft end
+                if h == '100%' then h = blockHeight - child.marginTop - child.marginBottom end
 
                 realW = w + child.marginRight + child.marginLeft
                 realH = h + child.marginTop + child.marginBottom
@@ -112,8 +118,8 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
                 totalLines = totalLines + 1
                 iInLine = 1
             else
-            	maxHeightThisLine = math.max(maxHeightThisLine, realH)
-           		widthThisLine = widthThisLine + realW
+                maxHeightThisLine = math.max(maxHeightThisLine, realH)
+                widthThisLine = widthThisLine + realW
                 totalW = totalW + realW
                 iInLine = iInLine + 1
             end
@@ -125,11 +131,11 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
             if not func(i, iInLine, totalLines, widthThisLine, maxHeightThisLine, child, realW, realH) then break end
         end
 
-	    -- if iInLine == 1 and i ~= 1 then
-	    -- 	if self.childrenDirection == 'right' then
-	    -- 		maxHeightThisLine = 0
-	    -- 	end
-	    -- end
+        -- if iInLine == 1 and i ~= 1 then
+        -- 	if self.childrenDirection == 'right' then
+        -- 		maxHeightThisLine = 0
+        -- 	end
+        -- end
     end
 
     if self.childrenDirection == 'right' then
@@ -155,28 +161,14 @@ local function sizeFromContentSize(self, contentW, contentH, requestedW, request
 end
 
 function Block:getSize(requestedW, requestedH)
-	if requestedW == nil then requestedW = self.paddingLeft + self.paddingRight end
-	if requestedH == nil then requestedH = self.paddingTop + self.paddingBottom end
+    if requestedW == nil then requestedW = self.paddingLeft + self.paddingRight end
+    if requestedH == nil then requestedH = self.paddingTop + self.paddingBottom end
     local contentW, contentH = computeContent(
         self,
         requestedW - self.paddingLeft - self.paddingRight,
         requestedH - self.paddingTop - self.paddingBottom
     )
     return sizeFromContentSize(self, contentW, contentH, requestedW, requestedH)
-end
-
-local function drawChild(self, term, child, posX, posY, availableW, availableH)
-    term.setTextColor(term.defaultTextColor)
-    term.setBackgroundColor(term.defaultBackgroundColor)
-    if self.textColor ~= nil then
-        term.setTextColor(self.textColor)
-    end
-    if self.backgroundColor ~= nil then
-        term.setBackgroundColor(self.backgroundColor)
-    end
-    child:draw(term, posX, posY, availableW, availableH)
-    term.setTextColor(term.defaultTextColor)
-    term.setBackgroundColor(term.defaultBackgroundColor)
 end
 
 local function calcSlackFromMiddle(max, nElems, i)
@@ -209,6 +201,59 @@ local function align(alignContent, slack, i, nElems)
     return 0
 end
 
+function computeFullTiling(self, blockWidth, blockHeight, contentW, contentH, nLines, drawChild)
+    local posX, posY = x + self.paddingLeft, y + self.paddingTop
+
+    local lineHeight = 0
+    local lineWidth = 0
+    local elemsInLine = 0
+    computeContent(self, blockWidth, blockHeight, 1,
+        function(i, iInLine, iLine, wThisLine_, maxHThisLine_, child, realW, realH)
+            if i ~= 1 and iInLine == 1 then
+                posY = posY + lineHeight
+                posX = x + self.paddingLeft
+            end
+
+            if iInLine == 1 then
+                -- get line height!
+                local first = true
+                computeContent(self, blockWidth, blockHeight, i, function(_, iInLine_, _, wThisLine, maxHThisLine)
+                    if not first and iInLine_ == 1 then
+                        return false -- stop iteration
+                    end
+
+                    lineHeight = maxHThisLine
+                    lineWidth = wThisLine
+                    elemsInLine = iInLine_
+                    first = false
+                    return true
+                end)
+            end
+
+            local slackW = blockWidth - lineWidth -- per line slack
+            local slackH = blockHeight - contentH -- whole content slack
+
+            posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
+            if iInLine == 1 then
+                posY = posY + align(self.alignContentY, slackH, iLine, nLines)
+            end
+
+            -- between children align
+            local correctedY = posY + align(self.alignChildren, lineHeight - realH, 1, 1)
+
+            if not drawChild(child,
+                    posX + child.marginLeft, correctedY + child.marginTop,
+                    realW - child.marginLeft - child.marginRight, realH - child.marginTop - child.marginBottom)
+            then
+                return false
+            end
+
+            posX = posX + realW
+
+            return true
+        end)
+end
+
 function Block:draw(term, x, y, requestedW, requestedH)
     if self.transparent then return end
     local blockWidth = requestedW - self.paddingLeft - self.paddingRight
@@ -230,54 +275,64 @@ function Block:draw(term, x, y, requestedW, requestedH)
         end
     end
 
-    local posX, posY = x + self.paddingLeft, y + self.paddingTop
+    computeFullTiling(self, blockWidth, blockHeight, contentW, contentH, nLines,
+        function(child, posX, posY, availableW, availableH)
+            term.setTextColor(term.defaultTextColor)
+            term.setBackgroundColor(term.defaultBackgroundColor)
+            if self.textColor ~= nil then
+                term.setTextColor(self.textColor)
+            end
+            if self.backgroundColor ~= nil then
+                term.setBackgroundColor(self.backgroundColor)
+            end
+            child:draw(term, posX, posY, availableW, availableH)
+            term.setTextColor(term.defaultTextColor)
+            term.setBackgroundColor(term.defaultBackgroundColor)
+            return true
+        end)
+end
 
-    local lineHeight = 0
-    local lineWidth = 0
-    local elemsInLine = 0
-    computeContent(self, blockWidth, blockHeight, 1, function(i, iInLine, iLine, wThisLine_, maxHThisLine_, child, realW, realH)
-        if i ~= 1 and iInLine == 1 then
-            posY = posY + lineHeight
-            posX = x + self.paddingLeft
-        end
+local function findChildAt(self, x, y, requestedW, requestedH)
+    if self.transparent then return end
+    local blockWidth = requestedW - self.paddingLeft - self.paddingRight
+    local blockHeight = requestedH - self.paddingTop - self.paddingBottom
 
-        if iInLine == 1 then
-            -- get line height!
-            local first = true
-            computeContent(self, blockWidth, blockHeight, i, function(_, iInLine_, _, wThisLine, maxHThisLine)
-                if not first and iInLine_ == 1 then
-                    return false -- stop iteration
-                end
+    local contentW, contentH, nLines = computeContent(self, blockWidth, blockHeight)
 
-                lineHeight = maxHThisLine
-                lineWidth = wThisLine
-                elemsInLine = iInLine_
-                first = false
-                return true
-            end)
-        end
+    local foundChild, relX, relY
+    computeFullTiling(self, blockWidth, blockHeight, contentW, contentH, nLines,
+        function(child, posX, posY, availableW, availableH)
+            if x >= posX and x < posX + availableW and y >= posY and y < posY + availableH then
+                relX = x - posX
+                relY = y - posY
+                foundChild = child
+                return false
+            end
+            return true
+        end)
 
-        local slackW = blockWidth - lineWidth -- per line slack
-        local slackH = blockHeight - contentH -- whole content slack
+    return foundChild, relX, relY
+end
 
-        posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
-        -- print(self.alignContentY, slackH, iLine, nLines, blockHeight, contentH)
-        if iInLine == 1 then
-        	posY = posY + align(self.alignContentY, slackH, iLine, nLines)
-        end
+function Block:onMonitorTouch(x, y, requestedW, requestedH)
+    local child, relX, relY = findChildAt(self, x, y, requestedW, requestedH)
+    if child then
+        child:onMonitorTouch(relX, relY, requestedW, requestedH)
+    end
+end
 
-        -- between children align
-        print(self.alignChildren, lineHeight - realH, 1, 1)
-        correctedY = posY + align(self.alignChildren, lineHeight - realH, 1, 1)
+function Block:onClick(x, y, button, requestedW, requestedH)
+    local child, relX, relY = findChildAt(self, x, y, requestedW, requestedH)
+    if child then
+        child:onMonitorTouch(relX, relY, button, requestedW, requestedH)
+    end
+end
 
-        drawChild(self, term, child,
-        	posX + child.marginLeft, correctedY + child.marginTop,
-        	realW - child.marginLeft - child.marginRight, realH - child.marginTop - child.marginBottom)
-
-        posX = posX + realW
-
-        return true
-    end)
+function Block:onMouseClick(x, y, button, requestedW, requestedH)
+    local child, relX, relY = findChildAt(self, x, y, requestedW, requestedH)
+    if child then
+        child:onMonitorTouch(relX, relY, button, requestedW, requestedH)
+    end
 end
 
 local function stringDisplaySize(s)
@@ -349,34 +404,52 @@ local function wrapTerm(term)
         blinkBackgroundColor = colors.black,
         blinkTextColor = colors.white,
     }
-    setmetatable(newTerm, {__index=term})
+    setmetatable(newTerm, { __index = term })
     return newTerm
 end
 
-function draw(obj, term)
-    term = wrapTerm(term or _G.term)
-
-    if not term then
+local function redraw(obj, termObj)
+    if not termObj then
         error("no term")
     end
-    local w, h = term.getSize()
-    term.setCursorPos(1, 1)
-    term.setBackgroundColor(term.defaultBackgroundColor)
-    term.setTextColor(term.defaultTextColor)
-    term.clear()
-    term.setCursorBlink(false)
-    term.setTextScale(0.5)
-    obj:draw(term, 1, 1, w, h)
-    if term.blinkPositionX ~= nil and term.blinkPositionY ~= nil then
-        term.setCursorPos(term.blinkPositionX, term.blinkPositionY)
-        term.setBackgroundColor(term.blinkBackgroundColor)
-        term.setTextColor(term.blinkTextColor)
-        term.setCursorBlink(true)
+    local w, h = termObj.getSize()
+    termObj.setCursorPos(1, 1)
+    termObj.setBackgroundColor(termObj.defaultBackgroundColor)
+    termObj.setTextColor(termObj.defaultTextColor)
+    termObj.clear()
+    termObj.setCursorBlink(false)
+    termObj.setTextScale(0.5)
+    obj:draw(termObj, 1, 1, w, h)
+    if termObj.blinkPositionX ~= nil and termObj.blinkPositionY ~= nil then
+        termObj.setCursorPos(termObj.blinkPositionX, termObj.blinkPositionY)
+        termObj.setBackgroundColor(termObj.blinkBackgroundColor)
+        termObj.setTextColor(termObj.blinkTextColor)
+        termObj.setCursorBlink(true)
+    end
+end
+
+function draw(obj, termObj)
+    termObj = wrapTerm(termObj or term)
+
+    while true do
+        local event, a, b, c = os.pullEvent()
+
+        local w, h = termObj.getSize()
+
+        if event == 'monitor_touch' then
+            obj:onMonitorTouch(b, c, w, h)
+            obj:onClick(b, c, 0, w, h)
+        elseif event == 'mouse_click' then
+            obj:onMouseClick(b, c, a, w, h)
+            obj:onClick(b, c, a, w, h)
+        end
+
+        redraw(obj, termObj)
     end
 end
 
 function makeBlock(h)
-	return Block:new {
+    return Block:new {
         -- paddingTop = 1,
         paddingRight = 1,
         -- paddingBottom = 1,
@@ -387,8 +460,12 @@ function makeBlock(h)
         marginLeft = 1,
         height = h,
         backgroundColor = colors.gray,
-    alignContentX = 'center',
-    alignContentY = 'center',
+        alignContentX = 'center',
+        alignContentY = 'center',
+        onClick = function(self, x, y)
+            print(x, y)
+        end,
+
         Text:new { text = "Hello!" },
     }
 end
