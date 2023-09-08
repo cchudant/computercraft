@@ -217,12 +217,6 @@ function Block:draw(term, x, y, requestedW, requestedH)
     local lineWidth = 0
     local elemsInLine = 0
     computeContent(self, blockWidth, blockHeight, 1, function(i, iInLine, iLine, _, _, child, realW, realH)
-        print(i, iInLine, iLine)
-        if i ~= 1 and iInLine == 1 then
-            posY = posY + lineHeight
-            posX = x + self.paddingLeft
-        end
-
         if iInLine == 1 then
             -- get line height!
             local first = true
@@ -237,6 +231,12 @@ function Block:draw(term, x, y, requestedW, requestedH)
                 first = false
                 return true
             end)
+        end
+
+        print(i, iInLine, iLine)
+        if i ~= 1 and iInLine == 1 then
+            posY = posY + lineHeight
+            posX = x + self.paddingLeft
         end
 
         local slackW = blockWidth - lineWidth   -- per line slack
