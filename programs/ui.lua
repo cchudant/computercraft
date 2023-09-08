@@ -21,9 +21,9 @@ function UIObject:getSize(requestedW, requestedH) return 0, 0 end
 
 ---@class Block: UIObject
 Block = {
-    ---@type number|nil|'fill'
+    ---@type number|nil|'100%'
     width = nil,
-    ---@type number|nil|'fill'
+    ---@type number|nil|'100%'
     height = nil,
     backgroundColor = nil,
     textColor = nil,
@@ -71,6 +71,8 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         local childAvailableW = availableW - child.marginRight - child.marginLeft
         local childAvailableH = availableH - child.marginTop - child.marginBottom
         local w, h = child:getSize(childAvailableW, childAvailableH)
+        if w == '100%' then w = blockWidth end
+        if h == '100%' then h = blockWidth end
 
         local realW = w + child.marginRight + child.marginLeft
         local realH = h + child.marginTop + child.marginBottom
@@ -90,6 +92,8 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
                 childAvailableW = availableW - child.marginRight - child.marginLeft
                 childAvailableH = availableH - child.marginTop - child.marginBottom
                 w, h = child:getSize(childAvailableW, childAvailableH)
+                if w == '100%' then w = blockWidth end
+                if h == '100%' then h = blockWidth end
 
                 realW = w + child.marginRight + child.marginLeft
                 realH = h + child.marginTop + child.marginBottom
@@ -127,8 +131,8 @@ local function sizeFromContentSize(self, contentW, contentH, requestedW, request
     if self.minHeight ~= nil then usedHeight = math.max(usedHeight, self.minHeight) end
     if self.maxHeight ~= nil then usedHeight = math.min(usedHeight, self.maxHeight) end
 
-    if self.width == 'full' then usedWidth = math.max(requestedW, usedWidth) end
-    if self.height == 'full' then usedHeight = math.max(requestedH, usedHeight) end
+    if self.width == '100%' then usedWidth = '100%' end
+    if self.height == '100%' then usedHeight = '100%' end
 
     return usedWidth, usedHeight
 end
@@ -195,6 +199,8 @@ function Block:draw(term, x, y, requestedW, requestedH)
 
     local contentW, contentH, nLines = computeContent(self, blockWidth, blockHeight)
     local width, height = sizeFromContentSize(self, contentW, contentH, requestedW, requestedH)
+    if width == '100%' then width = requestedW end
+    if height == '100%' then height = requestedH end
 
     if self.backgroundColor ~= nil then
         term.setBackgroundColor(self.backgroundColor)
@@ -362,25 +368,25 @@ function makeBlock()
 end
 
 local interface = Block:new {
-    width = 'full',
-    height = 'full',
+    width = '100%',
+    height = '100%',
     backgroundColor = colors.yellow,
     Text:new { text = 'begin' },
     Block:new {
-    	width = 'full',
+    	width = '100%',
 	    alignContentX = 'begin',
 	    alignContentY = 'begin',
     	makeBlock(),
     },
     Block:new {
-    	width = 'full',
+    	width = '100%',
 	    alignContentX = 'begin',
 	    alignContentY = 'begin',
     	makeBlock(),
     	makeBlock(),
     },
     Block:new {
-    	width = 'full',
+    	width = '100%',
 	    alignContentX = 'begin',
 	    alignContentY = 'begin',
     	makeBlock(),
