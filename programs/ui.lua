@@ -73,8 +73,8 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         local childAvailableW = availableW - child.marginRight - child.marginLeft
         local childAvailableH = availableH - child.marginTop - child.marginBottom
         local w, h = child:getSize(childAvailableW, childAvailableH)
-        if w == '100%' then w = blockWidth end
-        if h == '100%' then h = blockHeight end
+        if w == '100%' then w = blockWidth - child.marginRight - child.marginLeft end
+        if h == '100%' then h = blockHeight - child.marginTop - child.marginBottom end
 
         local realW = w + child.marginRight + child.marginLeft
         local realH = h + child.marginTop + child.marginBottom
@@ -92,8 +92,8 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
                 childAvailableW = availableW - child.marginRight - child.marginLeft
                 childAvailableH = availableH - child.marginTop - child.marginBottom
                 w, h = child:getSize(childAvailableW, childAvailableH)
-                if w == '100%' then w = blockWidth end
-                if h == '100%' then h = blockHeight end
+		        if w == '100%' then w = blockWidth - child.marginRight - child.marginLeft end
+		        if h == '100%' then h = blockHeight - child.marginTop - child.marginBottom end
 
                 realW = w + child.marginRight + child.marginLeft
                 realH = h + child.marginTop + child.marginBottom
