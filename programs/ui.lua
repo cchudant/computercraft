@@ -146,6 +146,8 @@ local function sizeFromContentSize(self, contentW, contentH, requestedW, request
 end
 
 function Block:getSize(requestedW, requestedH)
+	if requestedW == nil then requestedW = 0 end
+	if requestedH == nil then requestedH = 0 end
     local contentW, contentH = computeContent(
         self,
         requestedW - self.paddingLeft - self.paddingRight,
