@@ -380,12 +380,12 @@ function makeLine(config)
 		    alignContentX = config,
 		    alignContentY = 'begin',
 	    	makeBlock(),
+	    	makeBlock(),
 	    },
 	    Block:new {
 	    	-- width = '100%',
 		    alignContentX = config,
 		    alignContentY = 'begin',
-	    	makeBlock(),
 	    	makeBlock(),
 	    }
 	    -- Block:new {
@@ -430,5 +430,4 @@ local interface = Block:new {
 
 
 local monitor = peripheral.wrap('right')
-print(interface:getSize())
 draw(interface, monitor)
