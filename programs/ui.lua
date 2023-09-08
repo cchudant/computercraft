@@ -114,7 +114,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         end
 
         if self.childrenDirection == 'right' then
-        	if iInLine == 1 then
+        	if iInLine == 1 and i ~= 1 then
                 maxHeightThisLine = 0
         	end
         end
