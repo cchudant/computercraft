@@ -217,7 +217,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
     local elemsInLine = 0
     computeContent(self, blockWidth, blockHeight, 1, function(i, iInLine, iLine, _, _, child, realW, realH)
         if i ~= 1 and iInLine == 1 then
-            posY = posY + lineWidth
+            posY = posY + lineHeight
         end
 
         if iInLine == 1 then
