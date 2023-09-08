@@ -341,64 +341,8 @@ local interface = Block:new {
     width = 'full',
     height = 'full',
     backgroundColor = colors.yellow,
-    alignContentX = 'spaceBetween',
-    alignContentY = 'spaceBetween',
-    Block:new {
-        paddingTop = 1,
-        paddingRight = 1,
-        paddingBottom = 1,
-        paddingLeft = 1,
-        backgroundColor = colors.gray,
-        Text:new { text = "Hello!" }
-    },
-    Block:new {
-        paddingTop = 1,
-        paddingRight = 1,
-        paddingBottom = 1,
-        paddingLeft = 1,
-        backgroundColor = colors.gray,
-        Text:new { text = "Hello!" }
-    },
-    Block:new {
-        paddingTop = 1,
-        paddingRight = 1,
-        paddingBottom = 1,
-        paddingLeft = 1,
-        backgroundColor = colors.gray,
-        Text:new { text = "Hello!" }
-    },
-    Block:new {
-        paddingTop = 1,
-        paddingRight = 1,
-        paddingBottom = 1,
-        paddingLeft = 1,
-        backgroundColor = colors.gray,
-        Text:new { text = "Hello!" }
-    },
-    Block:new {
-        paddingTop = 1,
-        paddingRight = 1,
-        paddingBottom = 1,
-        paddingLeft = 1,
-        backgroundColor = colors.gray,
-        Text:new { text = "Hello!" }
-    },
-    Block:new {
-        paddingTop = 1,
-        paddingRight = 1,
-        paddingBottom = 1,
-        paddingLeft = 1,
-        backgroundColor = colors.gray,
-        Text:new { text = "Hello!" }
-    },
-    Block:new {
-        paddingTop = 1,
-        paddingRight = 1,
-        paddingBottom = 1,
-        paddingLeft = 1,
-        backgroundColor = colors.gray,
-        Text:new { text = "Hello!" }
-    },
+    alignContentX = 'end',
+    alignContentY = 'end',
     Block:new {
         paddingTop = 1,
         paddingRight = 1,
