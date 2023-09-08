@@ -268,10 +268,10 @@ function Block:draw(term, x, y, requestedW, requestedH)
 
         -- between children align
         print(self.alignChildren, lineHeight - realH, 1, 1)
-        posY = posY + align(self.alignChildren, lineHeight - realH, 1, 1)
+        correctedY = posY + align(self.alignChildren, lineHeight - realH, 1, 1)
 
         drawChild(self, term, child,
-        	posX + child.marginLeft, posY + child.marginTop,
+        	posX + child.marginLeft, correctedY + child.marginTop,
         	realW - child.marginLeft - child.marginRight, realH - child.marginTop - child.marginBottom)
 
         posX = posX + realW
