@@ -84,7 +84,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
             
             availableW = availableW - realW
 
-            if availableW <= 0 and i ~= 1 then
+            if availableW < 0 and i ~= 1 then
                 -- wrap
 
                 availableW = blockWidth
