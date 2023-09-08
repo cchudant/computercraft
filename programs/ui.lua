@@ -130,8 +130,6 @@ local function sizeFromContentSize(self, contentW, contentH, requestedW, request
     if self.width == 'full' then usedWidth = math.max(requestedW, usedWidth) end
     if self.height == 'full' then usedHeight = math.max(requestedH, usedHeight) end
 
-    print(contentW, contentH, requestedW, requestedH, usedWidth, usedHeight)
-
     return usedWidth, usedHeight
 end
 
@@ -141,6 +139,7 @@ function Block:getSize(requestedW, requestedH)
         requestedW - self.paddingLeft - self.paddingRight,
         requestedH - self.paddingTop - self.paddingBottom
     )
+    print(contentW, contentH, requestedW, requestedH, sizeFromContentSize(self, contentW, contentH, requestedW, requestedH))
     return sizeFromContentSize(self, contentW, contentH, requestedW, requestedH)
 end
 
