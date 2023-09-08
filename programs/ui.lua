@@ -408,6 +408,7 @@ function makeLine(config)
 	    	makeBlock(),
 	    	makeBlock(),
 	    	makeBlock(),
+	    	makeBlock(),
 	    }
 end
 
