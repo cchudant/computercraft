@@ -56,6 +56,8 @@ Block = UIObject:new(Block)
 
 ---@param self Block
 local function computeContent(self, blockWidth, blockHeight, start, func)
+	if blockWidth == nil then blockWidth = 0 end
+	if blockHeight == nil then blockHeight = 0 end
     local availableW = blockWidth
     local availableH = blockHeight
     local widthThisLine = 0
@@ -426,5 +428,5 @@ local interface = Block:new {
 
 
 local monitor = peripheral.wrap('right')
-print(interface:getSize(monitor.getSize()))
+print(interface:getSize())
 draw(interface, monitor)
