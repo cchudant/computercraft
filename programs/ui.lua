@@ -80,13 +80,11 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         local realH = h + child.marginTop + child.marginBottom
 
         if self.childrenDirection == 'right' then
-            widthThisLine = widthThisLine + realW
+            maxHeightThisLine = math.max(maxHeightThisLine, realH)
             
             availableW = availableW - realW
             if availableW <= 0 and i ~= 1 then
                 -- wrap
-                totalW = math.max(widthThisLine, totalW)
-                totalH = totalH + maxHeightThisLine
 
                 availableW = blockWidth
                 availableH = availableH - realH
@@ -101,10 +99,15 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
                 realH = h + child.marginTop + child.marginBottom
 
                 maxHeightThisLine = realH
+
+                totalW = math.max(widthThisLine, totalW)
+                totalH = totalH + maxHeightThisLine
+
                 widthThisLine = 0
                 totalLines = totalLines + 1
                 iInLine = 1
             else
+            	widthThisLine = widthThisLine + realW
                 totalW = totalW + w
                 iInLine = iInLine + 1
             end
@@ -113,7 +116,6 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         if i == 1 then totalLines = 1 end
 
         if func then
-        	print('d', i, iInLine, totalLines, maxHeightThisLine)
             if not func(i, iInLine, totalLines, widthThisLine, maxHeightThisLine, child, realW, realH) then break end
         end
     end
@@ -222,7 +224,8 @@ function Block:draw(term, x, y, requestedW, requestedH)
     local lineHeight = 0
     local lineWidth = 0
     local elemsInLine = 0
-    computeContent(self, blockWidth, blockHeight, 1, function(i, iInLine, iLine, _, _, child, realW, realH)
+    computeContent(self, blockWidth, blockHeight, 1, function(i, iInLine, iLine, wThisLine_, maxHThisLine_, child, realW, realH)
+    	print(i, iInLine, iLine, wThisLine_, maxHThisLine_)
         if i ~= 1 and iInLine == 1 then
             posY = posY + lineHeight
             posX = x + self.paddingLeft
