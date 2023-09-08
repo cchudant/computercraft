@@ -397,7 +397,7 @@ local interface = Block:new {
     width = '100%',
     height = '100%',
     backgroundColor = colors.yellow,
-    makeLine('end'),
+    makeLine('center'),
     -- makeLine('end'),
     -- makeLine('center'),
     -- makeLine('space'),
