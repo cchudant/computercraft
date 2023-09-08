@@ -84,7 +84,9 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
             
             availableW = availableW - realW
 
-            print(availableW, realW, blockWidth, blockHeight)
+            if i == 3 then 
+	            print(availableW, realW, blockWidth, blockHeight)
+	        end
 
             if availableW < 0 and i ~= 1 then
                 -- wrap
