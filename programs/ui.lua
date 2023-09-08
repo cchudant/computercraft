@@ -424,5 +424,7 @@ local interface = Block:new {
     -- makeLine('spaceBetween'),
 }
 
+print(interface:getSize())
+
 local monitor = peripheral.wrap('right')
 draw(interface, monitor)
