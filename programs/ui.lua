@@ -64,7 +64,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
     local totalW, totalH = 0, 0
     local totalLines = 0
 
-    local iInLine = 1
+    local iInLine = 0
 
     for i = start or 1, #self do
         local child = self[i]
