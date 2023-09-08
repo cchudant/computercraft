@@ -167,6 +167,7 @@ local function calcSlackFromMiddle(max, nElems, i)
 end
 
 local function align(alignContent, slack, i, nElems)
+	print('align', alignContent, slack, i, nElems)
     if alignContent == 'begin' then
         return 0
     elseif alignContent == 'end' then
