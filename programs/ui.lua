@@ -367,7 +367,7 @@ local interface = Block:new {
     height = 'full',
     backgroundColor = colors.yellow,
     alignContentY = 'center',
-    Text { text = 'begin' },
+    Text:new { text = 'begin' },
     Block:new {
     	width = 'full',
 	    alignContentX = 'begin',
@@ -389,7 +389,7 @@ local interface = Block:new {
     	makeBlock(),
     	makeBlock(),
     },
-    Text { text = 'end' },
+    Text:new { text = 'end' },
     Block:new {
     	width = 'full',
 	    alignContentX = 'end',
@@ -411,7 +411,7 @@ local interface = Block:new {
     	makeBlock(),
     	makeBlock(),
     },
-    Text { text = 'center' },
+    Text:new { text = 'center' },
     Block:new {
     	width = 'full',
 	    alignContentX = 'center',
@@ -433,7 +433,7 @@ local interface = Block:new {
     	makeBlock(),
     	makeBlock(),
     },
-    Text { text = 'space' },
+    Text:new { text = 'space' },
     Block:new {
     	width = 'full',
 	    alignContentX = 'space',
@@ -455,7 +455,7 @@ local interface = Block:new {
     	makeBlock(),
     	makeBlock(),
     },
-    Text { text = 'spaceBetween' },
+    Text:new { text = 'spaceBetween' },
     Block:new {
     	width = 'full',
 	    alignContentX = 'spaceBetween',
