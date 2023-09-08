@@ -232,7 +232,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
                 return true
             end)
         end
-
+
         print(i, iInLine, iLine)
         if i ~= 1 and iInLine == 1 then
             posY = posY + lineHeight
