@@ -74,7 +74,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         local childAvailableH = availableH - child.marginTop - child.marginBottom
         local w, h = child:getSize(childAvailableW, childAvailableH)
         if w == '100%' then w = blockWidth end
-        if h == '100%' then h = blockWidth end
+        if h == '100%' then h = blockHeight end
 
         local realW = w + child.marginRight + child.marginLeft
         local realH = h + child.marginTop + child.marginBottom
@@ -93,7 +93,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
                 childAvailableH = availableH - child.marginTop - child.marginBottom
                 w, h = child:getSize(childAvailableW, childAvailableH)
                 if w == '100%' then w = blockWidth end
-                if h == '100%' then h = blockWidth end
+                if h == '100%' then h = blockHeight end
 
                 realW = w + child.marginRight + child.marginLeft
                 realH = h + child.marginTop + child.marginBottom
@@ -374,7 +374,7 @@ end
 function makeLine(config)
 	-- return Text:new { text = config, textColor = colors.black }
 	    return Block:new {
-	    	-- width = '100%',
+	    	width = '100%',
 		    alignContentX = config,
 		    alignContentY = 'begin',
 	    	makeBlock(),
