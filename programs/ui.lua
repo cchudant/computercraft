@@ -233,12 +233,6 @@ function Block:draw(term, x, y, requestedW, requestedH)
             end)
         end
 
-        print(i, iInLine, iLine)
-        if i ~= 1 and iInLine == 1 then
-            posY = posY + lineHeight
-            posX = x + self.paddingLeft
-        end
-
         local slackW = blockWidth - lineWidth   -- per line slack
         local slackH = blockHeight - lineHeight -- in line slack
 
@@ -250,6 +244,12 @@ function Block:draw(term, x, y, requestedW, requestedH)
         	realW - child.marginLeft - child.marginRight, realH - child.marginTop - child.marginBottom)
 
         posX = posX + realW
+
+        print(i, iInLine, iLine)
+        if i ~= 1 and iInLine == 1 then
+            posY = posY + lineHeight
+            posX = x + self.paddingLeft
+        end
 
         return true
     end)
