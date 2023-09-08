@@ -265,6 +265,10 @@ function Block:draw(term, x, y, requestedW, requestedH)
         if iInLine == 1 then
         	posY = posY + align(self.alignContentY, slackH, iLine, nLines)
         end
+
+        -- between children align
+        posY = posY + align(self.alignChildren, lineHeight - realH, 1, 1)
+
         drawChild(self, term, child,
         	posX + child.marginLeft, posY + child.marginTop,
         	realW - child.marginLeft - child.marginRight, realH - child.marginTop - child.marginBottom)
