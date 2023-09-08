@@ -387,6 +387,8 @@ function makeBlock(h)
         marginLeft = 1,
         height = h,
         backgroundColor = colors.gray,
+    alignContentX = 'center',
+    alignContentY = 'center',
         Text:new { text = "Hello!" },
     }
 end
