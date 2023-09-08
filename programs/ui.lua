@@ -48,6 +48,10 @@ Block = {
     ---@type 'begin'|'center'|'spaceBetween'|'space'|'end'
     alignContentY = 'begin',
 
+    ---Align the children among themselves
+    ---@type 'begin'|'center'|'end'
+    alignChildren = 'begin'
+
     ---Direction children should be stacked first
     ---@type 'right'|'bottom'
     childrenDirection = 'right',
@@ -253,8 +257,8 @@ function Block:draw(term, x, y, requestedW, requestedH)
             end)
         end
 
-        local slackW = blockWidth - lineWidth   -- per line slack
-        local slackH = blockHeight - lineHeight -- in line slack
+        local slackW = blockWidth - lineWidth  -- per line slack
+        local slackH = blockHeight - contentH -- in line slack
 
         posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
         print(self.alignContentY, slackH, iLine, nLines)
