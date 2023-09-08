@@ -148,8 +148,8 @@ local function sizeFromContentSize(self, contentW, contentH, requestedW, request
     if self.minHeight ~= nil then usedHeight = math.max(usedHeight, self.minHeight) end
     if self.maxHeight ~= nil then usedHeight = math.min(usedHeight, self.maxHeight) end
 
-    if self.width == '100%' then usedWidth = '100%' end
-    if self.height == '100%' then usedHeight = '100%' end
+    if self.height ~= nil then usedHeight = self.height end
+    if self.width ~= nil then usedWidth = self.width end
 
     return usedWidth, usedHeight
 end
@@ -395,6 +395,9 @@ local interface = Block:new {
     makeBlock(1),
     makeBlock(2),
     makeBlock(3),
+    makeBlock(4),
+    makeBlock(5),
+    makeBlock(6),
 }
 
 local monitor = peripheral.find('monitor')
