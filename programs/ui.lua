@@ -391,7 +391,7 @@ local interface = Block:new {
     height = '100%',
     backgroundColor = colors.yellow,
     alignContentX = 'center',
-    alignContentY = 'center',
+    -- alignContentY = 'center',
     makeBlock(1),
     makeBlock(2),
     makeBlock(3),
