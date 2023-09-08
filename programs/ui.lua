@@ -1,5 +1,6 @@
 os.loadAPI("/firmware/apis/util.lua")
 
+---@class UIObject
 UIObject = {
     transparent = false,
     marginLeft = 0,
@@ -15,10 +16,14 @@ function UIObject:new(o)
 end
 
 function UIObject:draw(term, x, y, requestedW, requestedH) end
-function UIObject:getSize(requestedW, requestedH) end
 
-Block = UIObject:new {
+function UIObject:getSize(requestedW, requestedH) return 0, 0 end
+
+---@class Block: UIObject
+Block = {
+    ---@type number|nil|'fill'
     width = nil,
+    ---@type number|nil|'fill'
     height = nil,
     backgroundColor = nil,
     textColor = nil,
@@ -27,88 +32,95 @@ Block = UIObject:new {
     paddingBottom = 0,
     paddingRight = 0,
 
+    ---@type number?
     minHeight = nil,
+    ---@type number?
     minWidth = nil,
+    ---@type number?
     maxHeight = nil,
+    ---@type number?
     maxWidth = nil,
 
+    ---Align content in the X dimension
+    ---@type 'begin'|'center'|'spaceBetween'|'space'|'end'
+    alignContentX = 'begin',
+    ---Align content in the Y dimension
+    ---@type 'begin'|'center'|'spaceBetween'|'space'|'end'
+    alignContentY = 'begin',
+
+    ---Direction children should be stacked first
+    ---@type 'right'|'bottom'
     childrenDirection = 'right',
-    centerElements = false,
 }
+Block = UIObject:new(Block)
 
-local function blockTiling(self, requestedW, requestedH, func)
-    local posX, posY = (self.paddingLeft or 0), (self.paddingTop or 0)
-
-    local blockWidth = requestedW - (self.paddingLeft or 0) - (self.paddingRight or 0)
-    local blockHeight = requestedH - (self.paddingTop or 0) - (self.paddingBottom or 0)
+---@param self Block
+function computeContent(self, blockWidth, blockHeight, start, func)
     local availableW = blockWidth
     local availableH = blockHeight
-
-    local maxWidthThisLine, maxHeightThisLine = 0, 0
-    -- if not onlyOneLine then maxWidthThisLine, maxHeightThisLine = computeTiling(true, 1) end
+    local widthThisLine = 0
+    local maxHeightThisLine = 0
 
     local totalW, totalH = 0, 0
+    local totalLines = 0
 
-    for i = start or 1, #self do
+    local iInLine = 1
+
+    for i = start, #self do
         local child = self[i]
-        local w, h = child:getSize(
-        	availableW - (child.marginRight or 0) - (child.marginLeft or 0),
-        	availableH - (child.marginTop or 0) - (child.marginBottom or 0)
-        )
+        local childAvailableW = availableW - (child.marginRight or 0) - (child.marginLeft or 0)
+        local childAvailableH = availableH - (child.marginTop or 0) - (child.marginBottom or 0)
+        local w, h = child:getSize(childAvailableW, childAvailableH)
 
         local realW = w + (child.marginRight or 0) + (child.marginLeft or 0)
         local realH = h + (child.marginTop or 0) + (child.marginBottom or 0)
-        maxWidthThisLine, maxHeightThisLine = math.max(maxWidthThisLine, realW), math.max(maxHeightThisLine, realH)
 
-        posX, posY = posX + (child.marginLeft or 0), posY + (child.marginTop or 0)
         if self.childrenDirection == 'right' then
+            widthThisLine = widthThisLine + realW
+            maxHeightThisLine = math.max(maxHeightThisLine, realH)
             availableW = availableW - realW
-            totalW = totalW + w
-            print(totalW, i, availableW, realW, maxWidthThisLine, maxHeightThisLine)
             if availableW <= 0 and i ~= 1 then
-            	-- wrap
-                totalW = blockWidth
-            	totalH = totalH + maxHeightThisLine
-                posX = self.paddingLeft or 0
-                posY = posY + maxHeightThisLine
-
-			    w, h = child:getSize(
-			    	availableW - (child.marginRight or 0) - (child.marginLeft or 0),
-			    	availableH - (child.marginTop or 0) - (child.marginBottom or 0)
-			    )
-			    realW = w + (child.marginRight or 0) + (child.marginLeft or 0)
-			    realH = h + (child.marginTop or 0) + (child.marginBottom or 0)
+                -- wrap
+                totalW = math.max(widthThisLine, totalW)
+                totalH = totalH + maxHeightThisLine
 
                 availableW = blockWidth
                 availableH = availableH - realH
-                maxHeightThisLine = 0
 
+                childAvailableW = availableW - (child.marginRight or 0) - (child.marginLeft or 0)
+                childAvailableH = availableH - (child.marginTop or 0) - (child.marginBottom or 0)
+                w, h = child:getSize(childAvailableW, childAvailableH)
+
+                realW = w + (child.marginRight or 0) + (child.marginLeft or 0)
+                realH = h + (child.marginTop or 0) + (child.marginBottom or 0)
+
+                maxHeightThisLine = 0
+                widthThisLine = 0
+                totalLines = totalLines + 1
+                iInLine = 1
+            else
+                totalW = totalW + w
+                iInLine = iInLine + 1
             end
         end
 
-        -- local correctedX, correctedY = posX, posY
-        -- if self.centerItems then
-        --     if self.childrenDirection == 'bottom' then
-        --         local fatW = maxWidthThisLine - w
-        --         correctedX = correctedX + math.floor((fatW / 2) + 0.5) -- pseudo round
-        --     else
-        --         local fatH = maxHeightThisLine - h
-        --         correctedY = correctedY + math.floor((fatH / 2) + 0.5) -- pseudo round
-        --     end
-        -- end
+        if i == 1 then totalLines = 1 end
 
-        if func ~= nil then func(child, posX, posY, w, h) end
-
-        if self.childrenDirection == 'right' then
-            posX = posX + realW
+        if func then
+            if not func(i, iInLine, totalLines, widthThisLine, maxHeightThisLine, child, realW, realH) then break end
         end
     end
+
     if self.childrenDirection == 'right' then
-    	totalH = totalH + maxHeightThisLine
+        totalH = totalH + maxHeightThisLine
     end
 
-    local usedWidth = totalW + (self.paddingLeft or 0) + (self.paddingRight or 0)
-    local usedHeight = totalH + (self.paddingTop or 0) + (self.paddingBottom or 0)
+    return totalW, totalH, totalLines
+end
+
+local function sizeFromContentSize(self, contentW, contentH, requestedW, requestedH)
+    local usedWidth = contentW + self.paddingLeft + self.paddingRight
+    local usedHeight = contentH + self.paddingTop + self.paddingBottom
 
     if self.minWidth ~= nil then usedWidth = math.max(usedWidth, self.minWidth) end
     if self.maxWidth ~= nil then usedWidth = math.min(usedWidth, self.maxWidth) end
@@ -122,39 +134,110 @@ local function blockTiling(self, requestedW, requestedH, func)
 end
 
 function Block:getSize(requestedW, requestedH)
-    return blockTiling(self, requestedW, requestedH)
+    local contentW, contentH = computeContent(
+        self,
+        requestedW - self.paddingLeft - self.paddingRight,
+        requestedH - self.paddingTop - self.paddingBottom
+    )
+    return sizeFromContentSize(self, contentW, contentH, requestedW, requestedH)
+end
+
+local function drawChild(self, term, child, posX, posY, availableW, availableH)
+    print("call", posX, posY, availableW, availableH)
+    term.setTextColor(term.defaultTextColor)
+    term.setBackgroundColor(term.defaultBackgroundColor)
+    if self.textColor ~= nil then
+        term.setTextColor(self.textColor)
+    end
+    if self.backgroundColor ~= nil then
+        term.setBackgroundColor(self.backgroundColor)
+    end
+    child:draw(term, x + posX, y + posY, availableW, availableH)
+    term.setTextColor(term.defaultTextColor)
+    term.setBackgroundColor(term.defaultBackgroundColor)
+end
+
+local function calcSlackFromMiddle(max, nElems, i)
+    local v = math.floor(max / nElems)
+    local rem = max % nElems
+    local skip = math.floor(nElems / 2 - rem / 2 + 0.5)
+
+    if i < rem + skip and i >= skip then v = v + 1 end
+    return v
+end
+
+local function align(alignContent, slack, i, nElems)
+    if alignContent == 'begin' then
+        return 0
+    elseif alignContent == 'end' then
+        if i == 1 then return slack end
+        return 0
+    elseif alignContent == 'center' then
+        if i == 1 then return math.floor(slack / 2) end
+        return 0
+    elseif alignContent == 'space' then
+        slack = calcSlackFromMiddle(slack, nElems + 1, i)
+        return slack
+    elseif alignContent == 'spaceBetween' then
+        if i == 1 then return 0 end
+
+        slack = calcSlackFromMiddle(slack, nElems - 1, i)
+        return slack
+    end
+    return 0
 end
 
 function Block:draw(term, x, y, requestedW, requestedH)
     if self.transparent then return end
+    local blockWidth = requestedW - self.paddingLeft - self.paddingRight
+    local blockHeight = requestedH - self.paddingTop - self.paddingBottom
 
-    local width, height = self:getSize(requestedW, requestedH)
+    local contentW, contentH, nLines = computeContent(self, blockWidth, blockHeight)
+    local width, height = sizeFromContentSize(self, contentW, contentH, requestedW, requestedH)
+
     if self.backgroundColor ~= nil then
-    	print(self.backgroundColor, self[1])
+        print(self.backgroundColor, self[1])
         term.setBackgroundColor(self.backgroundColor)
 
         print("Got", requestedW, requestedH, width, height)
-        for i = 0, height-1 do
+        for i = 0, height - 1 do
             term.setCursorPos(x, y + i)
-            for _ = 0, width-1 do
+            for _ = 0, width - 1 do
                 term.write(" ")
             end
         end
     end
 
-    blockTiling(self, requestedW, requestedH, function(child, posX, posY, availableW, availableH)
-    	print("call", posX, posY, availableW, availableH)
-        term.setTextColor(term.defaultTextColor)
-        term.setBackgroundColor(term.defaultBackgroundColor)
-        if self.textColor ~= nil then
-            term.setTextColor(self.textColor)
+    local posX, posY = x + self.paddingLeft, y + self.paddingTop
+
+    local lineHeight = 0
+    local lineWidth = 0
+    local elemsInLine = 0
+    computeContent(self, blockWidth, blockHeight, 1, function(i, iInLine, iLine, _, _, child, realW, realH)
+        if iInLine == 1 then
+            -- get line height!
+            local first = true
+            computeContent(self, blockWidth, blockHeight, i, function(_, iInLine_, _, wThisLine, maxHThisLine)
+                if not first and iInLine_ == 1 then
+                    return false -- stop iteration
+                end
+
+                lineHeight = maxHThisLine
+                lineWidth = wThisLine
+                elemsInLine = iInLine_
+                first = false
+                return true
+            end)
         end
-        if self.backgroundColor ~= nil then
-            term.setBackgroundColor(self.backgroundColor)
-        end
-        child:draw(term, x + posX, y + posY, availableW, availableH)
-        term.setTextColor(term.defaultTextColor)
-        term.setBackgroundColor(term.defaultBackgroundColor)
+
+        local slackW = blockWidth - lineWidth   -- per line slack
+        local slackH = blockHeight - lineHeight -- in line slack
+
+        posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
+        posY = posY + align(self.alignContentY, slackH, iLine, nLines)
+        drawChild(self, term, child, posX, posY, realW, realH)
+
+        return true
     end)
 end
 
@@ -186,6 +269,7 @@ function Text:new(obj)
     obj.width, obj.height = stringDisplaySize(obj.text)
     return obj
 end
+
 function Text:draw(term, x, y, parentW, parentH)
     if self.transparent then return end
     if self.backgroundColor ~= nil then
@@ -200,24 +284,25 @@ function Text:draw(term, x, y, parentW, parentH)
         local c = self.text:sub(i, i)
 
         if offsetWidth < parentW and offsetHeight < parentH then
-        	term.write(c)
+            term.write(c)
         end
 
         offsetWidth = offsetWidth + 1
         if c == '\n' then
-        	offsetWidth = 0
-        	offsetHeight = offsetHeight + 1
-        	term.setCursorPos(x + offsetWidth, y + offsetWidth)
+            offsetWidth = 0
+            offsetHeight = offsetHeight + 1
+            term.setCursorPos(x + offsetWidth, y + offsetWidth)
         end
     end
 end
+
 function Text:getSize()
     return self.width, self.height
 end
 
-interface = Block:new {
-	width = 'full',
-	height = 'full',
+local interface = Block:new {
+    width = 'full',
+    height = 'full',
     backgroundColor = colors.yellow,
     Block:new {
         paddingTop = 1,
@@ -225,11 +310,26 @@ interface = Block:new {
         paddingBottom = 1,
         paddingLeft = 1,
         backgroundColor = colors.gray,
-    	Text:new { text = "Hello!" }
+        Text:new { text = "Hello!" }
     },
 }
 
-local monitor = peripheral.wrap('right')
+local function wrapTerm(term)
+    local newTerm = {
+        defaultBackgroundColor = colors.black,
+        defaultTextColor = colors.white,
+        blinkPosition = nil,
+        nil,
+    }
+    newTerm.__index = term
+    setmetatable(newTerm, term)
+    return newTerm
+end
+
+local monitor = wrapTerm(peripheral.wrap('right'))
+if not monitor then
+    error("no monitor")
+end
 monitor.setCursorPos(1, 1)
 monitor.setBackgroundColor(colors.black)
 monitor.setTextColor(colors.white)
@@ -237,6 +337,7 @@ monitor.clear()
 monitor.setTextScale(0.7)
 monitor.defaultBackgroundColor = colors.black
 monitor.defaultTextColor = colors.white
+
 local w, h = monitor.getSize()
 print(interface[1]:getSize(w, h))
 interface:draw(monitor, 1, 1, w, h)
