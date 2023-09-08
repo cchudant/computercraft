@@ -373,6 +373,7 @@ local interface = Block:new {
     backgroundColor = colors.yellow,
     Block:new {
     	width = '100%',
+   		backgroundColor = colors.yellow,
     	Text:new { text = 'begin' },
     },
     Block:new {
