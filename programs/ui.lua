@@ -366,40 +366,39 @@ function makeBlock()
         marginBottom = 1,
         marginLeft = 1,
         backgroundColor = colors.gray,
-        Text:new { text = "Hello!" }
+        Text:new { text = "Hello!" },
     }
 end
+
+function makeLine(config)
+	return Text:new { text = config },
+	    Block:new {
+	    	width = '100%',
+		    alignContentX = config,
+		    alignContentY = 'begin',
+	    	makeBlock(),
+	    },
+	    Block:new {
+	    	width = '100%',
+		    alignContentX = config,
+		    alignContentY = 'begin',
+	    	makeBlock(),
+	    	makeBlock(),
+	    },
+	    Block:new {
+	    	width = '100%',
+		    alignContentX = config,
+		    alignContentY = 'begin',
+	    	makeBlock(),
+	    	makeBlock(),
+	    	makeBlock(),
+	    },
 
 local interface = Block:new {
     width = '100%',
     height = '100%',
     backgroundColor = colors.yellow,
-    -- Block:new {
-    -- 	width = '100%',
-   	-- 	backgroundColor = colors.yellow,
-    -- 	Text:new { text = 'begin' },
-    -- },
-    Block:new {
-    	width = '100%',
-	    alignContentX = 'center',
-	    alignContentY = 'begin',
-    	makeBlock(),
-    },
-    Block:new {
-    	width = '100%',
-	    alignContentX = 'center',
-	    alignContentY = 'begin',
-    	makeBlock(),
-    	makeBlock(),
-    },
-    Block:new {
-    	width = '100%',
-	    alignContentX = 'center',
-	    alignContentY = 'begin',
-    	makeBlock(),
-    	makeBlock(),
-    	makeBlock(),
-    },
+    makeLine('begin'),
 }
 
 local monitor = peripheral.wrap('right')
