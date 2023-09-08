@@ -171,7 +171,7 @@ local function calcSlackFromMiddle(max, nElems, i)
     local rem = max % nElems
     local skip = nElems / 2 - rem / 2
 
-    if i < rem + math.floor(skip) and i >= math.ceil(skip) then v = v + 1 end
+    if i < rem + math.floor(skip) and i > math.ceil(skip) then v = v + 1 end
     return v
 end
 
@@ -387,6 +387,24 @@ function makeLine(config)
 	    	width = '100%',
 		    alignContentX = config,
 		    alignContentY = 'begin',
+	    	makeBlock(),
+	    	makeBlock(),
+	    	makeBlock(),
+	    },
+	    Block:new {
+	    	width = '100%',
+		    alignContentX = config,
+		    alignContentY = 'begin',
+	    	makeBlock(),
+	    	makeBlock(),
+	    	makeBlock(),
+	    	makeBlock(),
+	    },
+	    Block:new {
+	    	width = '100%',
+		    alignContentX = config,
+		    alignContentY = 'begin',
+	    	makeBlock(),
 	    	makeBlock(),
 	    	makeBlock(),
 	    	makeBlock(),
