@@ -261,8 +261,10 @@ function Block:draw(term, x, y, requestedW, requestedH)
         local slackH = blockHeight - contentH -- whole content slack
 
         posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
-        print(self.alignContentY, slackH, iLine, nLines, blockHeight, contentH)
-        posY = posY + align(self.alignContentY, slackH, iLine, nLines)
+        -- print(self.alignContentY, slackH, iLine, nLines, blockHeight, contentH)
+        if iInLine == 1 then
+        	posY = posY + align(self.alignContentY, slackH, iLine, nLines)
+        end
         drawChild(self, term, child,
         	posX + child.marginLeft, posY + child.marginTop,
         	realW - child.marginLeft - child.marginRight, realH - child.marginTop - child.marginBottom)
