@@ -440,4 +440,4 @@ print(Block:new {
 
 
 local monitor = peripheral.wrap('right')
--- draw(interface, monitor)
+draw(interface, monitor)
