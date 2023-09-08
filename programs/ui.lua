@@ -372,15 +372,15 @@ function makeBlock()
 end
 
 function makeLine(config)
-	-- return Text:new { text = config, textColor = colors.black }
-	    return Block:new {
-	    	-- width = '100%',
+	return Text:new { text = config, textColor = colors.black },
+	    Block:new {
+	    	width = '100%',
 		    alignContentX = config,
 		    alignContentY = 'begin',
 	    	makeBlock(),
 	    },
 	    Block:new {
-	    	-- width = '100%',
+	    	width = '100%',
 		    alignContentX = config,
 		    alignContentY = 'begin',
 	    	makeBlock(),
@@ -394,25 +394,25 @@ function makeLine(config)
 	    	makeBlock(),
 	    	makeBlock(),
 	    }
-	    -- Block:new {
-	    -- 	width = '100%',
-		   --  alignContentX = config,
-		   --  alignContentY = 'begin',
-	    -- 	makeBlock(),
-	    -- 	makeBlock(),
-	    -- 	makeBlock(),
-	    -- 	makeBlock(),
-	    -- },
-	    -- Block:new {
-	    -- 	width = '100%',
-		   --  alignContentX = config,
-		   --  alignContentY = 'begin',
-	    -- 	makeBlock(),
-	    -- 	makeBlock(),
-	    -- 	makeBlock(),
-	    -- 	makeBlock(),
-	    -- 	makeBlock(),
-	    -- }
+	    Block:new {
+	    	width = '100%',
+		    alignContentX = config,
+		    alignContentY = 'begin',
+	    	makeBlock(),
+	    	makeBlock(),
+	    	makeBlock(),
+	    	makeBlock(),
+	    },
+	    Block:new {
+	    	width = '100%',
+		    alignContentX = config,
+		    alignContentY = 'begin',
+	    	makeBlock(),
+	    	makeBlock(),
+	    	makeBlock(),
+	    	makeBlock(),
+	    	makeBlock(),
+	    }
 end
 
 local interface = Block:new {
