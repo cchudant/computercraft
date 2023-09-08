@@ -66,7 +66,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
 
     local iInLine = 1
 
-    for i = start, #self do
+    for i = start or 1, #self do
         local child = self[i]
         local childAvailableW = availableW - (child.marginRight or 0) - (child.marginLeft or 0)
         local childAvailableH = availableH - (child.marginTop or 0) - (child.marginBottom or 0)
