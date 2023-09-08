@@ -219,7 +219,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
         if i ~= 1 and iInLine == 1 then
             posY = posY + lineWidth
         end
-
+
         if iInLine == 1 then
             -- get line height!
             local first = true
