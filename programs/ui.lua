@@ -50,7 +50,7 @@ Block = {
 
     ---Align the children among themselves
     ---@type 'begin'|'center'|'end'
-    alignChildren = 'begin'
+    alignChildren = 'begin',
 
     ---Direction children should be stacked first
     ---@type 'right'|'bottom'
