@@ -386,7 +386,7 @@ function makeLine(config)
 		    alignContentX = config,
 		    alignContentY = 'begin',
 	    	makeBlock(),
-	    	-- makeBlock(),
+	    	makeBlock(),
 	    }
 	    -- Block:new {
 	    -- 	width = '100%',
