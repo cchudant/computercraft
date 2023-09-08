@@ -371,11 +371,11 @@ local interface = Block:new {
     width = '100%',
     height = '100%',
     backgroundColor = colors.yellow,
-    Block:new {
-    	width = '100%',
-   		backgroundColor = colors.yellow,
-    	Text:new { text = 'begin' },
-    },
+    -- Block:new {
+    -- 	width = '100%',
+   	-- 	backgroundColor = colors.yellow,
+    -- 	Text:new { text = 'begin' },
+    -- },
     Block:new {
     	width = '100%',
 	    alignContentX = 'begin',
