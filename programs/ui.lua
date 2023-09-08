@@ -346,6 +346,7 @@ function draw(obj, term)
     term.setBackgroundColor(term.defaultBackgroundColor)
     term.setTextColor(term.defaultTextColor)
     term.clear()
+    term.setCursorBlink(false)
     term.setTextScale(0.5)
     obj:draw(term, 1, 1, w, h)
     if term.blinkPositionX ~= nil and term.blinkPositionY ~= nil then
