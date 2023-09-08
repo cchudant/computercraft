@@ -300,20 +300,6 @@ function Text:getSize()
     return self.width, self.height
 end
 
-local interface = Block:new {
-    width = 'full',
-    height = 'full',
-    backgroundColor = colors.yellow,
-    Block:new {
-        paddingTop = 1,
-        paddingRight = 1,
-        paddingBottom = 1,
-        paddingLeft = 1,
-        backgroundColor = colors.gray,
-        Text:new { text = "Hello!" }
-    },
-}
-
 local function wrapTerm(term)
     if term == nil then return nil end
     local newTerm = {
@@ -348,6 +334,21 @@ function draw(obj, term)
         term.setCursorBlink(true)
     end
 end
+
+local interface = Block:new {
+    width = 'full',
+    height = 'full',
+    backgroundColor = colors.yellow,
+    alignContentX = 'center',
+    Block:new {
+        paddingTop = 1,
+        paddingRight = 1,
+        paddingBottom = 1,
+        paddingLeft = 1,
+        backgroundColor = colors.gray,
+        Text:new { text = "Hello!" }
+    },
+}
 
 local monitor = peripheral.wrap('right')
 draw(interface, monitor)
