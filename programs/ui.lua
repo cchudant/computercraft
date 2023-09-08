@@ -143,12 +143,10 @@ function Block:getSize(requestedW, requestedH)
         requestedW - self.paddingLeft - self.paddingRight,
         requestedH - self.paddingTop - self.paddingBottom
     )
-    print(contentW, contentH, requestedW, requestedH, sizeFromContentSize(self, contentW, contentH, requestedW, requestedH))
     return sizeFromContentSize(self, contentW, contentH, requestedW, requestedH)
 end
 
 local function drawChild(self, term, child, posX, posY, availableW, availableH)
-    print("call", posX, posY, availableW, availableH)
     term.setTextColor(term.defaultTextColor)
     term.setBackgroundColor(term.defaultBackgroundColor)
     if self.textColor ~= nil then
@@ -244,7 +242,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
         local slackW = blockWidth - lineWidth   -- per line slack
         local slackH = blockHeight - lineHeight -- in line slack
 
-        print(posX, posY)
+        print(iInLine, iLine, posX, posY)
 
         posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
         posY = posY + align(self.alignContentY, slackH, iLine, nLines)
