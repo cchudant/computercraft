@@ -155,6 +155,7 @@ function Block:getSize(requestedW, requestedH)
 end
 
 local function drawChild(self, term, child, posX, posY, availableW, availableH)
+	print(posX, posY, availableW, availableH)
     term.setTextColor(term.defaultTextColor)
     term.setBackgroundColor(term.defaultBackgroundColor)
     if self.textColor ~= nil then
