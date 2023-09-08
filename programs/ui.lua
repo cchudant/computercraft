@@ -347,48 +347,136 @@ function draw(obj, term)
     end
 end
 
+function makeBlock()
+	return Block:new {
+        paddingTop = 1,
+        paddingRight = 1,
+        paddingBottom = 1,
+        paddingLeft = 1,
+        marginTop = 1,
+        marginRight = 1,
+        marginBottom = 1,
+        marginLeft = 1,
+        backgroundColor = colors.gray,
+        Text:new { text = "Hello!" }
+    }
+end
+
 local interface = Block:new {
     width = 'full',
     height = 'full',
     backgroundColor = colors.yellow,
-    alignContentX = 'center',
-    alignContentY = 'begin',
+    alignContentY = 'center'
+    Text { text = 'begin' },
     Block:new {
-        paddingTop = 1,
-        paddingRight = 1,
-        paddingBottom = 1,
-        paddingLeft = 1,
-        marginTop = 1,
-        marginRight = 1,
-        marginBottom = 1,
-        marginLeft = 1,
-        backgroundColor = colors.gray,
-        Text:new { text = "Hello!" }
+    	width = 'full',
+	    alignContentX = 'begin',
+	    alignContentY = 'begin',
+    	makeBlock(),
     },
     Block:new {
-        paddingTop = 1,
-        paddingRight = 1,
-        paddingBottom = 1,
-        paddingLeft = 1,
-        marginTop = 1,
-        marginRight = 1,
-        marginBottom = 1,
-        marginLeft = 1,
-        backgroundColor = colors.gray,
-        Text:new { text = "Hello!" }
+    	width = 'full',
+	    alignContentX = 'begin',
+	    alignContentY = 'begin',
+    	makeBlock(),
+    	makeBlock(),
     },
     Block:new {
-        paddingTop = 1,
-        paddingRight = 1,
-        paddingBottom = 1,
-        paddingLeft = 1,
-        marginTop = 1,
-        marginRight = 1,
-        marginBottom = 1,
-        marginLeft = 1,
-        backgroundColor = colors.gray,
-        Text:new { text = "Hello!" }
+    	width = 'full',
+	    alignContentX = 'begin',
+	    alignContentY = 'begin',
+    	makeBlock(),
+    	makeBlock(),
+    	makeBlock(),
     },
+    Text { text = 'end' },
+    Block:new {
+    	width = 'full',
+	    alignContentX = 'end',
+	    alignContentY = 'begin',
+    	makeBlock(),
+    },
+    Block:new {
+    	width = 'full',
+	    alignContentX = 'end',
+	    alignContentY = 'begin',
+    	makeBlock(),
+    	makeBlock(),
+    },
+    Block:new {
+    	width = 'full',
+	    alignContentX = 'end',
+	    alignContentY = 'begin',
+    	makeBlock(),
+    	makeBlock(),
+    	makeBlock(),
+    },
+    Text { text = 'center' },
+    Block:new {
+    	width = 'full',
+	    alignContentX = 'center',
+	    alignContentY = 'begin',
+    	makeBlock(),
+    },
+    Block:new {
+    	width = 'full',
+	    alignContentX = 'center',
+	    alignContentY = 'begin',
+    	makeBlock(),
+    	makeBlock(),
+    },
+    Block:new {
+    	width = 'full',
+	    alignContentX = 'center',
+	    alignContentY = 'begin',
+    	makeBlock(),
+    	makeBlock(),
+    	makeBlock(),
+    },
+    Text { text = 'space' },
+    Block:new {
+    	width = 'full',
+	    alignContentX = 'space',
+	    alignContentY = 'begin',
+    	makeBlock(),
+    },
+    Block:new {
+    	width = 'full',
+	    alignContentX = 'space',
+	    alignContentY = 'begin',
+    	makeBlock(),
+    	makeBlock(),
+    },
+    Block:new {
+    	width = 'full',
+	    alignContentX = 'space',
+	    alignContentY = 'begin',
+    	makeBlock(),
+    	makeBlock(),
+    	makeBlock(),
+    },
+    Text { text = 'spaceBetween' },
+    Block:new {
+    	width = 'full',
+	    alignContentX = 'spaceBetween',
+	    alignContentY = 'begin',
+    	makeBlock(),
+    },
+    Block:new {
+    	width = 'full',
+	    alignContentX = 'spaceBetween',
+	    alignContentY = 'begin',
+    	makeBlock(),
+    	makeBlock(),
+    },
+    Block:new {
+    	width = 'full',
+	    alignContentX = 'spaceBetween',
+	    alignContentY = 'begin',
+    	makeBlock(),
+    	makeBlock(),
+    	makeBlock(),
+    }
 }
 
 local monitor = peripheral.wrap('right')
