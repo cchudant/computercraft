@@ -378,20 +378,20 @@ local interface = Block:new {
     -- },
     Block:new {
     	width = '100%',
-	    alignContentX = 'begin',
+	    alignContentX = 'center',
 	    alignContentY = 'begin',
     	makeBlock(),
     },
     Block:new {
     	width = '100%',
-	    alignContentX = 'begin',
+	    alignContentX = 'center',
 	    alignContentY = 'begin',
     	makeBlock(),
     	makeBlock(),
     },
     Block:new {
     	width = '100%',
-	    alignContentX = 'begin',
+	    alignContentX = 'center',
 	    alignContentY = 'begin',
     	makeBlock(),
     	makeBlock(),
