@@ -418,8 +418,8 @@ function makeLine(config)
 end
 
 local interface = Block:new {
-    width = '100%',
-    height = '100%',
+    -- width = '100%',
+    -- height = '100%',
     backgroundColor = colors.yellow,
     makeLine('spaceBetween'),
     -- makeLine('end'),
@@ -431,4 +431,4 @@ local interface = Block:new {
 
 local monitor = peripheral.wrap('right')
 print(interface:getSize())
--- draw(interface, monitor)
+draw(interface, monitor)
