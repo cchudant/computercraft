@@ -248,6 +248,8 @@ function Block:draw(term, x, y, requestedW, requestedH)
         local slackW = blockWidth - lineWidth   -- per line slack
         local slackH = blockHeight - lineHeight -- in line slack
 
+        print(iInLine, elemsInLine)
+
         posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
         posY = posY + align(self.alignContentY, slackH, iLine, nLines)
         drawChild(self, term, child,
