@@ -377,6 +377,18 @@ local interface = Block:new {
         backgroundColor = colors.gray,
         Text:new { text = "Hello!" }
     },
+    Block:new {
+        paddingTop = 1,
+        paddingRight = 1,
+        paddingBottom = 1,
+        paddingLeft = 1,
+        marginTop = 1,
+        marginRight = 1,
+        marginBottom = 1,
+        marginLeft = 1,
+        backgroundColor = colors.gray,
+        Text:new { text = "Hello!" }
+    },
 }
 
 local monitor = peripheral.wrap('right')
