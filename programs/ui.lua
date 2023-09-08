@@ -341,8 +341,8 @@ local interface = Block:new {
     width = 'full',
     height = 'full',
     backgroundColor = colors.yellow,
-    alignContentX = 'end',
-    alignContentY = 'end',
+    alignContentX = 'center',
+    alignContentY = 'center',
     Block:new {
         paddingTop = 1,
         paddingRight = 1,
