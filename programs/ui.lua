@@ -82,10 +82,6 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         if self.childrenDirection == 'right' then            
             availableW = availableW - realW
 
-            if i == 3 then 
-	            print(availableW, realW, blockWidth, blockHeight)
-	        end
-
             if availableW < 0 and i ~= 1 then
                 -- wrap
 
@@ -166,7 +162,6 @@ function Block:getSize(requestedW, requestedH)
 end
 
 local function drawChild(self, term, child, posX, posY, availableW, availableH)
-	print('draw', posX, posY, availableW, availableH)
     term.setTextColor(term.defaultTextColor)
     term.setBackgroundColor(term.defaultBackgroundColor)
     if self.textColor ~= nil then
@@ -237,9 +232,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
     local lineWidth = 0
     local elemsInLine = 0
     computeContent(self, blockWidth, blockHeight, 1, function(i, iInLine, iLine, wThisLine_, maxHThisLine_, child, realW, realH)
-	    print('wrap??', i, iInLine)
         if i ~= 1 and iInLine == 1 then
-	    	print('wrap', i, iInLine)
             posY = posY + lineHeight
             posX = x + self.paddingLeft
         end
@@ -264,6 +257,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
         local slackH = blockHeight - lineHeight -- in line slack
 
         posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
+        print(self.alignContentY, slackH, iLine, nLines)
         posY = posY + align(self.alignContentY, slackH, iLine, nLines)
         drawChild(self, term, child,
         	posX + child.marginLeft, posY + child.marginTop,
@@ -380,7 +374,7 @@ function makeBlock(h)
         marginRight = 1,
         -- marginBottom = 1,
         marginLeft = 1,
-        -- height = h,
+        height = h,
         backgroundColor = colors.gray,
         Text:new { text = "Hello!" },
     }
