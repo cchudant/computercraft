@@ -152,7 +152,7 @@ local function drawChild(self, term, child, posX, posY, availableW, availableH)
     if self.backgroundColor ~= nil then
         term.setBackgroundColor(self.backgroundColor)
     end
-    child:draw(term, x + posX, y + posY, availableW, availableH)
+    child:draw(term, posX, posY, availableW, availableH)
     term.setTextColor(term.defaultTextColor)
     term.setBackgroundColor(term.defaultBackgroundColor)
 end
