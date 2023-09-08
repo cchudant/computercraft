@@ -223,9 +223,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
     local lineWidth = 0
     local elemsInLine = 0
     computeContent(self, blockWidth, blockHeight, 1, function(i, iInLine, iLine, _, _, child, realW, realH)
-        print(i, iInLine, iLine)
         if i ~= 1 and iInLine == 1 then
-        	print('newline!! ', lineHeight)
             posY = posY + lineHeight
             posX = x + self.paddingLeft
         end
@@ -400,10 +398,10 @@ local interface = Block:new {
     height = '100%',
     backgroundColor = colors.yellow,
     makeLine('begin'),
-    makeLine('end'),
-    makeLine('center'),
-    makeLine('space'),
-    makeLine('spaceBetween'),
+    -- makeLine('end'),
+    -- makeLine('center'),
+    -- makeLine('space'),
+    -- makeLine('spaceBetween'),
 }
 
 local monitor = peripheral.wrap('right')
