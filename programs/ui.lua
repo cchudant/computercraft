@@ -84,7 +84,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
             
             availableW = availableW - realW
 
-            if i == 3 then 
+            if i == 3 and blockWidth == 79 then 
 	            print(availableW, realW, blockWidth, blockHeight)
 	        end
 
@@ -402,15 +402,15 @@ function makeLine(config)
 		    -- backgroundColor = colors.red,
 	    	makeBlock(),
 	    	makeBlock(),
-	    },
-	    Block:new {
-	    	width = '100%',
-		    alignContentX = config,
-		    alignContentY = 'begin',
-	    	makeBlock(),
-	    	makeBlock(),
-	    	makeBlock(),
-	    }
+	    }--,
+	    -- Block:new {
+	    -- 	width = '100%',
+		   --  alignContentX = config,
+		   --  alignContentY = 'begin',
+	    -- 	makeBlock(),
+	    -- 	makeBlock(),
+	    -- 	makeBlock(),
+	    -- }
 	    -- Block:new {
 	    -- 	width = '100%',
 		   --  alignContentX = config,
