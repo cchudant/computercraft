@@ -255,9 +255,8 @@ function Block:draw(term, x, y, requestedW, requestedH)
         	posX + child.marginLeft, posY + child.marginTop,
         	realW - child.marginLeft - child.marginRight, realH - child.marginTop - child.marginBottom)
 
+        print(posX, realW, realH)
         posX = posX + realW
-
-        print(posX)
 
         return true
     end)
