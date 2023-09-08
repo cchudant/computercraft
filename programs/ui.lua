@@ -55,7 +55,7 @@ Block = {
 Block = UIObject:new(Block)
 
 ---@param self Block
-function computeContent(self, blockWidth, blockHeight, start, func)
+local function computeContent(self, blockWidth, blockHeight, start, func)
     local availableW = blockWidth
     local availableH = blockHeight
     local widthThisLine = 0
@@ -315,29 +315,40 @@ local interface = Block:new {
 }
 
 local function wrapTerm(term)
+    if term == nil then return nil end
     local newTerm = {
         defaultBackgroundColor = colors.black,
         defaultTextColor = colors.white,
-        blinkPosition = nil,
-        nil,
+        blinkPositionX = nil,
+        blinkPositionY = nil,
+        blinkBackgroundColor = colors.black,
+        blinkTextColor = colors.white,
     }
     newTerm.__index = term
     setmetatable(newTerm, term)
     return newTerm
 end
 
-local monitor = wrapTerm(peripheral.wrap('right'))
-if not monitor then
-    error("no monitor")
-end
-monitor.setCursorPos(1, 1)
-monitor.setBackgroundColor(colors.black)
-monitor.setTextColor(colors.white)
-monitor.clear()
-monitor.setTextScale(0.7)
-monitor.defaultBackgroundColor = colors.black
-monitor.defaultTextColor = colors.white
+function draw(obj, term)
+    term = wrapTerm(term or _G.term)
 
-local w, h = monitor.getSize()
-print(interface[1]:getSize(w, h))
-interface:draw(monitor, 1, 1, w, h)
+    if not term then
+        error("no term")
+    end
+    local w, h = term.getSize()
+    term.setCursorPos(1, 1)
+    term.setBackgroundColor(term.defaultBackgroundColor)
+    term.setTextColor(term.defaultTextColor)
+    term.clear()
+    term.setTextScale(0.7)
+    obj:draw(term, 1, 1, w, h)
+    if term.blinkPositionX ~= nil and term.blinkPositionY ~= nil then
+        term.setCursorPos(term.blinkPositionX, term.blinkPositionY)
+        term.setBackgroundColor(term.blinkBackgroundColor)
+        term.setTextColor(term.blinkTextColor)
+        term.setCursorBlink(true)
+    end
+end
+
+local monitor = peripheral.wrap('right')
+draw(interface, monitor)
