@@ -375,6 +375,7 @@ end
 
 function makeLine(config)
 	-- return Text:new { text = config, textColor = colors.black }
+	return makeBlock()
 	    return Block:new {
 	    	-- width = '100%',
 		    alignContentX = config,
