@@ -225,7 +225,6 @@ function Block:draw(term, x, y, requestedW, requestedH)
     local lineWidth = 0
     local elemsInLine = 0
     computeContent(self, blockWidth, blockHeight, 1, function(i, iInLine, iLine, wThisLine_, maxHThisLine_, child, realW, realH)
-    	print(i, iInLine, iLine, wThisLine_, maxHThisLine_)
         if i ~= 1 and iInLine == 1 then
             posY = posY + lineHeight
             posX = x + self.paddingLeft
@@ -252,8 +251,6 @@ function Block:draw(term, x, y, requestedW, requestedH)
 
         posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
         posY = posY + align(self.alignContentY, slackH, iLine, nLines)
-        print(posX + child.marginLeft, posY + child.marginTop,
-        	realW - child.marginLeft - child.marginRight, realH - child.marginTop - child.marginBottom)
         drawChild(self, term, child,
         	posX + child.marginLeft, posY + child.marginTop,
         	realW - child.marginLeft - child.marginRight, realH - child.marginTop - child.marginBottom)
@@ -376,11 +373,11 @@ end
 
 function makeLine(config)
 	-- return Text:new { text = config, textColor = colors.black }
-	    return Block:new {
+	    return 
+	    Block:new {
 	    	-- width = '100%',
 		    alignContentX = config,
 		    alignContentY = 'begin',
-	    	makeBlock(),
 	    	makeBlock(),
 	    },
 	    Block:new {
@@ -388,15 +385,16 @@ function makeLine(config)
 		    alignContentX = config,
 		    alignContentY = 'begin',
 	    	makeBlock(),
-	    }
-	    -- Block:new {
-	    -- 	width = '100%',
-		   --  alignContentX = config,
-		   --  alignContentY = 'begin',
-	    -- 	makeBlock(),
-	    -- 	makeBlock(),
-	    -- 	makeBlock(),
-	    -- },
+	    	makeBlock(),
+	    },
+	    Block:new {
+	    	width = '100%',
+		    alignContentX = config,
+		    alignContentY = 'begin',
+	    	makeBlock(),
+	    	makeBlock(),
+	    	makeBlock(),
+	    },
 	    -- Block:new {
 	    -- 	width = '100%',
 		   --  alignContentX = config,
@@ -429,15 +427,5 @@ local interface = Block:new {
     -- makeLine('spaceBetween'),
 }
 
-
-print(Block:new {
-	-- width = '100%',
-    alignContentX = config,
-    alignContentY = 'begin',
-	makeBlock(),
-	makeBlock(),
-}:getSize(10, 100))
-
-
-local monitor = peripheral.wrap('right')
+local monitor = peripheral.find('monitor')
 draw(interface, monitor)
