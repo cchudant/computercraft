@@ -107,6 +107,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         if i == 1 then totalLines = 1 end
 
         if func then
+        	print(i, iInLine, totalLines, widthThisLine, maxHeightThisLine, child, realW, realH)
             if not func(i, iInLine, totalLines, widthThisLine, maxHeightThisLine, child, realW, realH) then break end
         end
     end
