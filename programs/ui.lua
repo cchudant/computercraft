@@ -7,11 +7,53 @@ UIObject = {
     marginTop = 0,
     marginBottom = 0,
     marginRight = 0,
+
+    ---@type number|nil
+    ---Shorthand to marginLeft, marginRight, marginTop, marginBottom
+    margin = nil,
+    ---@type number|nil
+    ---Shorthand to marginLeft, marginRight
+    marginX = nil,
+    ---@type number|nil
+    ---Shorthand to marginTop, marginBottom
+    marginY = nil,
 }
+
+---@diagnostic disable-next-line: duplicate-set-field
+function UIObject:__newindex(self, index, value)
+    if index == 'margin' then
+        self.marginLeft = value
+        self.marginRight = value
+        self.marginTom = value
+        self.marginBottom = value
+    elseif index == 'marginX' then
+        self.marginLeft = value
+        self.marginRight = value
+    elseif index == 'marginY' then
+        self.marginTom = value
+        self.marginBottom = value
+    end
+    rawset(self, index, value)
+end
+
+---@diagnostic disable-next-line: duplicate-set-field
 function UIObject:new(o)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
+    if o.marginX ~= nil then
+        UIObject.__newindex(o, 'marginX', o.marginX)
+        o.marginX = nil
+    end
+    if o.marginY ~= nil then
+        UIObject.__newindex(o, 'marginY', o.marginY)
+        o.marginY = nil
+    end
+    if o.margin ~= nil then
+        UIObject.__newindex(o, 'margin', o.margin)
+        o.margin = nil
+    end
+
     return o
 end
 
@@ -33,10 +75,21 @@ Block = {
     height = nil,
     backgroundColor = nil,
     textColor = nil,
+    
     paddingLeft = 0,
     paddingTop = 0,
     paddingBottom = 0,
     paddingRight = 0,
+
+    ---@type number|nil
+    ---Shorthand to paddingLeft, paddingRight, paddingTop, paddingBottom
+    padding = nil,
+    ---@type number|nil
+    ---Shorthand to paddingLeft, paddingRight
+    paddingX = nil,
+    ---@type number|nil
+    ---Shorthand to paddingTop, paddingBottom
+    paddingY = nil,
 
     ---@type number?
     minHeight = nil,
@@ -54,7 +107,7 @@ Block = {
     ---@type 'begin'|'center'|'spaceBetween'|'space'|'end'
     alignContentY = 'begin',
 
-    ---Align the children among themselves
+    ---Align the children within the same line
     ---@type 'begin'|'center'|'end'
     alignChildren = 'begin',
 
@@ -63,6 +116,37 @@ Block = {
     childrenDirection = 'right',
 }
 Block = UIObject:new(Block)
+function Block:__newindex(self, index, value)
+    if index == 'padding' then
+        self.paddingLeft = value
+        self.paddingRight = value
+        self.paddingTom = value
+        self.paddingBottom = value
+    elseif index == 'paddingX' then
+        self.paddingLeft = value
+        self.paddingRight = value
+    elseif index == 'paddingY' then
+        self.paddingTom = value
+        self.paddingBottom = value
+    end
+    UIObject.__newindex(self, index, value)
+end
+function Block:new(o)
+    Block.new(self, o)
+    if o.paddingX ~= nil then
+        Block.__newindex(o, 'paddingX', o.paddingX)
+        o.paddingX = nil
+    end
+    if o.paddingY ~= nil then
+        Block.__newindex(o, 'paddingY', o.paddingY)
+        o.paddingY = nil
+    end
+    if o.padding ~= nil then
+        Block.__newindex(o, 'padding', o.padding)
+        o.padding = nil
+    end
+    return o
+end
 
 ---@param self Block
 local function computeContent(self, blockWidth, blockHeight, start, func)
@@ -201,7 +285,7 @@ local function align(alignContent, slack, i, nElems)
     return 0
 end
 
-function computeFullTiling(self, blockWidth, blockHeight, contentW, contentH, nLines, drawChild)
+local function computeFullTiling(self, blockWidth, blockHeight, contentW, contentH, nLines, drawChild)
     local posX, posY = x + self.paddingLeft, y + self.paddingTop
 
     local lineHeight = 0
@@ -395,7 +479,6 @@ function Text:getSize()
 end
 
 local function wrapTerm(term)
-    if term == nil then return nil end
     local newTerm = {
         defaultBackgroundColor = colors.black,
         defaultTextColor = colors.white,
@@ -409,9 +492,6 @@ local function wrapTerm(term)
 end
 
 local function redraw(obj, termObj)
-    if not termObj then
-        error("no term")
-    end
     local w, h = termObj.getSize()
     termObj.setCursorPos(1, 1)
     termObj.setBackgroundColor(termObj.defaultBackgroundColor)
@@ -432,6 +512,8 @@ function draw(obj, termObj)
     termObj = wrapTerm(termObj or term)
 
     while true do
+        redraw(obj, termObj)
+
         local event, a, b, c = os.pullEvent()
 
         local w, h = termObj.getSize()
@@ -443,21 +525,13 @@ function draw(obj, termObj)
             obj:onMouseClick(b, c, a, w, h)
             obj:onClick(b, c, a, w, h)
         end
-
-        redraw(obj, termObj)
     end
 end
 
-function makeBlock(h)
+local function makeBlock(h)
     return Block:new {
-        -- paddingTop = 1,
-        paddingRight = 1,
-        -- paddingBottom = 1,
-        paddingLeft = 1,
-        -- marginTop = 1,
-        marginRight = 1,
-        -- marginBottom = 1,
-        marginLeft = 1,
+        paddingX = 1,
+        marginX = 1,
         height = h,
         backgroundColor = colors.gray,
         alignContentX = 'center',
