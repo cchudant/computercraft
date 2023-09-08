@@ -267,6 +267,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
         end
 
         -- between children align
+        print(self.alignChildren, lineHeight - realH, 1, 1)
         posY = posY + align(self.alignChildren, lineHeight - realH, 1, 1)
 
         drawChild(self, term, child,
