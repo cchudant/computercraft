@@ -107,7 +107,6 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         if i == 1 then totalLines = 1 end
 
         if func then
-        	print(i, iInLine, totalLines, widthThisLine, maxHeightThisLine, child, realW, realH)
             if not func(i, iInLine, totalLines, widthThisLine, maxHeightThisLine, child, realW, realH) then break end
         end
     end
@@ -238,6 +237,8 @@ function Block:draw(term, x, y, requestedW, requestedH)
         local slackW = blockWidth - lineWidth   -- per line slack
         local slackH = blockHeight - lineHeight -- in line slack
 
+        print(posX, posY)
+
         posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
         posY = posY + align(self.alignContentY, slackH, iLine, nLines)
         drawChild(self, term, child, posX, posY, realW, realH)
@@ -346,8 +347,8 @@ local interface = Block:new {
     width = 'full',
     height = 'full',
     backgroundColor = colors.yellow,
-    alignContentX = 'center',
-    alignContentY = 'center',
+    alignContentX = 'begin',
+    alignContentY = 'begin',
     Block:new {
         paddingTop = 1,
         paddingRight = 1,
