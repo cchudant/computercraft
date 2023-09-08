@@ -371,7 +371,7 @@ local interface = Block:new {
     width = '100%',
     height = '100%',
     backgroundColor = colors.yellow,
-    Text:new { text = 'begin' },
+    -- Text:new { text = 'begin' },
     Block:new {
     	width = '100%',
 	    alignContentX = 'begin',
@@ -383,16 +383,22 @@ local interface = Block:new {
 	    alignContentX = 'begin',
 	    alignContentY = 'begin',
     	makeBlock(),
-    	makeBlock(),
     },
-    Block:new {
-    	width = '100%',
-	    alignContentX = 'begin',
-	    alignContentY = 'begin',
-    	makeBlock(),
-    	makeBlock(),
-    	makeBlock(),
-    },
+    -- Block:new {
+    -- 	width = '100%',
+	   --  alignContentX = 'begin',
+	   --  alignContentY = 'begin',
+    -- 	makeBlock(),
+    -- 	makeBlock(),
+    -- },
+    -- Block:new {
+    -- 	width = '100%',
+	   --  alignContentX = 'begin',
+	   --  alignContentY = 'begin',
+    -- 	makeBlock(),
+    -- 	makeBlock(),
+    -- 	makeBlock(),
+    -- },
 }
 
 local monitor = peripheral.wrap('right')
