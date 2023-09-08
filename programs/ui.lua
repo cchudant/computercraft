@@ -366,7 +366,7 @@ local interface = Block:new {
     width = 'full',
     height = 'full',
     backgroundColor = colors.yellow,
-    alignContentY = 'center'
+    alignContentY = 'center',
     Text { text = 'begin' },
     Block:new {
     	width = 'full',
