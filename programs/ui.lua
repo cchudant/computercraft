@@ -219,7 +219,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
     computeContent(self, blockWidth, blockHeight, 1, function(i, iInLine, iLine, _, _, child, realW, realH)
         print(i, iInLine, iLine)
         if i ~= 1 and iInLine == 1 then
-        	print('newline!!')
+        	print('newline!! ', lineHeight)
             posY = posY + lineHeight
             posX = x + self.paddingLeft
         end
@@ -245,6 +245,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
 
         posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
         posY = posY + align(self.alignContentY, slackH, iLine, nLines)
+        print(posX, posY)
         drawChild(self, term, child,
         	posX + child.marginLeft, posY + child.marginTop,
         	realW - child.marginLeft - child.marginRight, realH - child.marginTop - child.marginBottom)
