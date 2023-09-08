@@ -431,4 +431,4 @@ local interface = Block:new {
 
 local monitor = peripheral.wrap('right')
 print(interface:getSize())
-draw(interface, monitor)
+-- draw(interface, monitor)
