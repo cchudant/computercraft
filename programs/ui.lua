@@ -75,7 +75,6 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         local w, h = child:getSize(childAvailableW, childAvailableH)
         if w == '100%' then w = blockWidth - child.marginRight - child.marginLeft end
         if h == '100%' then h = blockHeight - child.marginTop - child.marginBottom end
-        print(w, h)
 
         local realW = w + child.marginRight + child.marginLeft
         local realH = h + child.marginTop + child.marginBottom
