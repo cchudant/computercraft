@@ -84,7 +84,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
             
             availableW = availableW - realW
 
-            if i == 3 and blockWidth == 79 then 
+            if i == 3 then 
 	            print(availableW, realW, blockWidth, blockHeight)
 	        end
 
