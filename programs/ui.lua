@@ -169,9 +169,9 @@ end
 local function calcSlackFromMiddle(max, nElems, i)
     local v = math.floor(max / nElems)
     local rem = max % nElems
-    local skip = math.floor(nElems / 2 - rem / 2 + 0.5)
+    local skip = nElems / 2 - rem / 2
 
-    if i < rem + skip and i >= skip then v = v + 1 end
+    if i < rem + math.floor(skip) and i >= math.ceil(skip) then v = v + 1 end
     return v
 end
 
