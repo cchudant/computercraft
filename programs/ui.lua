@@ -392,7 +392,8 @@ function makeLine(config)
 	    	makeBlock(),
 	    	makeBlock(),
 	    	makeBlock(),
-	    },
+	    }
+end
 
 local interface = Block:new {
     width = '100%',
