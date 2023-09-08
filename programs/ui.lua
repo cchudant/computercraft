@@ -438,8 +438,8 @@ local interface = Block:new {
     -- makeLine('begin'),
     -- makeLine('end'),
     -- makeLine('center'),
-    makeLine('space'),
-    -- makeLine('spaceBetween'),
+    -- makeLine('space'),
+    makeLine('spaceBetween'),
 }
 
 local monitor = peripheral.find('monitor')
