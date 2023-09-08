@@ -226,8 +226,9 @@ function Block:draw(term, x, y, requestedW, requestedH)
     local lineWidth = 0
     local elemsInLine = 0
     computeContent(self, blockWidth, blockHeight, 1, function(i, iInLine, iLine, wThisLine_, maxHThisLine_, child, realW, realH)
+	    print('wrap??', i, iInLine)
         if i ~= 1 and iInLine == 1 then
-        	print('wrap', i, iInLine)
+	    	print('wrap', i, iInLine)
             posY = posY + lineHeight
             posX = x + self.paddingLeft
         end
