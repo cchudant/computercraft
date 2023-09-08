@@ -383,6 +383,7 @@ local interface = Block:new {
 	    alignContentX = 'begin',
 	    alignContentY = 'begin',
     	makeBlock(),
+    	makeBlock(),
     },
     -- Block:new {
     -- 	width = '100%',
