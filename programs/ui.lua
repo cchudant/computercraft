@@ -230,6 +230,9 @@ function Block:draw(term, x, y, requestedW, requestedH)
                 first = false
                 return true
             end)
+
+            posX = x + self.paddingLeft
+            posY = posY + lineWidth
         end
 
         local slackW = blockWidth - lineWidth   -- per line slack
@@ -238,6 +241,8 @@ function Block:draw(term, x, y, requestedW, requestedH)
         posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
         posY = posY + align(self.alignContentY, slackH, iLine, nLines)
         drawChild(self, term, child, posX, posY, realW, realH)
+
+        posX = posX + realW
 
         return true
     end)
