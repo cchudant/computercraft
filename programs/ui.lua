@@ -370,76 +370,31 @@ function draw(obj, term)
     end
 end
 
-function makeBlock()
+function makeBlock(h)
 	return Block:new {
-        paddingTop = 1,
+        -- paddingTop = 1,
         paddingRight = 1,
-        paddingBottom = 1,
+        -- paddingBottom = 1,
         paddingLeft = 1,
-        marginTop = 1,
+        -- marginTop = 1,
         marginRight = 1,
-        marginBottom = 1,
+        -- marginBottom = 1,
         marginLeft = 1,
+        height = h,
         backgroundColor = colors.gray,
         Text:new { text = "Hello!" },
     }
-end
-
-function makeLine(config)
-	return Text:new { text = config, textColor = colors.black },
-		Block:new {
-	    	width = '100%',
-		    alignContentX = config,
-		    alignContentY = 'begin',
-		    -- backgroundColor = colors.blue,
-	    	makeBlock(),
-	    },
-	    Block:new {
-	    	width = '100%',
-		    alignContentX = config,
-		    alignContentY = 'begin',
-		    -- backgroundColor = colors.red,
-	    	makeBlock(),
-	    	makeBlock(),
-	    },
-	    Block:new {
-	    	width = '100%',
-		    alignContentX = config,
-		    alignContentY = 'begin',
-	    	makeBlock(),
-	    	makeBlock(),
-	    	makeBlock(),
-	    },
-	    Block:new {
-	    	width = '100%',
-		    alignContentX = config,
-		    alignContentY = 'begin',
-	    	makeBlock(),
-	    	makeBlock(),
-	    	makeBlock(),
-	    	makeBlock(),
-	    },
-	    Block:new {
-	    	width = '100%',
-		    alignContentX = config,
-		    alignContentY = 'begin',
-	    	makeBlock(),
-	    	makeBlock(),
-	    	makeBlock(),
-	    	makeBlock(),
-	    	makeBlock(),
-	    }
 end
 
 local interface = Block:new {
     width = '100%',
     height = '100%',
     backgroundColor = colors.yellow,
-    -- makeLine('begin'),
-    -- makeLine('end'),
-    -- makeLine('center'),
-    -- makeLine('space'),
-    makeLine('spaceBetween'),
+    alignContentX = 'center',
+    alignContentY = 'center',
+    makeBlock(1),
+    makeBlock(2),
+    makeBlock(3),
 }
 
 local monitor = peripheral.find('monitor')
