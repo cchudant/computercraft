@@ -387,8 +387,8 @@ function makeBlock()
 end
 
 function makeLine(config)
-	return Text:new { text = config, textColor = colors.black },
-		Block:new {
+	-- return Text:new { text = config, textColor = colors.black },
+		return Block:new {
 	    	width = '100%',
 		    alignContentX = config,
 		    alignContentY = 'begin',
