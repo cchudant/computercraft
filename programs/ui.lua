@@ -191,7 +191,7 @@ local function align(alignContent, slack, i, nElems)
     elseif alignContent == 'spaceBetween' then
         if i == 1 then return 0 end
 
-        slack = calcSlackFromMiddle(slack, nElems - 1, i)
+        slack = calcSlackFromMiddle(slack, nElems - 1, i - 1)
         return slack
     end
     return 0
