@@ -92,7 +92,6 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
                 -- wrap
 
                 availableW = blockWidth
-                availableH = availableH - realH
 
                 childAvailableW = availableW - child.marginRight - child.marginLeft
                 childAvailableH = availableH - child.marginTop - child.marginBottom
@@ -107,6 +106,9 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
 
                 totalW = math.max(widthThisLine, totalW)
                 totalH = totalH + maxHeightThisLine
+
+                availableW = 0
+                availableH = availableH - realH
 
                 widthThisLine = 0
                 totalLines = totalLines + 1
