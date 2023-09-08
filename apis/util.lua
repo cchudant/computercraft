@@ -75,7 +75,7 @@ function arrayFindLastIndex(arr, func)
 end
 
 function arrayFlat(arr, depth)
-    function arrFlat(newTable, arr, depth)
+    local function arrFlat(newTable, arr, depth)
         if type(arr) == 'table' and (depth == nil or depth > 0) then
             for i,el in ipairs(arr) do
                 if not arrFlat(newTable, arr, depth - 1) then
@@ -93,7 +93,7 @@ function arrayFlat(arr, depth)
 end
 
 function arrayFlatMap(arr, func, depth)
-    function arrFlat(newTable, arr, depth)
+    local function arrFlat(newTable, arr, depth)
         if type(arr) == 'table' and (depth == nil or depth > 0) then
             for i,el in ipairs(arr) do
                 local elem = func(el)
@@ -163,7 +163,7 @@ function arrayMap(arr, func)
     local newTable = {}
     for i,el in ipairs(arr) do
         local newEl = func(el)
-        table.push(newTable, newEl)
+        table.insert(newTable, newEl)
     end
     return newTable
 end
