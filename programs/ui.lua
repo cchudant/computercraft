@@ -183,6 +183,7 @@ local function align(alignContent, slack, i, nElems)
         if i == 1 then return 0 end
 
         slack = calcSlackFromMiddle(slack, nElems - 1, i)
+        print('slack is', slack)
         return slack
     end
     return 0
