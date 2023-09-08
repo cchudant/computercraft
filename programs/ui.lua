@@ -430,5 +430,14 @@ local interface = Block:new {
 }
 
 
+print(Block:new {
+	-- width = '100%',
+    alignContentX = config,
+    alignContentY = 'begin',
+	makeBlock(),
+	makeBlock(),
+}:getSize(10, 100))
+
+
 local monitor = peripheral.wrap('right')
-draw(interface, monitor)
+-- draw(interface, monitor)
