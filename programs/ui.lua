@@ -380,7 +380,7 @@ function makeBlock(h)
         marginRight = 1,
         -- marginBottom = 1,
         marginLeft = 1,
-        height = h,
+        -- height = h,
         backgroundColor = colors.gray,
         Text:new { text = "Hello!" },
     }
