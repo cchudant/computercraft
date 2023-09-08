@@ -345,7 +345,7 @@ function draw(obj, term)
     term.setBackgroundColor(term.defaultBackgroundColor)
     term.setTextColor(term.defaultTextColor)
     term.clear()
-    term.setTextScale(0.2)
+    term.setTextScale(0.5)
     obj:draw(term, 1, 1, w, h)
     if term.blinkPositionX ~= nil and term.blinkPositionY ~= nil then
         term.setCursorPos(term.blinkPositionX, term.blinkPositionY)
@@ -400,6 +400,10 @@ local interface = Block:new {
     height = '100%',
     backgroundColor = colors.yellow,
     makeLine('begin'),
+    makeLine('end'),
+    makeLine('center'),
+    makeLine('space'),
+    makeLine('spaceBetween'),
 }
 
 local monitor = peripheral.wrap('right')
