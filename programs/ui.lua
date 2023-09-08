@@ -75,6 +75,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         local w, h = child:getSize(childAvailableW, childAvailableH)
         if w == '100%' then w = blockWidth - child.marginRight - child.marginLeft end
         if h == '100%' then h = blockHeight - child.marginTop - child.marginBottom end
+        print(w, h)
 
         local realW = w + child.marginRight + child.marginLeft
         local realH = h + child.marginTop + child.marginBottom
@@ -350,7 +351,6 @@ function draw(obj, term)
     term.setTextScale(0.5)
     obj:draw(term, 1, 1, w, h)
     if term.blinkPositionX ~= nil and term.blinkPositionY ~= nil then
-    	print('blink territory')
         term.setCursorPos(term.blinkPositionX, term.blinkPositionY)
         term.setBackgroundColor(term.blinkBackgroundColor)
         term.setTextColor(term.blinkTextColor)
