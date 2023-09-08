@@ -394,15 +394,15 @@ function makeLine(config)
 		    alignContentY = 'begin',
 		    backgroundColor = colors.blue,
 	    	makeBlock(),
-	    },
-	    Block:new {
-	    	width = '100%',
-		    alignContentX = config,
-		    alignContentY = 'begin',
-		    backgroundColor = colors.red,
-	    	makeBlock(),
-	    	makeBlock(),
 	    }
+	    -- Block:new {
+	    -- 	width = '100%',
+		   --  alignContentX = config,
+		   --  alignContentY = 'begin',
+		   --  backgroundColor = colors.red,
+	    -- 	makeBlock(),
+	    -- 	makeBlock(),
+	    -- }
 	    -- Block:new {
 	    -- 	width = '100%',
 		   --  alignContentX = config,
