@@ -219,6 +219,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
     computeContent(self, blockWidth, blockHeight, 1, function(i, iInLine, iLine, _, _, child, realW, realH)
         print(i, iInLine, iLine)
         if i ~= 1 and iInLine == 1 then
+        	print('newline!!')
             posY = posY + lineHeight
             posX = x + self.paddingLeft
         end
