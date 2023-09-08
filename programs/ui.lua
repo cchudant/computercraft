@@ -251,11 +251,11 @@ function Block:draw(term, x, y, requestedW, requestedH)
 
         posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
         posY = posY + align(self.alignContentY, slackH, iLine, nLines)
+        print(posX, realW, realH)
         drawChild(self, term, child,
         	posX + child.marginLeft, posY + child.marginTop,
         	realW - child.marginLeft - child.marginRight, realH - child.marginTop - child.marginBottom)
 
-        print(posX, realW, realH)
         posX = posX + realW
 
         return true
