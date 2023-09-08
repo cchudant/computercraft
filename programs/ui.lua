@@ -216,6 +216,10 @@ function Block:draw(term, x, y, requestedW, requestedH)
     local lineWidth = 0
     local elemsInLine = 0
     computeContent(self, blockWidth, blockHeight, 1, function(i, iInLine, iLine, _, _, child, realW, realH)
+        if i ~= 1 and iInLine == 1 then
+            posY = posY + lineWidth
+        end
+
         if iInLine == 1 then
             -- get line height!
             local first = true
@@ -241,11 +245,9 @@ function Block:draw(term, x, y, requestedW, requestedH)
 
         posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
         posY = posY + align(self.alignContentY, slackH, iLine, nLines)
-        drawChild(self, term, child, posX + child.marginLeft, posY + child.marginTop, realW, realH)
-
-        if i ~= 1 and iInLine == 1 then
-            posY = posY + lineWidth
-        end
+        drawChild(self, term, child,
+        	posX + child.marginLeft, posY + child.marginTop,
+        	realW - child.marginLeft - child.marginRight, realH - child.marginTop - child.marginBottom)
 
         posX = posX + realW
 
