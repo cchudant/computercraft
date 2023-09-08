@@ -260,6 +260,8 @@ function Block:draw(term, x, y, requestedW, requestedH)
 
         posX = posX + realW
 
+        print(posX)
+
         return true
     end)
 end
