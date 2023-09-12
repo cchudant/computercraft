@@ -26,6 +26,12 @@ mine2.travelCuboid(turtle, {
 		if success and detail.name == 'minecraft:sugar_cane' then
 			turtle.digDown()
 		end
+
+		if not success then
+			if mine2.selectItem('minecraft:sugar_cane') then
+				turtle.placeDown()
+			end
+		end
 	end,
 	finish = function()
 		turtle.back()
