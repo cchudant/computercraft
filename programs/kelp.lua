@@ -14,10 +14,13 @@ depth = 4
 right = 4
 height = 8
 
+turtle.forward()
 mine2.travelCuboid(turtle, {
 	depth = depth,
 	right = right,
 	height = 1,
+    prepareSameLevel = function(funcs, firstBottom, firstUp)
+    end,
 	runBeforeEveryStep = function(funcs)
 		turtle.dig()
 	end,
@@ -37,10 +40,13 @@ mine2.travelCuboid(turtle, {
 	runBeforeEveryStep = function(funcs)
 		turtle.suckDown()
 	end,
+    finish = function() end,
 })
 
 for j=1,height do
     turtle.down()
 end
+
+turtle.back()
 
 
