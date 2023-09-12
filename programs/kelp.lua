@@ -14,6 +14,7 @@ depth = 4
 right = 4
 height = 8
 
+turtle.dig()
 turtle.forward()
 mine2.travelCuboid(turtle, {
 	depth = depth,
@@ -43,9 +44,11 @@ mine2.travelCuboid(turtle, {
     finish = function() end,
 })
 
-for j=1,height do
+for j=1,height-1 do
+    turtle.digDown()
     turtle.down()
 end
+turtle.down()
 
 turtle.back()
 
