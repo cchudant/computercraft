@@ -17,7 +17,7 @@ height = 8
 mine2.travelCuboid(turtle, {
 	depth = depth,
 	right = right,
-	height = height,
+	height = 1,
 	runBeforeEveryStep = function(funcs)
 		turtle.dig()
 	end,
@@ -30,7 +30,7 @@ end
 mine2.travelCuboid(turtle, {
 	depth = depth,
 	right = right,
-	height = height,
+	height = 1,
 	runBeforeEveryStep = function(funcs)
 		turtle.suckDown()
 	end,
