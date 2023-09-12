@@ -10,8 +10,8 @@ os.loadAPI("/firmware/apis/mine2.lua")
 -- right = tonumber(right)
 -- height = tonumber(height)
 
-depth = 5
-right = 5
+depth = 37
+right = 40
 height = 1
 
 mine2.travelCuboid(turtle, {
