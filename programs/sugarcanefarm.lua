@@ -32,9 +32,6 @@ while true do
 				turtle.digDown()
 			end
 		end,
-		finish = function()
-			turtle.back()
-		end,
 	})
 	while select_item('minecraft:sugar_cane') do
 		turtle.dropUp()
