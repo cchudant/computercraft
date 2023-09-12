@@ -23,14 +23,12 @@ mine2.travelCuboid(turtle, {
 	end,
 	runAfterEveryStep = function(funcs, bottom, up)
 		local success, detail = turtle.inspectDown()
-		if success and detail.name == 'minecraft:sugar_cane' then
-			turtle.digDown()
-		end
+		-- if success and detail.name == 'minecraft:sugar_cane' then
+		-- 	turtle.digDown()
+		-- end
 
-		if not success then
-			if mine2.selectItem('minecraft:sugar_cane') then
-				turtle.placeDown()
-			end
+		if mine2.selectItem('minecraft:sugar_cane') then
+			turtle.placeDown()
 		end
 	end,
 	finish = function()
