@@ -14,25 +14,7 @@ depth = 5
 right = 5
 height = 1
 
-function replaceLiquid(turtle, dir)
-	local success, detail
-
-	if success and (detail.name == lava or detail.name == water) and detail.state.level == 0 then
-		if not selectItem(turtle, canReplaceLiquid) then
-			return
-		end
-
-		if dir == 'down' then turtle.placeDown()
-		else turtle.placeUp() end
-
-		if dir == 'down' then digDown()
-		else digUp() end
-
-		turtle.select(1)
-	end
-end
-
-travelCuboid(turtle, {
+mine2.travelCuboid(turtle, {
 	depth = depth,
 	right = right,
 	height = height,
