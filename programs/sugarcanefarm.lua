@@ -27,7 +27,7 @@ mine2.travelCuboid(turtle, {
 		-- 	turtle.digDown()
 		-- end
 
-		if mine2.selectItem('minecraft:sugar_cane') then
+		if mine2.selectItem(turtle, 'minecraft:sugar_cane') then
 			turtle.placeDown()
 		end
 	end,
