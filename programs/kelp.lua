@@ -89,8 +89,8 @@ height = 8
 chunckDepth = 3
 chunckRight = 3
 
-for y=1,chunckDepth do
-    for x=1,chunckRight do
+for y=chunckDepth,1,-1 do
+    for x=chunckRight,1,-1 do
         turtle.dig()
         turtle.forward()
 
@@ -102,6 +102,7 @@ for y=1,chunckDepth do
         turtle.turnRight()
         turtle.turnRight()
         for k=1,16 do
+            turtle.select(k)
             turtle.drop()
         end
         turtle.turnRight()
