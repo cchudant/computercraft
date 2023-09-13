@@ -84,6 +84,7 @@ end
 
 function refuel()
     if turtle.getFuelLevel() < 10000 then
+        print("refuling")
         turtle.up()
         turtle.turnRight()
         turtle.turnRight()
@@ -93,6 +94,8 @@ function refuel()
         turtle.turnRight()
         turtle.turnRight()
         turtle.down()
+    else
+        print("not refuling")
     end
 end
 
@@ -102,6 +105,7 @@ height = 8
 
 chunckDepth = 3
 chunckRight = 3
+
 refuel()
 
 -- for y=chunckDepth,1,-1 do
