@@ -49,14 +49,14 @@ end
 
 function kelpSetup(depth, right, chunkY, chunkX)
     for i=1,chunkY do
-        for j=0,depth do
+        for j=1,depth do
             turtle.dig()
             turtle.forward()
         end
     end
     turtle.turnRight()
     for i=1,chunkX do
-        for j=0,right do
+        for j=1,right do
             turtle.dig()
             turtle.forward()
         end
