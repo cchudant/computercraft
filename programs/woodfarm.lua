@@ -13,7 +13,7 @@ while true do
 		if success and detail.name == 'minecraft:oak_log' then
 			turtle.digDown()
 			local success, detail = turtle.inspectUp()
-			local level = 1
+			local level = 0
 			while success and detail.name == 'minecraft:oak_log' do
 				turtle.digUp()
 				turtle.up()
