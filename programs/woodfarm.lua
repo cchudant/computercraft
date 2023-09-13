@@ -57,7 +57,7 @@ while true do
 
 	turtle.select(1)
 
-	os.sleep(60*5)
+	os.sleep(60*2)
 end
 
 
