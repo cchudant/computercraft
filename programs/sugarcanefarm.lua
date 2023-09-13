@@ -15,7 +15,7 @@ right = 40
 height = 1
 
 while true do
-	while mine2.selectItem('minecraft:sugar_cane') do
+	while mine2.selectItem(turtle, 'minecraft:sugar_cane') do
 		turtle.dropUp()
 	end
 
@@ -33,7 +33,7 @@ while true do
 			end
 		end,
 	})
-	while mine2.selectItem('minecraft:sugar_cane') do
+	while mine2.selectItem(turtle, 'minecraft:sugar_cane') do
 		turtle.dropUp()
 	end
 
