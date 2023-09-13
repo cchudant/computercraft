@@ -15,7 +15,7 @@ while true do
 			local success, detail = turtle.inspectUp()
 			local level = 0
 			while success and detail.name == 'minecraft:oak_log' do
-				turtle.digUp()
+				while turtle.digUp() do end
 				turtle.up()
 				level = level + 1					
 				success, detail = turtle.inspectUp()
@@ -55,6 +55,9 @@ while true do
 		turtle.dropUp()
 	end
 	while mine2.selectItem(turtle, 'minecraft:stick') do
+		turtle.dropUp()
+	end
+	while mine2.selectItem(turtle, 'minecraft:apple') do
 		turtle.dropUp()
 	end
 
