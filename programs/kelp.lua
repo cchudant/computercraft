@@ -89,23 +89,26 @@ height = 8
 chunckDepth = 2
 chunckRight = 2
 
--- for i=0,chunckDepth-1 do
---     for j=0,chunckRight-1 do
-turtle.dig()
-turtle.forward()
+for y=1,chunckDepth do
+    for x=1,chunckRight do
+        turtle.dig()
+        turtle.forward()
 
-kelpSetup(depth, right, 3, 3)
-kelpHarvest(depth, right, height)
-kelpUnSetup(depth, right, 3, 3)
+        kelpSetup(depth, right, x, y)
+        kelpHarvest(depth, right, height)
+        kelpUnSetup(depth, right, x, y)
 
--- turtle.back()
--- turtle.turnRight()
--- turtle.turnRight()
--- for k=1,16 do
---     turtle.place()
--- end
--- turtle.turnRight()
--- turtle.turnRight()
+        turtle.back()
+        turtle.turnRight()
+        turtle.turnRight()
+        for k=1,16 do
+            turtle.place()
+        end
+        turtle.turnRight()
+        turtle.turnRight()
+    end
+end
+
 
 
 
