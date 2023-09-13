@@ -75,7 +75,7 @@ chunckRight = 2
 turtle.dig()
 turtle.forward()
 
-kelpSetup(depth, right, 2, 1)
+kelpSetup(depth, right, 1, 0)
 kelpHarvest(depth, right, height)
 
 -- turtle.back()
