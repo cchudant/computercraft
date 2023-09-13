@@ -9,7 +9,7 @@ while true do
 	end
 
 	function cutTree() 
-		local success, detail = turtle.inspect()
+		local success, detail = turtle.inspectDown()
 		if success and detail.name == 'minecraft:oak_log' then
 			turtle.digDown()
 			local success, detail = turtle.inspectUp()
