@@ -61,6 +61,7 @@ function kelpSetup(depth, right, chunkY, chunkX)
             turtle.forward()
         end
     end
+    turtle.turnLeft()
 end
 
 depth = 2
