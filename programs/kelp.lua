@@ -82,12 +82,12 @@ function kelpUnSetup(depth, right, chunkY, chunkX)
     turtle.turnLeft()
 end
 
-depth = 2
-right = 2
+depth = 3
+right = 3
 height = 8
 
-chunckDepth = 2
-chunckRight = 2
+chunckDepth = 3
+chunckRight = 3
 
 for y=1,chunckDepth do
     for x=1,chunckRight do
