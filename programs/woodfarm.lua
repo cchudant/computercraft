@@ -1,7 +1,7 @@
 os.loadAPI("/firmware/apis/mine2.lua")
 
 depth = 15
-right = 3
+right = 5
 
 while true do
 	while mine2.selectItem(turtle, 'minecraft:oak_log') do
