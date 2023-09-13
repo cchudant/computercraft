@@ -65,26 +65,29 @@ local toRemove = {
 	"minecraft:blackstone"
 }
 function removeUselessItems(turtle, force)
+	dropExcessItems(turtle, toRemove, 3, force)
+end
+function dropExcessItems(turtle, removeList, keepNStacks, force)
 	local nStacks = 0
 	if not force then
 		for slot=1,16 do
 			local detail = turtle.getItemDetail(slot)
-			if detail ~= nil and arrayContains(toRemove, detail.name) then
+			if detail ~= nil and arrayContains(removeList, detail.name) then
 				nStacks = nStacks + 1
 			end
 		end
 	end
-	if nStacks > 3 or force then
+	if nStacks > keepNStacks or force then
 		local removed = 0
 		for slot=16,1,-1 do
 			local detail = turtle.getItemDetail(slot)
 			local found = false
-			if detail ~= nil and arrayContains(toRemove, detail.name) then
+			if detail ~= nil and arrayContains(removeList, detail.name) then
 				removed = removed + 1
 				turtle.select(slot)
 				turtle.dropDown()
 			end
-			if removed > 2 then
+			if removed > keepNStacks-1 then
 				break
 			end
 		end

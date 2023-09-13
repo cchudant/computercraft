@@ -21,7 +21,7 @@ while true do
 
 	mine2.travelCuboid(turtle, {
 		depth = depth,
-		right = right,
+		right = right / 2,
 		height = height,
 		runBeforeEveryStep = function(funcs)
 			turtle.dig()
@@ -33,6 +33,38 @@ while true do
 			end
 		end,
 	})
+
+	while mine2.selectItem(turtle, 'minecraft:sugar_cane') do
+		turtle.dropUp()
+	end
+
+	turtle.turnRight()
+	for i = 1,right/2 do
+		turtle.forward()
+	end
+	turtle.turnLeft()
+
+	mine2.travelCuboid(turtle, {
+		depth = depth,
+		right = right / 2,
+		height = height,
+		runBeforeEveryStep = function(funcs)
+			turtle.dig()
+		end,
+		runAfterEveryStep = function(funcs, bottom, up)
+			local success, detail = turtle.inspectDown()
+			if success and detail.name == 'minecraft:sugar_cane' then
+				turtle.digDown()
+			end
+		end,
+	})
+
+	turtle.turnLeft()
+	for i = 1,right/2 do
+		turtle.forward()
+	end
+	turtle.turnRight()
+
 	while mine2.selectItem(turtle, 'minecraft:sugar_cane') do
 		turtle.dropUp()
 	end
