@@ -40,11 +40,10 @@ function kelpHarvest(depth, right, height)
         finish = function() end,
     })
 
-    for j=1,height-1 do
+    for j=1,height do
         turtle.digDown()
         turtle.down()
     end
-    turtle.down()
 end
 
 function kelpSetup(depth, right, chunkY, chunkX)
@@ -64,6 +63,25 @@ function kelpSetup(depth, right, chunkY, chunkX)
     turtle.turnLeft()
 end
 
+function kelpUnSetup(depth, right, chunkY, chunkX)
+    turtle.turnLeft()
+    for i=2,chunkX do
+        for j=1,depth do
+            turtle.dig()
+            turtle.forward()
+        end
+    end
+    turtle.turnLeft()
+    for i=2,chunkY do
+        for j=1,right do
+            turtle.dig()
+            turtle.forward()
+        end
+    end
+    turtle.turnLeft()
+    turtle.turnLeft()
+end
+
 depth = 2
 right = 2
 height = 8
@@ -76,8 +94,9 @@ chunckRight = 2
 turtle.dig()
 turtle.forward()
 
-kelpSetup(depth, right, 2, 1)
+kelpSetup(depth, right, 3, 3)
 kelpHarvest(depth, right, height)
+kelpUnSetup(depth, right, 3, 3)
 
 -- turtle.back()
 -- turtle.turnRight()
