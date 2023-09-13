@@ -10,8 +10,8 @@ os.loadAPI("/firmware/apis/mine2.lua")
 -- right = tonumber(right)
 -- height = tonumber(height)
 
-depth = 5 -- 37
-right = 4 -- 40
+depth = 37
+right = 40
 height = 1
 
 while true do
@@ -64,6 +64,10 @@ while true do
 		turtle.forward()
 	end
 	turtle.turnRight()
+
+	while mine2.selectItem(turtle, 'minecraft:sugar_cane') do
+		turtle.dropUp()
+	end
 
 	os.sleep(60*5)
 end
