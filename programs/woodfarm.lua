@@ -11,7 +11,7 @@ while true do
 	mine2.travelCuboid(turtle, {
 		depth = depth,
 		right = right,
-		height = height,
+		height = 1,
 		runBeforeEveryStep = function(funcs)
 			turtle.dig()
 		end,
