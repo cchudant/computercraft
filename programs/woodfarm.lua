@@ -27,10 +27,10 @@ while true do
 
 		end
 
-		if not success and mine2.selectItem(turtle, 'minecraft:sapling') then
+		if not success and mine2.selectItem(turtle, 'minecraft:oak_sapling') then
 			turtle.placeDown()
 		end
-		mine2.dropExcessItems(turtle, {'minecraft:sapling'}, 2)
+		mine2.dropExcessItems(turtle, {'minecraft:oak_sapling'}, 2)
 		turtle.suckDown()
 	end
 
