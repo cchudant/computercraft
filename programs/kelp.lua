@@ -102,7 +102,7 @@ for y=1,chunckDepth do
         turtle.turnRight()
         turtle.turnRight()
         for k=1,16 do
-            turtle.place()
+            turtle.drop()
         end
         turtle.turnRight()
         turtle.turnRight()
