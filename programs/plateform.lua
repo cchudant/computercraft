@@ -6,7 +6,7 @@ mine2.travelCuboid(turtle, {
     height = 1,
     prepareSameLevel = function(funcs, firstBottom, firstUp) end,
     runBeforeEveryStep = function(funcs)
-        mine2.selectItem(turtle, "minecraft:cobblestone")
+        mine2.selectItem(turtle, {"minecraft:cobblestone", "minecraft:cobbled_deepslate"})
         turtle.placeDown()
     end,
     finish = function() end,
