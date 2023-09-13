@@ -54,6 +54,9 @@ while true do
 	while mine2.selectItem(turtle, 'minecraft:oak_log') do
 		turtle.dropUp()
 	end
+	while mine2.selectItem(turtle, 'minecraft:stick') do
+		turtle.dropUp()
+	end
 
 	turtle.select(1)
 
