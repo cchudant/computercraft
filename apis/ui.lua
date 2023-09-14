@@ -463,6 +463,7 @@ function Text:new(obj)
 end
 
 function Text:draw(term, x, y, parentW, parentH)
+    print('he')
     if self.transparent then return end
     if self.backgroundColor ~= nil then
         term.setBackgroundColor(self.backgroundColor)
