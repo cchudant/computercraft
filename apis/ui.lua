@@ -33,6 +33,7 @@ function UIObject:__newindex(self, index, value)
         self.marginTom = value
         self.marginBottom = value
     end
+    print(self, index, value)
     rawset(self, index, value)
 end
 
