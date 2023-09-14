@@ -25,6 +25,7 @@ ui.drawLoop(
                 },
                 ui.Block:new {
                     width = 20,
+                    height = 1,
                     backgroundColor = colors.lightGray,
                     textColor = colors.white
                 }
