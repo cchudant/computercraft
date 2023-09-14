@@ -512,6 +512,7 @@ function TextInput:draw(term, x, y, parentW, parentH)
         term.setTextColor(self.textColor)
     end
     term.setCursorPos(x, y)
+    print(string.len(self.text) - self.width, string.len(self.text))
     local shownText = self.text:sub(string.len(self.text) - self.width, string.len(self.text))
     term.write(shownText)
 
