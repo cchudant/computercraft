@@ -442,7 +442,7 @@ Text = UIObject:new {
     textColor = nil,
 }
 function Text:new(obj)
-    Block.new(self, obj)
+    UIObject.new(self, obj)
     obj.text = obj.text
     obj.width, obj.height = stringDisplaySize(obj.text)
     return obj
