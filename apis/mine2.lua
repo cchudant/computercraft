@@ -43,7 +43,9 @@ local canReplaceLiquid = {
 	"minecraft:magma_block",
 	"minecraft:soul_sand",
 	"minecraft:soul_soil",
-	"minecraft:blackstone"
+	"minecraft:blackstone",
+	"minecraft:calcite",
+	"minecraft:smooth_basalt"
 }
 local toRemove = {
 	"minecraft:andesite",
@@ -62,7 +64,9 @@ local toRemove = {
 	"minecraft:magma_block",
 	"minecraft:soul_sand",
 	"minecraft:soul_soil",
-	"minecraft:blackstone"
+	"minecraft:blackstone",
+	"minecraft:calcite",
+	"minecraft:smooth_basalt"
 }
 function removeUselessItems(turtle, force)
 	dropExcessItems(turtle, toRemove, 3, force)
