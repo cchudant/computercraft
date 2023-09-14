@@ -7,7 +7,7 @@ ui.drawLoop(
     ui.Block:new {
         width = 10,
         height = 10,
-        ui.Text:new { text = "hello" },
+        ui.Text:new { text = "hello", textColor = colors.white },
     --     ui.Block:new {
     --         width = '100%',
     --         alignContentX = 'spaceBetween',            
