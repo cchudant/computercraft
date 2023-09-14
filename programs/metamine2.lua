@@ -48,11 +48,14 @@ function turtleFinishTask(id)
 		turtle.turnLeft()
 		turtle.turnLeft()
 
-		for i = 1,16 do 
-			local item = turtle.getItemDetail(i)
-			if item ~= nil then
-				turtle.select(i)
-				turtle.drop()
+		local succ, detail = turtle.inspect()
+		if sucess and detail.name == 'minecraft:shulker_box' then
+			for i = 1,16 do 
+				local item = turtle.getItemDetail(i)
+				if item ~= nil then
+					turtle.select(i)
+					turtle.drop()
+				end
 			end
 		end
 
