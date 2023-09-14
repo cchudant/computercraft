@@ -490,6 +490,10 @@ function Text:draw(term, x, y, parentW, parentH)
     end
 end
 
+function Text:getSize()
+    return self.width, self.height
+end
+
 TextInput = UIObject:new {
     text = "",
     backgroundColor = nil,
