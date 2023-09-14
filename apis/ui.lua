@@ -552,7 +552,7 @@ local function wrapTerm(term)
     }
     function newTerm.addGlobalListener(event, handler)
         local obj = newTerm._globalListeners[event] or {}
-        obj:insert(handler)
+        table.insert(obj, handler)
         newTerm._globalListeners[event] = obj
     end
     function newTerm.removeGlobalListener(event, handler)
