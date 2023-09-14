@@ -58,13 +58,17 @@ function UIObject:new(o)
 end
 
 function UIObject:draw(term, x, y, requestedW, requestedH) end
+
 function UIObject:getSize(requestedW, requestedH) return 0, 0 end
 
 function UIObject:onMount(term) end
+
 function UIObject:onUnmount(term) end
 
 function UIObject:onMonitorTouch(x, y, requestedW, requestedH) end
+
 function UIObject:onClick(x, y, button, requestedW, requestedH) end
+
 function UIObject:onMouseClick(x, y, button, requestedW, requestedH) end
 
 ---@class Block: UIObject
@@ -150,12 +154,13 @@ function Block:new(o)
 end
 
 function Block:onMount(term)
-    for _,child in ipairs(self) do
+    for _, child in ipairs(self) do
         child:onMount(term)
     end
 end
+
 function Block:onUnmount(term)
-    for _,child in ipairs(self) do
+    for _, child in ipairs(self) do
         child:onUnmount(term)
     end
 end
@@ -512,12 +517,12 @@ function TextInput:draw(term, x, y, parentW, parentH)
         term.setTextColor(self.textColor)
     end
     term.setCursorPos(x, y)
-    print(math.max(string.len(self.text) - self.width, 0), string.len(self.text))
-    local shownText = self.text:sub(math.max(string.len(self.text) - self.width, 0), string.len(self.text))
+    -- the -1 => blink position takes a char
+    local shownText = self.text:sub(math.max(string.len(self.text) - self.width - 1, 0), string.len(self.text))
     term.write(shownText)
 
-    local left = self.width - shownText:len()
-    for _ = 1,left do
+    local left = self.width - 1 - shownText:len()
+    for _ = 1, left do
         term.write(' ')
     end
 
@@ -565,6 +570,7 @@ local function wrapTerm(term)
         table.insert(obj, handler)
         newTerm._globalListeners[event] = obj
     end
+
     function newTerm.removeGlobalListener(event, handler)
         local obj = newTerm._globalListeners[event] or {}
         local index = util.arrayIndexOf(handler)
@@ -604,7 +610,7 @@ function drawLoop(obj, termObj)
 
     redraw(obj, termObj)
     while true do
-        local bag = {os.pullEvent()}
+        local bag = { os.pullEvent() }
         local event, a, b, c = table.unpack(bag)
         local needRedraw = false
 
@@ -620,7 +626,7 @@ function drawLoop(obj, termObj)
         end
 
         if termObj._globalListeners[event] ~= nil then
-            for _,handler in ipairs(termObj._globalListeners[event]) do
+            for _, handler in ipairs(termObj._globalListeners[event]) do
                 handler(table.unpack(bag))
                 needRedraw = true
             end
