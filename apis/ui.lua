@@ -33,7 +33,6 @@ function UIObject:__newindex(index, value)
         self.marginTom = value
         self.marginBottom = value
     end
-    print(self, index, value)
     rawset(self, index, value)
 end
 
@@ -43,17 +42,14 @@ function UIObject:new(o)
     setmetatable(o, self)
     self.__index = self
     if o.marginX ~= nil then
-        print(o, 'marginX', o.marginX)
         UIObject.__newindex(o, 'marginX', o.marginX)
         o.marginX = nil
     end
     if o.marginY ~= nil then
-        print(o, 'marginY', o.marginX)
         UIObject.__newindex(o, 'marginY', o.marginY)
         o.marginY = nil
     end
     if o.margin ~= nil then
-        print(o, 'margin', o.marginX)
         UIObject.__newindex(o, 'margin', o.margin)
         o.margin = nil
     end
