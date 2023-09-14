@@ -517,11 +517,11 @@ function TextInput:draw(term, x, y, parentW, parentH)
         term.setTextColor(self.textColor)
     end
     term.setCursorPos(x, y)
-    -- the -1 => blink position takes a char
+    -- the -1 is because the blink position takes a char
     local shownText = self.text:sub(math.max(string.len(self.text) - self.width - 1, 0), string.len(self.text))
     term.write(shownText)
 
-    local left = self.width - 1 - shownText:len()
+    local left = self.width - shownText:len()
     for _ = 1, left do
         term.write(' ')
     end
