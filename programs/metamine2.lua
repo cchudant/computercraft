@@ -42,7 +42,7 @@ function turtleFinishTask(id)
 
 	while mine2.selectItem(turtle, {TURTLE1, TURTLE2}) do
 		local succ, detail = turtle.inspectUp()
-		if succ and detail.name ~= 'minecraft:shulker_box' then
+		if succ and detail.name ~= SHULKER_BOX then
 			turtle.digUp()
 			succ, detail = turtle.inspectUp()
 		end
@@ -51,7 +51,7 @@ function turtleFinishTask(id)
 			for slot = 1, 16 do
 				local detail = turtle.getItemDetail(slot)
 				if
-					detail ~= nil and detail.name == 'minecraft:shulker_box' and
+					detail ~= nil and detail.name == SHULKER_BOX and
 					usedShulkers[slot] == true
 				then
 					turtle.select(slot)
@@ -98,7 +98,7 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 	while not mine2.selectItem(turtle, {TURTLE1, TURTLE2}) do
 		local succ, detail = turtle.inspectUp()
 
-		if succ and detail.name ~= 'minecraft:shulker_box' then
+		if succ and detail.name ~= SHULKER_BOX then
 			turtle.digUp()
 			succ, detail = turtle.inspectUp()
 		end
@@ -108,7 +108,7 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 				local detail = turtle.getItemDetail(slot)
 				print(detail, usedShulkers[slot])
 				if
-					detail ~= nil and detail.name == 'minecraft:shulker_box' and
+					detail ~= nil and detail.name == SHULKER_BOX and
 					usedShulkers[slot] ~= true
 				then
 					turtle.select(slot)
