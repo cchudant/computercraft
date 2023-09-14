@@ -23,7 +23,7 @@ UIObject = {
 function UIObject:__newindex(self, index, value)
     if type(self) ~= "table" then
         print("eh?", self, index, value)
-        rawset(self, index, value)
+        -- rawset(self, index, value)
         return
     end
 
@@ -126,7 +126,7 @@ Block = {
     childrenDirection = 'right',
 }
 Block = UIObject:new(Block)
-function Block:__newindex(self, index, value)
+function Block:__newindex(index, value)
     if index == 'padding' then
         self.paddingLeft = value
         self.paddingRight = value
