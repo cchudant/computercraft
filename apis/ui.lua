@@ -463,7 +463,7 @@ function Text:new(obj)
 end
 
 function Text:draw(term, x, y, parentW, parentH)
-    print('he', self.text, self.width, self.height)
+    print('he', self.text, self.width, self.height, parentW, parentH)
     if self.transparent then return end
     if self.backgroundColor ~= nil then
         term.setBackgroundColor(self.backgroundColor)
@@ -477,6 +477,7 @@ function Text:draw(term, x, y, parentW, parentH)
         local c = self.text:sub(i, i)
 
         if offsetWidth < parentW and offsetHeight < parentH then
+            print(c)
             term.write(c)
         end
 
