@@ -32,6 +32,6 @@ ui.drawLoop(
     --         }
     --     }
     -- },
-    ui.Text { text = "hello" },
+    ui.Text:new { text = "hello" },
     monitor
 )
