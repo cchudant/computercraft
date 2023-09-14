@@ -21,6 +21,11 @@ UIObject = {
 
 ---@diagnostic disable-next-line: duplicate-set-field
 function UIObject:__newindex(self, index, value)
+    if type(self) ~= "table" then
+        rawset(self, index, value)
+        return
+    end
+
     if index == 'margin' then
         self.marginLeft = value
         self.marginRight = value
