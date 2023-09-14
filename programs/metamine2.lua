@@ -38,10 +38,12 @@ function turtleFinishTask(id)
 		error("Error: " .. id .. " not where expected")
 	end
 
-	repeat
+	while true
 		local sucked = false
 
 		while turtle.suck() do sucked = true end
+
+		if not sucked then break end
 
 		turtle.turnLeft()
 		turtle.turnLeft()
@@ -56,7 +58,7 @@ function turtleFinishTask(id)
 
 		turtle.turnRight()
 		turtle.turnRight()
-	until not sucked
+	do
 
 	turtle.dig()
 
