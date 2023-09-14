@@ -20,13 +20,7 @@ UIObject = {
 }
 
 ---@diagnostic disable-next-line: duplicate-set-field
-function UIObject:__newindex(self, index, value)
-    if type(self) ~= "table" then
-        print("eh?", self, index, value)
-        -- rawset(self, index, value)
-        return
-    end
-
+function UIObject:__newindex(index, value)
     if index == 'margin' then
         self.marginLeft = value
         self.marginRight = value
@@ -139,23 +133,19 @@ function Block:__newindex(index, value)
         self.paddingTom = value
         self.paddingBottom = value
     end
-    print("block")
     UIObject.__newindex(self, index, value)
 end
 function Block:new(o)
     Block.new(self, o)
     if o.paddingX ~= nil then
-        print("block", o, 'paddingX', o.paddingX)
         Block.__newindex(o, 'paddingX', o.paddingX)
         o.paddingX = nil
     end
     if o.paddingY ~= nil then
-        print("block", o, 'paddingY', o.paddingX)
         Block.__newindex(o, 'paddingY', o.paddingY)
         o.paddingY = nil
     end
     if o.padding ~= nil then
-        print("block", o, 'padding', o.paddingX)
         Block.__newindex(o, 'padding', o.padding)
         o.padding = nil
     end
