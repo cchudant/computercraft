@@ -317,3 +317,12 @@ parallel.waitForAll(unpack(tasks))
 
 print("all done")
 
+-- remove last shulker on top
+for slot = 1, 16 do
+	local detail = turtle.getItemDetail(slot)
+	if detail == nil then
+		turtle.select(slot)
+		turtle.digUp()
+		usedShulkers[slot] = nil
+	end
+end
