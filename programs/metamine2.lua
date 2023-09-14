@@ -21,6 +21,7 @@ end
 
 local TURTLE1 = "computercraft:turtle_normal"
 local TURTLE2 = "computercraft:turtle_advanced"
+local SHULKER_BOX = "minecraft:yellow_shulker_box"
 
 -- print("I have " .. nTurtles .. " turtles.")
 if nTurtles == 0 then
