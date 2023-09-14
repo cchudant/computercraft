@@ -105,6 +105,7 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 		if not succ then
 			for slot = 1, 16 do
 				local detail = turtle.getItemDetail(slot)
+				print(detail.name, usedShulkers[slot])
 				if
 					detail ~= nil and detail.name == 'minecraft:shulker_box' and
 					usedShulkers[slot] ~= true
