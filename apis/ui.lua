@@ -286,7 +286,7 @@ local function align(alignContent, slack, i, nElems)
 end
 
 local function computeFullTiling(self, blockWidth, blockHeight, contentW, contentH, nLines, drawChild)
-    local posX, posY = x + self.paddingLeft, y + self.paddingTop
+    local posX, posY = self.paddingLeft, self.paddingTop
 
     local lineHeight = 0
     local lineWidth = 0
@@ -295,7 +295,7 @@ local function computeFullTiling(self, blockWidth, blockHeight, contentW, conten
         function(i, iInLine, iLine, wThisLine_, maxHThisLine_, child, realW, realH)
             if i ~= 1 and iInLine == 1 then
                 posY = posY + lineHeight
-                posX = x + self.paddingLeft
+                posX = self.paddingLeft
             end
 
             if iInLine == 1 then
@@ -369,7 +369,7 @@ function Block:draw(term, x, y, requestedW, requestedH)
             if self.backgroundColor ~= nil then
                 term.setBackgroundColor(self.backgroundColor)
             end
-            child:draw(term, posX, posY, availableW, availableH)
+            child:draw(term, x + posX, y + posY, availableW, availableH)
             term.setTextColor(term.defaultTextColor)
             term.setBackgroundColor(term.defaultBackgroundColor)
             return true
@@ -386,6 +386,8 @@ local function findChildAt(self, x, y, requestedW, requestedH)
     local foundChild, relX, relY
     computeFullTiling(self, blockWidth, blockHeight, contentW, contentH, nLines,
         function(child, posX, posY, availableW, availableH)
+            posX = posX + x
+            posY = posY + y
             if x >= posX and x < posX + availableW and y >= posY and y < posY + availableH then
                 relX = x - posX
                 relY = y - posY
