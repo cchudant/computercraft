@@ -4,26 +4,26 @@ local monitor = peripheral.find('monitor')
 monitor.setTextScale(0.5)
 
 ui.drawLoop(
-    ui.Block {
+    ui.Block:new {
         width = '100%',
         height = '100%',
-        ui.Block {
+        ui.Block:new {
             width = '100%',
             alignContentX = 'spaceBetween',            
-            ui.Block {
+            ui.Block:new {
                 marginLeft = 2,
                 paddingX = 1,
                 backgroundColor = colors.gray,
                 textColor = colors.white,
-                ui.Text { text = "Push" }
+                ui.Text:new { text = "Push" }
             },
-            ui.Block { -- search bar
-                ui.Text {
+            ui.Block:new { -- search bar
+                ui.Text:new {
                     text = "Search:",
                     backgroundColor = colors.gray,
                     textColor = colors.white
                 },
-                ui.Block {
+                ui.Block:new {
                     width = 20,
                     backgroundColor = colors.lightGray,
                     textColor = colors.white
