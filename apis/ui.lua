@@ -22,6 +22,7 @@ UIObject = {
 ---@diagnostic disable-next-line: duplicate-set-field
 function UIObject:__newindex(self, index, value)
     if type(self) ~= "table" then
+        print("eh?", self, index, value)
         rawset(self, index, value)
         return
     end
