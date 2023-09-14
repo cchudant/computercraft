@@ -489,7 +489,7 @@ function Text:draw(term, x, y, parentW, parentH)
 end
 
 TextInput = UIObject:new {
-    text = nil,
+    text = "",
     backgroundColor = nil,
     textColor = nil,
     width = 25,
