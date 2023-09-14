@@ -48,14 +48,17 @@ function UIObject:new(o)
     setmetatable(o, self)
     self.__index = self
     if o.marginX ~= nil then
+        print(o, 'marginX', o.marginX)
         UIObject.__newindex(o, 'marginX', o.marginX)
         o.marginX = nil
     end
     if o.marginY ~= nil then
+        print(o, 'marginY', o.marginX)
         UIObject.__newindex(o, 'marginY', o.marginY)
         o.marginY = nil
     end
     if o.margin ~= nil then
+        print(o, 'margin', o.marginX)
         UIObject.__newindex(o, 'margin', o.margin)
         o.margin = nil
     end
@@ -135,19 +138,23 @@ function Block:__newindex(self, index, value)
         self.paddingTom = value
         self.paddingBottom = value
     end
+    print("block")
     UIObject.__newindex(self, index, value)
 end
 function Block:new(o)
     Block.new(self, o)
     if o.paddingX ~= nil then
+        print("block", o, 'paddingX', o.paddingX)
         Block.__newindex(o, 'paddingX', o.paddingX)
         o.paddingX = nil
     end
     if o.paddingY ~= nil then
+        print("block", o, 'paddingY', o.paddingX)
         Block.__newindex(o, 'paddingY', o.paddingY)
         o.paddingY = nil
     end
     if o.padding ~= nil then
+        print("block", o, 'padding', o.paddingX)
         Block.__newindex(o, 'padding', o.padding)
         o.padding = nil
     end
