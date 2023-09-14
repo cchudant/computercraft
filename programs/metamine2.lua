@@ -40,7 +40,38 @@ function turtleFinishTask(id)
 	end
 
 	while mine2.selectItem(turtle, {TURTLE1, TURTLE2}) do
-		turtle.dropUp()
+		local succ, detail = turtle.inspectUp()
+		if succ and detail.name ~= 'minecraft:shulker_box' then
+			turtle.digUp()
+			succ, detail = turtle.inspectUp()
+		end
+
+		if not succ then
+			for slot = 1, 16 do
+				local detail = turtle.getItemDetail(slot)
+				if
+					detail ~= nil and detail.name == 'minecraft:shulker_box' and
+					usedShulkers[slot] == true
+				then
+					turtle.select(slot)
+					turtle.placeUp()
+				end
+			end
+		end
+
+		if not turtle.dropUp() then
+			-- shulker is full
+
+			-- find empty slot
+			for slot = 1, 16 do
+				local detail = turtle.getItemDetail(slot)
+				if detail == nil then
+					turtle.select(slot)
+					turtle.digUp()
+					usedShulkers[slot] = nil
+				end
+			end
+		end
 	end
 end
 
@@ -56,9 +87,47 @@ function turtleTask(id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, ri
 	print(id .. ' started')
 end
 
+
+local usedShulkers = {}
+
 function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, height)
+
+	-- find a turtle in shulker boxes
+
 	while not mine2.selectItem(turtle, {TURTLE1, TURTLE2}) do
-		turtle.suckUp()
+		local succ, detail = turtle.inspectUp()
+
+		if succ and detail.name ~= 'minecraft:shulker_box' then
+			turtle.digUp()
+			succ, detail = turtle.inspectUp()
+		end
+
+		if not succ then
+			for slot = 1, 16 do
+				local detail = turtle.getItemDetail(slot)
+				if
+					detail ~= nil and detail.name == 'minecraft:shulker_box' and
+					usedShulkers[slot] ~= true
+				then
+					turtle.select(slot)
+					turtle.placeUp()
+				end
+			end
+		end
+
+		if not turtle.suckUp() then
+			-- shulker is empty
+
+			-- find empty slot
+			for slot = 1, 16 do
+				local detail = turtle.getItemDetail(slot)
+				if detail == nil then
+					turtle.select(slot)
+					turtle.digUp()
+					usedShulkers[slot] = true
+				end
+			end
+		end
 	end
 
 	while not turtle.place() do end
@@ -246,3 +315,4 @@ end
 parallel.waitForAll(unpack(tasks))
 
 print("all done")
+
