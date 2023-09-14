@@ -515,6 +515,11 @@ function TextInput:draw(term, x, y, parentW, parentH)
     local shownText = self.text:sub(string.len(self.text) - self.width, string.len(self.text))
     term.write(shownText)
 
+    local left = self.width - shownText:len()
+    for _ = 1,left do
+        term.write(' ')
+    end
+
     if self.focus then
         term.blinkPositionX, term.blinkPositionY = x, y
         term.blinkBackgroundColor = self.backgroundColor
