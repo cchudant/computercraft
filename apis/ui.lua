@@ -508,7 +508,8 @@ local function redraw(obj, termObj)
     end
 end
 
-function draw(obj, termObj)
+---@diagnostic disable-next-line: lowercase-global
+function drawLoop(obj, termObj)
     termObj = wrapTerm(termObj or term)
 
     while true do
@@ -527,37 +528,3 @@ function draw(obj, termObj)
         end
     end
 end
-
-local function makeBlock(h)
-    return Block:new {
-        paddingX = 1,
-        marginX = 1,
-        height = h,
-        backgroundColor = colors.gray,
-        alignContentX = 'center',
-        alignContentY = 'center',
-        onClick = function(self, x, y)
-            print(x, y)
-        end,
-
-        Text:new { text = "Hello!" },
-    }
-end
-
-local interface = Block:new {
-    width = '100%',
-    height = '100%',
-    backgroundColor = colors.yellow,
-    alignContentX = 'center',
-    alignContentY = 'center',
-    alignChildren = 'center',
-    makeBlock(1),
-    makeBlock(2),
-    makeBlock(3),
-    makeBlock(4),
-    makeBlock(5),
-    makeBlock(6),
-}
-
-local monitor = peripheral.find('monitor')
-draw(interface, monitor)
