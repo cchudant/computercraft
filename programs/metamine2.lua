@@ -38,21 +38,25 @@ function turtleFinishTask(id)
 		error("Error: " .. id .. " not where expected")
 	end
 
-	while turtle.suck() do end
+	repeat
+		local sucked = false
 
-	turtle.turnLeft()
-	turtle.turnLeft()
+		while turtle.suck() do sucked = true end
 
-	for i = 1,16 do 
-		local item = turtle.getItemDetail(i)
-		if item ~= nil then
-			turtle.select(i)
-			turtle.drop()
+		turtle.turnLeft()
+		turtle.turnLeft()
+
+		for i = 1,16 do 
+			local item = turtle.getItemDetail(i)
+			if item ~= nil then
+				turtle.select(i)
+				turtle.drop()
+			end
 		end
-	end
 
-	turtle.turnRight()
-	turtle.turnRight()
+		turtle.turnRight()
+		turtle.turnRight()
+	until not sucked
 
 	turtle.dig()
 
