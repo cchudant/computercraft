@@ -33,12 +33,30 @@ function turtleFinishTask(id)
 	controlApi.waitForReady(id, -1, 'metamine:back')
 
 	print(id .. ' break')
-	success, detail = turtle.inspect()
-	if success and (detail.name == TURTLE1 or detail.name == TURTLE2) and turtle.dig() then
-		print(id .. ' finished')
-	else
-		print("Error: " .. id .. " not where expected")
+	local success, detail = turtle.inspect()
+	if not success or (detail.name ~= TURTLE1 and detail.name ~= TURTLE2) then
+		error("Error: " .. id .. " not where expected")
 	end
+
+	while turtle.suck() do end
+
+	turtle.turnLeft()
+	turtle.turnLeft()
+
+	for i = 1,16 do 
+		local item = turtle.getItemDetail(i)
+		if item ~= nil then
+			turtle.select(i)
+			turtle.drop()
+		end
+	end
+
+	turtle.turnRight()
+	turtle.turnRight()
+
+	turtle.dig()
+
+	print(id .. ' finished')
 
 	while mine2.selectItem(turtle, {TURTLE1, TURTLE2}) do
 		local succ, detail = turtle.inspectUp()
@@ -106,7 +124,6 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 		if not succ then
 			for slot = 1, 16 do
 				local detail = turtle.getItemDetail(slot)
-				print(detail, usedShulkers[slot])
 				if
 					detail ~= nil and detail.name == SHULKER_BOX and
 					usedShulkers[slot] ~= true
