@@ -132,7 +132,7 @@ function Block:__newindex(index, value)
     UIObject.__newindex(self, index, value)
 end
 function Block:new(o)
-    Block.new(self, o)
+    UIObject.new(self, o)
     if o.paddingX ~= nil then
         Block.__newindex(o, 'paddingX', o.paddingX)
         o.paddingX = nil
