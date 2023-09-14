@@ -61,7 +61,7 @@ function turtleFinishTask(id)
 
 		turtle.turnRight()
 		turtle.turnRight()
-	do
+	end
 
 	turtle.dig()
 
