@@ -5,8 +5,8 @@ monitor.setTextScale(0.5)
 
 ui.drawLoop(
     ui.Block:new {
-        width = '100%',
-        height = '100%',
+        width = 10,
+        height = 10,
         ui.Text:new { text = "hello" },
     --     ui.Block:new {
     --         width = '100%',
