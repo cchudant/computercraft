@@ -521,7 +521,7 @@ function TextInput:draw(term, x, y, parentW, parentH)
     end
 
     if self.focus then
-        term.blinkPositionX, term.blinkPositionY = x, y
+        term.blinkPositionX, term.blinkPositionY = x + shownText:len(), y
         term.blinkBackgroundColor = self.backgroundColor
         term.blinkTextColor = self.textColor
     end
