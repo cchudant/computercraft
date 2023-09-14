@@ -58,13 +58,13 @@ function UIObject:new(o)
 end
 
 function UIObject:draw(term, x, y, requestedW, requestedH) end
-
 function UIObject:getSize(requestedW, requestedH) return 0, 0 end
 
+function UIObject:onMount(term) end
+function UIObject:onUnmount(term) end
+
 function UIObject:onMonitorTouch(x, y, requestedW, requestedH) end
-
 function UIObject:onClick(x, y, button, requestedW, requestedH) end
-
 function UIObject:onMouseClick(x, y, button, requestedW, requestedH) end
 
 ---@class Block: UIObject
@@ -75,7 +75,7 @@ Block = {
     height = nil,
     backgroundColor = nil,
     textColor = nil,
-    
+
     paddingLeft = 0,
     paddingTop = 0,
     paddingBottom = 0,
@@ -131,6 +131,7 @@ function Block:__newindex(index, value)
     end
     UIObject.__newindex(self, index, value)
 end
+
 function Block:new(o)
     UIObject.new(self, o)
     if o.paddingX ~= nil then
@@ -146,6 +147,17 @@ function Block:new(o)
         o.padding = nil
     end
     return o
+end
+
+function Block:onMount(term)
+    for _,child in ipairs(self) do
+        child:onMount(term)
+    end
+end
+function Block:onUnmount(term)
+    for _,child in ipairs(self) do
+        child:onUnmount(term)
+    end
 end
 
 ---@param self Block
@@ -476,7 +488,55 @@ function Text:draw(term, x, y, parentW, parentH)
     end
 end
 
-function Text:getSize()
+TextInput = UIObject:new {
+    text = nil,
+    backgroundColor = nil,
+    textColor = nil,
+    width = 25,
+    height = 1,
+    focus = true,
+    _globalOnChar = nil,
+    _globalOnKey = nil
+}
+
+function TextInput:draw(term, x, y, parentW, parentH)
+    if self.transparent then return end
+    if self.backgroundColor ~= nil then
+        term.setBackgroundColor(self.backgroundColor)
+    end
+    if self.textColor ~= nil then
+        term.setTextColor(self.textColor)
+    end
+    term.setCursorPos(x, y)
+    local shownText = self.text:sub(string.len(self.text) - self.width, string.len(self.text))
+    term.write(shownText)
+
+    if self.focus then
+        term.blinkPositionX, term.blinkPositionY = x, y
+        term.blinkBackgroundColor = self.backgroundColor
+        term.blinkTextColor = self.textColor
+    end
+end
+
+function TextInput:onMount(term)
+    self._globalOnChar = function(_, c)
+        self.text = self.text .. c
+    end
+    self._globalOnKey = function(_, key)
+        if key == 259 then -- backspace
+            self.text = string.sub(self.text, 1, string.len(self.text) - 1)
+        end
+    end
+    term.addGlobalListener('char', self._globalOnChar)
+    term.addGlobalListener('key', self._globalOnKey)
+end
+
+function TextInput:onUnmount(term)
+    term.removeGlobalListener('char', self._globalOnChar)
+    term.removeGlobalListener('key', self._globalOnKey)
+end
+
+function TextInput:getSize()
     return self.width, self.height
 end
 
@@ -488,7 +548,23 @@ local function wrapTerm(term)
         blinkPositionY = nil,
         blinkBackgroundColor = colors.black,
         blinkTextColor = colors.white,
+        _globalListeners = {}
     }
+    function newTerm.addGlobalListener(event, handler)
+        local obj = newTerm._globalListeners[event] or {}
+        obj:insert(handler)
+        newTerm._globalListeners[event] = obj
+    end
+    function newTerm.removeGlobalListener(event, handler)
+        local obj = newTerm._globalListeners[event] or {}
+        local index = util.arrayIndexOf(handler)
+        if index > 0 then
+            table.remove(obj)
+            newTerm._globalListeners[event] = obj
+        end
+        return index > 0
+    end
+
     setmetatable(newTerm, { __index = term })
     return newTerm
 end
@@ -514,19 +590,36 @@ end
 function drawLoop(obj, termObj)
     termObj = wrapTerm(termObj or term)
 
-    while true do
-        redraw(obj, termObj)
+    obj:onMount(termObj)
 
-        local event, a, b, c = os.pullEvent()
+    redraw(obj, termObj)
+    while true do
+        local bag = {os.pullEvent()}
+        local event, a, b, c = table.unpack(bag)
+        local needRedraw = false
 
         local w, h = termObj.getSize()
-
         if event == 'monitor_touch' then
             obj:onMonitorTouch(b, c, w, h)
             obj:onClick(b, c, 0, w, h)
+            needRedraw = true
         elseif event == 'mouse_click' then
             obj:onMouseClick(b, c, a, w, h)
             obj:onClick(b, c, a, w, h)
+            needRedraw = true
+        end
+
+        if termObj._globalListeners[event] ~= nil then
+            for _,handler in ipairs(termObj._globalListeners[event]) do
+                handler(table.unpack(bag))
+                needRedraw = true
+            end
+        end
+
+        if needRedraw then
+            redraw(obj, termObj)
         end
     end
+
+    obj:onUnmount(termObj)
 end

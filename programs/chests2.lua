@@ -23,7 +23,7 @@ ui.drawLoop(
                     backgroundColor = colors.gray,
                     textColor = colors.white
                 },
-                ui.Block:new {
+                ui.TextInput:new {
                     width = 20,
                     height = 1,
                     backgroundColor = colors.lightGray,
