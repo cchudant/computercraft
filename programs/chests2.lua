@@ -4,9 +4,10 @@ local monitor = peripheral.find('monitor')
 monitor.setTextScale(0.5)
 
 ui.drawLoop(
-    -- ui.Block:new {
-    --     width = '100%',
-    --     height = '100%',
+    ui.Block:new {
+        width = '100%',
+        height = '100%',
+        ui.Text:new { text = "hello" },
     --     ui.Block:new {
     --         width = '100%',
     --         alignContentX = 'spaceBetween',            
@@ -31,7 +32,6 @@ ui.drawLoop(
     --             }
     --         }
     --     }
-    -- },
-    ui.Text:new { text = "hello" },
+    },
     monitor
 )
