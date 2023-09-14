@@ -52,7 +52,7 @@ function turtleFinishTask(id)
 		if succ and detail.name == 'minecraft:shulker_box' then
 			for i = 1,16 do 
 				local item = turtle.getItemDetail(i)
-				if item ~= nil then
+				if item ~= nil and item.name ~= FUEL then
 					turtle.select(i)
 					turtle.drop()
 				end
