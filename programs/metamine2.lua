@@ -38,7 +38,7 @@ function turtleFinishTask(id)
 		error("Error: " .. id .. " not where expected")
 	end
 
-	while true
+	while true do
 		local sucked = false
 
 		while turtle.suck() do sucked = true end
