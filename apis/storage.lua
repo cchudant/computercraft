@@ -472,13 +472,13 @@ function storage.storageServer()
                 end
                 local canReceive = item.maxCount - inDestinationSlot
 
-
                 if
                     (destItem == nil or (destItem.name == item.name and destItem.nbt == item.nbt))
                     and canReceive > 0
                 then
                     while slotI >= 1
                         and amountLeft > 0
+                        and canReceive > 0
                     do -- for each slot in storage chest
                         -- end conditions
 
