@@ -11,7 +11,7 @@ childEnv.shell = newShell
 childEnv.multishell = multishell
 
 function newShell.run(...)
-	-- print("Run", package.path, require, ...)
+	print("Run", package.path, require, ...)
 	return shell.run(...)
 end
 function newShell.execute(...)
@@ -22,6 +22,7 @@ end
 local function setPaths(firmware)
 	shell.setPath(shell.path() .. ":" .. firmware .. "/programs")
 	local newRequire, newPackage = require('cc.require').make(childEnv, firmware .. "/apis")
+	newPackage.path = newPackage.path .. ";" .. firmware .. "/apis"
 	childEnv.require = newRequire
 	childEnv.package = newPackage
 	print('hello', newPackage.path)
@@ -39,7 +40,6 @@ end
 -- package = childEnv.package
 
 -- require = childEnv.require
-local env = setmetatable(childEnv, { __index = _G })
 
 local controlApi = childEnv.require("controlApi")
 if JUST_FLASHED == nil then
@@ -53,9 +53,9 @@ parallel.waitForAny(
 	function()
 		if fs.exists("/autorun.lua") then
 			-- shell.run("autorun")
-			os.run(env, "/autorun.lua")
+			os.run(childEnv, "/autorun.lua")
 		else
-			os.run(env, shell.resolveProgram("shell"))
+			os.run(childEnv, shell.resolveProgram("shell"))
 		end
 	end
 )

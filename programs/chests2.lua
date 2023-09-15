@@ -1,4 +1,4 @@
-print(require, r)
+print('in chests', require, r)
 local ui = require('ui')
 local storage = require('storage')
 
