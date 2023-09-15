@@ -8,12 +8,14 @@ if JUST_FLASHED ~= nil then
 	print("Firmware flashed!")
 	os.loadAPI("/disk/firmware/apis/controlApi.lua")
 	shell.setPath(shell.path() .. ":/disk/firmware/programs")
-	package.path = package.path .. ";/disk/firmware/apis/?.lua"
+	local env = setmetatable({}, { __index = _ENV })
+	require = require('cc.require').make(env, "/firmware/apis")
 	controlApi = require("controlApi")
 else
 	os.loadAPI("/firmware/apis/controlApi.lua")
 	shell.setPath(shell.path() .. ":/firmware/programs")
-	package.path = package.path .. ";/firmware/apis/?.lua"
+	local env = setmetatable({}, { __index = _ENV })
+	require = require('cc.require').make(env, "/firmware/apis")
 	controlApi = require("controlApi")
 
 	controlApi.autoUpdate()
