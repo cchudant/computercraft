@@ -231,6 +231,19 @@ function storage.storageServer()
                         obj.nbt == detail.nbt
                 end)
 
+                if chest == nil then
+                    -- new item id
+                    
+                    item = {
+                        name = detail.name,
+                        nbt = detail.nbt,
+                        id = itemIDCounter,
+                        maxCount = detail.maxCount,
+                    }
+                    table.insert(uniqueItems, item)
+                    itemIDCounter = itemIDCounter + 1
+                end
+
                 if item ~= nil
                     and (req.name == nil or req.name == item.name)
                     and (req.nbt == nil or req.nbt == item.nbt)
