@@ -223,6 +223,7 @@ function storage.storageServer()
                 if amountLeft == 0 then
                     break
                 end
+                print(sourceSlot, detail and detail.name)
 
                 -- find the item id
                 local item = util.arrayFind(uniqueItems, function(obj)
@@ -309,6 +310,7 @@ function storage.storageServer()
                     end
 
                     -- not enough space in storage
+                    print("?", needToPush)
                     if needToPush > 0 and req.amountMustBeExact then
                         return nil, {
                             request = ireq,
@@ -330,6 +332,15 @@ function storage.storageServer()
                     end
                 end
             end
+
+            -- if req.amountMustBeExact and
+            --      then
+            --     return transfered, {
+            --         request = ireq,
+            --         reason = "not enough space in storage :("
+            --     }
+            -- end
+
             return transfered
         end
 
