@@ -259,7 +259,6 @@ function storage.storageServer()
                     local beginSlot = #slots+1
                     for i = #slots, 1, -1 do
                         local slotID = slots[i]
-                        print(slots, i, slots[i])
                         local chest, chestSlot = getStorageChestFromSlotID(slotID)
                         local chestObj = peripheral.wrap(chest.name)
                         local amount = chestObj.getItemDetail(chestSlot).count
@@ -280,7 +279,6 @@ function storage.storageServer()
 
                         local slotID = slots[i]
 
-                        print('d', slots, i, slots[i])
                         local chest, chestSlot = getStorageChestFromSlotID(slotID)
                         local chestObj = peripheral.wrap(chest.name)
                         local amount = chestObj.getItemDetail(chestSlot).count
@@ -330,7 +328,6 @@ function storage.storageServer()
                     end
 
                     -- not enough space in storage
-                    print("?", needToPush)
                     if needToPush > 0 and req.amountMustBeExact then
                         return nil, {
                             request = ireq,
@@ -339,15 +336,17 @@ function storage.storageServer()
                     end
 
 
-                    table.insert(results, {
-                        name = item.name,
-                        nbt = item.nbt,
-                        source = req.source,
-                        slot = sourceSlot,
-                        taken = transferedFromSlot,
-                        newAmount = originalAmount + transferedFromSlot,
-                        request = ireq
-                    })
+                    if taken > 0 then
+                        table.insert(results, {
+                            name = item.name,
+                            nbt = item.nbt,
+                            source = req.source,
+                            slot = sourceSlot,
+                            taken = transferedFromSlot,
+                            newAmount = originalAmount + transferedFromSlot,
+                            request = ireq
+                        })
+                    end
 
                     if reqAmount == 'slot' then
                         break
