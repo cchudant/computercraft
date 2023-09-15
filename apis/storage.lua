@@ -336,7 +336,7 @@ function storage.storageServer()
                     end
 
 
-                    if taken > 0 then
+                    if transferedFromSlot > 0 then
                         table.insert(results, {
                             name = item.name,
                             nbt = item.nbt,
