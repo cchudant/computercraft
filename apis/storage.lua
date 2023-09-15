@@ -496,6 +496,7 @@ function storage.storageServer()
                         end
 
                         local actuallyTransfered = math.min(item.maxCount, reqAmount, canReceive, amount)
+                        print(actuallyTransfered, item.maxCount, reqAmount, canReceive, amount)
 
                         if not nono then
                             destinationPeriph.pullItems(chest.name, chestSlot, actuallyTransfered, destSlot)
