@@ -484,6 +484,8 @@ function storage.storageServer()
                 local chestObj = peripheral.wrap(chest.name)
                 local amount = chestObj.getItemDetail(chestSlot).count
 
+                print(item.maxCount, amountLeft, amount)
+                pretty(item)
                 local toTransfer = math.max(item.maxCount, math.min(amountLeft, amount))
                 local willClearSlot = toTransfer >= amount
 
