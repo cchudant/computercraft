@@ -486,12 +486,9 @@ function storage.storageServer()
                 local chestObj = peripheral.wrap(chest.name)
                 local amount = chestObj.getItemDetail(chestSlot).count
 
-                print(item.maxCount, amountLeft, amount)
                 pretty(item)
                 local toTransfer = math.min(item.maxCount, amountLeft, amount)
                 local willClearSlot = toTransfer >= amount
-
-                print(toTransfer, willClearSlot)
 
                 while toTransfer > 0 do
                     local destSlot, canReceive = nextSlotInDest()
@@ -506,7 +503,6 @@ function storage.storageServer()
                         end
                     end
 
-                    print('t', chest.name, chestSlot, toTransfer, destSlot)
                     local actuallyTransfered = math.min(toTransfer, canReceive)
 
                     if not nono then
