@@ -219,7 +219,7 @@ function storage.storageServer()
             local amountLeft = reqAmount
             local transfered = 0
 
-            for sourceSlot, detail in sourcePeriph.list() do
+            for sourceSlot, detail in pairs(sourcePeriph.list()) do
                 if amountLeft == 0 then
                     break
                 end
