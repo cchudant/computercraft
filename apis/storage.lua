@@ -521,8 +521,7 @@ function storage.storageServer()
 
                             -- update state
                             itemIDToAmounts[itemID] = itemIDToAmounts[itemID] - actuallyTransfered
-                            print(canReceive, actuallyTransfered)
-                            if actuallyTransfered >= canReceive then
+                            if actuallyTransfered >= amount then
                                 print("REMOVE", slotI)
                                 table.remove(slots, slotI)
                                 table.insert(emptySlots, slotID)
