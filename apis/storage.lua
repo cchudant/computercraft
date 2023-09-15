@@ -463,84 +463,88 @@ function storage.storageServer()
                 if destSlot > destPeriphSize then break end
                 if req.slots ~= nil and iDestSlot > #req.slots then break end
 
-                local totalTransferedToSlot = 0
-
                 local destItem = destinationPeriph.getItemDetail(destSlot)
+
+                local totalTransferedToSlot = 0
                 local inDestinationSlot = 0
                 if destItem ~= nil then
                     inDestinationSlot = destItem.count
                 end
                 local canReceive = item.maxCount - inDestinationSlot
-                print(canReceive)
 
-                while true do -- for each slot in storage chest
-                    -- end conditions
-                    if slotI < 1 then
-                        break
-                    end
-                    if amountLeft == 0 then
-                        break
-                    end
-    
-                    local slotID = slots[slotI]
-    
-                    local chest, chestSlot = getStorageChestFromSlotID(slotID)
-                    local chestObj = peripheral.wrap(chest.name)
-                    local amount = chestObj.getItemDetail(chestSlot).count
-    
-                    -- local willClearSlot = toTransfer >= amount
-    
-                    while req.amount == 'all' or reqAmount > 0 do
-                        if destSlot == nil then
-                            if req.amountMustBeExact then
-                                return nil, {
-                                    request = ireq,
-                                    reason = "not enough space in destination inventory"
-                                }
-                            else
-                                break
+                if
+                    (destItem == nil or (destItem.name == item.name and destItem.nbt == item.nbt))
+                    and canReceive > 0
+                then
+                    while true do -- for each slot in storage chest
+                        -- end conditions
+                        if slotI < 1 then
+                            break
+                        end
+                        if amountLeft == 0 then
+                            break
+                        end
+
+                        local slotID = slots[slotI]
+
+                        local chest, chestSlot = getStorageChestFromSlotID(slotID)
+                        local chestObj = peripheral.wrap(chest.name)
+                        local amount = chestObj.getItemDetail(chestSlot).count
+
+                        -- local willClearSlot = toTransfer >= amount
+
+                        while req.amount == 'all' or reqAmount > 0 do
+                            if destSlot == nil then
+                                if req.amountMustBeExact then
+                                    return nil, {
+                                        request = ireq,
+                                        reason = "not enough space in destination inventory"
+                                    }
+                                else
+                                    break
+                                end
                             end
-                        end
-    
-                        local actuallyTransfered = math.min(item.maxCount, reqAmount, canReceive, amount)
-                        canReceive = canReceive - actuallyTransfered
-    
-                        if not nono then
-                            destinationPeriph.pullItems(chest.name, chestSlot, actuallyTransfered, destSlot)
-        
-                            -- update state
-                            itemIDToAmounts[itemID] = itemIDToAmounts[itemID] - actuallyTransfered
-                            if actuallyTransfered >= canReceive then
-                                table.remove(slots, slotI)
-                                table.insert(emptySlots, slotID)
+
+                            local actuallyTransfered = math.min(item.maxCount, reqAmount, canReceive, amount)
+                            canReceive = canReceive - actuallyTransfered
+
+                            if not nono then
+                                destinationPeriph.pullItems(chest.name, chestSlot, actuallyTransfered, destSlot)
+
+                                -- update state
+                                itemIDToAmounts[itemID] = itemIDToAmounts[itemID] - actuallyTransfered
+                                if actuallyTransfered >= canReceive then
+                                    table.remove(slots, slotI)
+                                    table.insert(emptySlots, slotID)
+                                end
                             end
-                        end
-        
-                        if reqAmount ~= 'all' then
-                            amountLeft = amountLeft - actuallyTransfered
+
+                            if reqAmount ~= 'all' then
+                                amountLeft = amountLeft - actuallyTransfered
+                            end
+
+                            totalTransferedToSlot = totalTransferedToSlot + actuallyTransfered
                         end
 
-                        totalTransferedToSlot = totalTransferedToSlot + actuallyTransfered
+                        slotI = slotI - 1
                     end
 
-                    slotI = slotI - 1
+                    if req.slots ~= nil then
+                        iDestSlot = iDestSlot + 1
+                        destSlot = req.slots[iDestSlot]
+                    else
+                        destSlot = destSlot + 1
+                    end
+                    table.insert(results, {
+                        name = item.name,
+                        nbt = item.nbt,
+                        destination = req.destination,
+                        slot = destSlot,
+                        request = ireq,
+                        amount = totalTransferedToSlot,
+                        newAmount = inDestinationSlot + totalTransferedToSlot,
+                    })
                 end
-                
-                if req.slots ~= nil then
-                    iDestSlot = iDestSlot + 1
-                    destSlot = req.slots[iDestSlot]
-                else
-                    destSlot = destSlot + 1
-                end
-                table.insert(results, {
-                    name = item.name,
-                    nbt = item.nbt,
-                    destination = req.destination,
-                    slot = destSlot,
-                    request = ireq,
-                    amount = totalTransferedToSlot,
-                    newAmount = inDestinationSlot + totalTransferedToSlot,
-                })
             end
 
             return reqAmount - amountLeft
