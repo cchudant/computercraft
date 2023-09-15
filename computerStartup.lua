@@ -22,6 +22,9 @@ else
 	setPaths("/firmware")
 end
 
+require = childEnv.require
+package = childEnv.package
+
 -- require = childEnv.require
 local env = setmetatable(childEnv, { __index = _G })
 
