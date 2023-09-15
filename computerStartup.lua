@@ -14,6 +14,8 @@ function newShell.run(...)
 	print("Run", package.path, require, ...)
 	_G.require = childEnv.require
 	_G.package = childEnv.package
+	_ENV.require = childEnv.require
+	_ENV.package = childEnv.package
 	return shell.run(...)
 end
 function newShell.execute(...)
