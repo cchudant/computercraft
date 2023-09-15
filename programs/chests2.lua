@@ -6,7 +6,7 @@ local storageServer = storage.storageServer()
 local success, errors, transfered, results = storageServer.storeItems(
     {{
         source = 'minecraft:chest_20',
-        amount = 1,
+        amount = 'all',
         -- name = 'minecraft:dried_kelp_block',
         -- slots = {1, 2},
         -- amountMustBeExact = true,

@@ -223,7 +223,6 @@ function storage.storageServer()
                 if amountLeft == 0 then
                     break
                 end
-                print(sourceSlot, detail and detail.name)
 
                 local transferedFromSlot = 0
                 local originalAmount = detail.count
@@ -311,7 +310,6 @@ function storage.storageServer()
 
                         local chest, chestSlot = getStorageChestFromSlotID(slotID)
 
-                        pretty(item)
                         local toTransfer = math.min(item.maxCount, needToPush)
                         transfered = transfered + toTransfer
                         needToPush = needToPush - toTransfer
@@ -346,10 +344,9 @@ function storage.storageServer()
                             newAmount = originalAmount + transferedFromSlot,
                             request = ireq
                         })
-                    end
-
-                    if reqAmount == 'slot' then
-                        break
+                        if reqAmount == 'slot' then
+                            break
+                        end
                     end
                 end
             end
