@@ -110,6 +110,7 @@ function storage.storageServer()
                     if found ~= nil then itemID = found.id end
 
                     if itemID == nil then
+                        pretty(detail)
                         table.insert(uniqueItems, {
                             name = detail.name,
                             nbt = detail.nbt,
