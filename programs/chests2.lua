@@ -3,12 +3,12 @@ local storage = require('storage')
 local pretty = require('cc.pretty').pretty_print
 
 local storageServer = storage.storageServer()
-local success, errors, transfered, results = storageServer.retrieveItems(
+local success, errors, transfered, results = storageServer.storeItems(
     {{
-        destination = 'minecraft:chest_20',
+        source = 'minecraft:chest_20',
         amount = 'all',
-        name = 'minecraft:dried_kelp_block',
-        slots = {1, 2},
+        -- name = 'minecraft:dried_kelp_block',
+        -- slots = {1, 2},
     }},
     {}
 )
