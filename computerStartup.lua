@@ -39,6 +39,8 @@ local newRequire, newPackage = require('cc.require').make(childEnv, firmwareDir 
 childEnv.require = newRequire
 childEnv.package = newPackage
 
+_ENV.require, _ENV.package = newRequire, newPackage
+
 local controlApi = childEnv.require("controlApi")
 if JUST_FLASHED == nil then
 	controlApi.autoUpdate()
@@ -50,8 +52,7 @@ parallel.waitForAny(
 	function() controlApi.sourceTask(shell) end,
 	function()
 		if fs.exists("/autorun.lua") then
-			shell.run("autorun")
-			-- os.run(_ENV, "/autorun.lua")
+			os.run(childEnv, "/autorun.lua")
 		else
 			os.run(childEnv, shell.resolveProgram("shell"))
 		end
