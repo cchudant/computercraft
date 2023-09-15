@@ -488,10 +488,9 @@ function storage.storageServer()
                     local chestObj = peripheral.wrap(chest.name)
                     local amount = chestObj.getItemDetail(chestSlot).count
     
-                    local toTransfer = math.min(item.maxCount, amountLeft, amount)
-                    local willClearSlot = toTransfer >= amount
+                    -- local willClearSlot = toTransfer >= amount
     
-                    while toTransfer > 0 do
+                    while req.amount == 'all' or reqAmount > 0 do
                         if destSlot == nil then
                             if req.amountMustBeExact then
                                 return nil, {
@@ -503,25 +502,25 @@ function storage.storageServer()
                             end
                         end
     
-                        local actuallyTransfered = math.min(toTransfer, canReceive)
+                        local actuallyTransfered = math.min(item.maxCount, reqAmount, canReceive, amount)
+                        canReceive = canReceive - actuallyTransfered
     
                         if not nono then
                             destinationPeriph.pullItems(chest.name, chestSlot, actuallyTransfered, destSlot)
         
                             -- update state
                             itemIDToAmounts[itemID] = itemIDToAmounts[itemID] - actuallyTransfered
-                            if willClearSlot then
+                            if actuallyTransfered >= canReceive then
                                 table.remove(slots, slotI)
                                 table.insert(emptySlots, slotID)
                             end
                         end
         
                         if reqAmount ~= 'all' then
-                            toTransfer = toTransfer - actuallyTransfered
                             amountLeft = amountLeft - actuallyTransfered
                         end
 
-                        totalTransferedToSlot = totalTransferedToSlot + toTransfer
+                        totalTransferedToSlot = totalTransferedToSlot + actuallyTransfered
                     end
 
                     slotI = slotI - 1
