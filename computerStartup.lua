@@ -8,7 +8,8 @@ local function setPaths(firmware)
 	shell.setPath(shell.path() .. ":" .. firmware .. "/programs")
 	requireEnv = setmetatable({}, { __index = _ENV })
 	print(requireEnv, requireEnv.require, require, firmware .. "/apis")
-	require('cc.require').make(requireEnv, firmware .. "/apis")
+	local requireFn = require('cc.require').make(requireEnv, firmware .. "/apis")
+	requireEnv.require = requireFn
 end
 
 local controlApi
