@@ -233,12 +233,12 @@ function storage.storageServer()
 
                 if item == nil then
                     -- new item id
-                    
+                    local maxCount = sourcePeriph.getItemLimit(sourceSlot)
                     item = {
                         name = detail.name,
                         nbt = detail.nbt,
                         id = itemIDCounter,
-                        maxCount = detail.maxCount,
+                        maxCount = maxCount,
                     }
                     table.insert(uniqueItems, item)
                     itemIDCounter = itemIDCounter + 1
@@ -261,7 +261,7 @@ function storage.storageServer()
                         local chestObj = peripheral.wrap(chest.name)
                         local amount = chestObj.getItemDetail(chestSlot).count
 
-                        if amount == detail.maxCount then
+                        if amount == item.maxCount then
                             break
                         end
                         beginSlot = i
@@ -282,7 +282,7 @@ function storage.storageServer()
                         local chestObj = peripheral.wrap(chest.name)
                         local amount = chestObj.getItemDetail(chestSlot).count
 
-                        local toTransfer = math.min(detail.maxCount - amount, needToPush)
+                        local toTransfer = math.min(item.maxCount - amount, needToPush)
                         transfered = transfered + toTransfer
 
                         if not nono then
@@ -310,7 +310,7 @@ function storage.storageServer()
                         local chest, chestSlot = getStorageChestFromSlotID(slotID)
 
                         pretty(item)
-                        local toTransfer = math.min(detail.maxCount, needToPush)
+                        local toTransfer = math.min(item.maxCount, needToPush)
                         transfered = transfered + toTransfer
                         needToPush = needToPush - toTransfer
 
