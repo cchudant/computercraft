@@ -139,7 +139,8 @@ function storage.storageServer()
         for _, slots in pairs(itemIDToSlots) do
             local amounts = {} -- [slotid]: number of items
 
-            for _, slotID in ipairs(slots) do
+            for i, slotID in ipairs(slots) do
+                print(i, slotID)
                 local chest, chestSlot = getStorageChestFromSlotID(slotID)
                 local chestObj = peripheral.wrap(chest.name)
                 amounts[slotID] = chestObj.getItemDetail(chestSlot).count
@@ -208,7 +209,7 @@ function storage.storageServer()
         local function handleOneRequest(ireq, req, results, nono)
             local sourcePeriph, error = openNonStorage(req.source)
             if sourcePeriph == nil then
-                return nil, {
+                return 0, {
                     request = ireq,
                     reason = error,
                 }
@@ -387,7 +388,7 @@ function storage.storageServer()
     ---@field nbt string?
     ---@field destination string
     ---@field slot string
-    ---@field amount number amount transfered into the inventory
+    ---@field added number amount transfered into the inventory
     ---@field newAmount number the new amount now in inventory
 
     ---@param requests RetrieveItemsRequest[]
@@ -519,7 +520,7 @@ function storage.storageServer()
                         destination = req.destination,
                         slot = destSlot,
                         request = ireq,
-                        amount = totalTransferedToSlot,
+                        added = totalTransferedToSlot,
                         newAmount = inDestinationSlot + totalTransferedToSlot,
                     })
                 end
