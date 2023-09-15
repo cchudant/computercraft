@@ -80,7 +80,7 @@ function storage.storageServer()
         -- fill up storageChests
         for _, name in ipairs(findChests()) do
             if name ~= 'minecraft:chest_222' then
-                local p = peripheral.wrap(v)
+                local p = peripheral.wrap(name)
                 table.insert(storageChests, {
                     name = name,
                     id = storageChestIDCounter,
@@ -94,7 +94,7 @@ function storage.storageServer()
 
         -- fill up items
         for _, v in ipairs(storageChests) do
-            local periph = peripheral.wrap(v)
+            local periph = peripheral.wrap(v.name)
             local list = periph.list()
             for slot = 1, v.size do
                 local detail = list[slot]
