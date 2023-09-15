@@ -22,7 +22,7 @@ end
 -- this is a hack
 
 local module = require("cc.require")
-local newModule = setmetatable({}, { __index = module })
+local newModule = setmetatable({ hello = '999999' }, { __index = module })
 function newModule.make(...)
 	local r, p = module.make(...)
 	print("MAKE!!")
@@ -52,7 +52,7 @@ parallel.waitForAny(
 	function() controlApi.sourceTask(shell) end,
 	function()
 		if fs.exists("/autorun.lua") then
-			os.run(childEnv, "/rom/programs/shell.lua", "/autorun.lua")
+			os.run(childEnv, "/autorun.lua")
 		else
 			os.run(childEnv, "/rom/programs/shell.lua")
 		end
