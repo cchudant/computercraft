@@ -1,4 +1,4 @@
-local util = require("../apis./util.lua")
+local util = require("util")
 
 local ui = {}
 
