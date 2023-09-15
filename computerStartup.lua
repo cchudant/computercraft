@@ -3,25 +3,30 @@ local JUST_FLASHED = ...
 term.clear()
 term.setCursorPos(1, 1)
 
-local requireEnv
+local childEnv = {}
+setmetatable(childEnv, { __index = _ENV })
+childEnv.shell = shell
+childEnv.multishell = multishell
+
 local function setPaths(firmware)
 	shell.setPath(shell.path() .. ":" .. firmware .. "/programs")
-	requireEnv = setmetatable({}, { __index = _ENV })
-	print(requireEnv, requireEnv.require, require, firmware .. "/apis")
-	local requireFn = require('cc.require').make(requireEnv, firmware .. "/apis")
-	requireEnv.require = requireFn
+	print(childEnv, childEnv.require, require, firmware .. "/apis")
+	local requireFn = require('cc.require').make(childEnv, firmware .. "/apis")
+	childEnv.require = requireFn
+	childEnv.package = requireFn
 end
 
 local controlApi
 if JUST_FLASHED ~= nil then
 	print("Firmware flashed!")
 	setPaths("/disk/firmware")
-	controlApi = requireEnv.require("controlApi")
+	controlApi = childEnv.require("controlApi")
 else
 	setPaths("/firmware")
-	controlApi = requireEnv.require("controlApi")
+	controlApi = childEnv.require("controlApi")
 	controlApi.autoUpdate()
 end
+
 
 print("Running ControlAPI " .. controlApi.VERSION .. " on computer " .. os.getComputerID() .. ".")
 
@@ -32,7 +37,7 @@ parallel.waitForAny(
 			shell.run("autorun")
 			-- os.run(requireEnv, "/autorun.lua")
 		else
-			os.run(requireEnv, shell.resolveProgram("shell"))
+			os.run(childEnv, shell.resolveProgram("shell"))
 		end
 	end
 )
