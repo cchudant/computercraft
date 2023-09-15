@@ -11,9 +11,9 @@ childEnv.multishell = multishell
 local function setPaths(firmware)
 	shell.setPath(shell.path() .. ":" .. firmware .. "/programs")
 	print(childEnv, childEnv.require, require, firmware .. "/apis")
-	require = require('cc.require').make(childEnv, firmware .. "/apis")
-	package = require
-	childEnv.require = require
+	r = require('cc.require').make(childEnv, firmware .. "/apis")
+	package = r
+	childEnv.require = r
 	childEnv.package = package
 end
 

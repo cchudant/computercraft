@@ -1,4 +1,4 @@
-print(require)
+print(require, r)
 local ui = require('ui')
 local storage = require('storage')
 
