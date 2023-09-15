@@ -433,7 +433,7 @@ function storage.storageServer()
             end
 
             -- do we have enough?
-            if itemIDToAmounts[itemID] < reqAmount then
+            if itemIDToAmounts[itemID] == nil or itemIDToAmounts[itemID] < reqAmount then
                 if req.amountMustBeExact then
                     return 0, {
                         request = ireq,
