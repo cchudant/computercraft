@@ -7,8 +7,8 @@ local success, errors, transfered, results = storageServer.storeItems(
     {{
         source = 'minecraft:chest_20',
         amount = 'all',
-        -- name = 'minecraft:dried_kelp_block',
-        slots = {1, 2},
+        name = 'minecraft:dried_kelp_block',
+        -- slots = {1, 2},
         -- amountMustBeExact = true,
     }},
     {}
