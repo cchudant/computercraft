@@ -29,7 +29,8 @@ parallel.waitForAny(
 	function() controlApi.sourceTask(shell) end,
 	function()
 		if fs.exists("/autorun.lua") then
-			os.run(requireEnv, "/autorun.lua")
+			shell.run("autorun")
+			-- os.run(requireEnv, "/autorun.lua")
 		else
 			os.run(requireEnv, shell.resolveProgram("shell"))
 		end
