@@ -267,11 +267,80 @@ function util.objectFromEntries(entries)
 end
 
 function util.defaultArgs(options, defaults)
+    if options == nil then options = {} end
 	for k,_ in pairs(defaults) do
 		if options[k] == nil then
 			options[k] = defaults[k]
 		end
 	end
+    return options
 end
+
+---Create a new random nonce
+---@return string
+function util.newNonce()
+	return tostring(math.floor(math.random() * 10000000))
+end
+
+function util.parallelGroup(...)
+    local coroutineIDCounter = 1
+	local coroutines = {}
+	local filters = {}
+    local nCoroutines = 0
+
+    local nonce = util.newNonce()
+
+    local addedCoroutines = {}
+
+	for _, func in ipairs({...}) do
+        local coroutineID = coroutineIDCounter
+        coroutineIDCounter = coroutineIDCounter + 1
+		coroutines[coroutineID] = coroutine.create(function()
+            local function addCoroutines(...)
+                for _, func in ipairs({...}) do
+                    local coroutineID = coroutineIDCounter
+                    coroutineIDCounter = coroutineIDCounter + 1
+                    addedCoroutines[coroutineID] = func
+                    os.queueEvent("parallelGroup:add:" .. nonce, coroutineID)
+                end
+            end
+            func(addCoroutines)
+            os.queueEvent("parallelGroup:end:" .. nonce)
+        end)
+        nCoroutines = nCoroutines + 1
+	end
+
+	while nCoroutines > 0 do
+		local bag = {os.pullEvent()}
+		if bag[1] == "parallelGroup:add:" .. nonce then
+            local func = addedCoroutines[bag[2]]
+            addedCoroutines[bag[2]] = nil
+			coroutines[bag[2]] = coroutine.create(function()
+				func()
+                os.queueEvent("parallelGroup:end:" .. nonce)
+			end)
+            nCoroutines = nCoroutines + 1
+        elseif bag[1] == "parallelGroup:end:" .. nonce then
+            coroutines[bag[2]] = nil
+            nCoroutines = nCoroutines - 1
+        else
+            for k,co in pairs(coroutines) do
+                local filter = filters[k]
+
+                if filter == nil or filter == bag[1] or bag[1] == 'terminate' then
+                    if coroutine.status(co) ~= 'dead' then
+                        local ok, filter = coroutine.resume(co, table.unpack(bag))
+                        if not ok then
+                            error(filter, 0)
+                        end
+                        filters[k] = filter
+                    end
+                end
+            end
+        end
+
+	end
+end
+
 
 return util
