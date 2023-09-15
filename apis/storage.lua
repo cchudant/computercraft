@@ -529,12 +529,6 @@ function storage.storageServer()
                         slotI = slotI - 1
                     end
 
-                    if req.slots ~= nil then
-                        iDestSlot = iDestSlot + 1
-                        destSlot = req.slots[iDestSlot]
-                    else
-                        destSlot = destSlot + 1
-                    end
                     table.insert(results, {
                         name = item.name,
                         nbt = item.nbt,
@@ -544,6 +538,12 @@ function storage.storageServer()
                         amount = totalTransferedToSlot,
                         newAmount = inDestinationSlot + totalTransferedToSlot,
                     })
+                end
+                if req.slots ~= nil then
+                    iDestSlot = iDestSlot + 1
+                    destSlot = req.slots[iDestSlot]
+                else
+                    destSlot = destSlot + 1
                 end
             end
 
