@@ -22,8 +22,8 @@ else
 	setPaths("/firmware")
 end
 
-_ENV.require = require
-_ENV.package = package
+_ENV.require = childEnv.require
+_ENV.package = childEnv.package
 
 local controlApi = childEnv.require("controlApi")
 if JUST_FLASHED == nil then
