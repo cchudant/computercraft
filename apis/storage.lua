@@ -316,9 +316,6 @@ function storage.storageServer()
                         }
                     end
 
-                    if reqAmount == 'slot' then
-                        break
-                    end
 
                     table.insert(results, {
                         name = item.name,
@@ -327,6 +324,10 @@ function storage.storageServer()
                         slot = sourceSlot,
                         request = ireq
                     })
+
+                    if reqAmount == 'slot' then
+                        break
+                    end
                 end
             end
             return transfered
