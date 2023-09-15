@@ -79,7 +79,7 @@ function storage.storageServer()
 
         -- fill up storageChests
         for _, name in ipairs(findChests()) do
-            if name ~= 'minecraft:chest_222' then
+            if name ~= 'minecraft:chest_20' then
                 local p = peripheral.wrap(name)
                 table.insert(storageChests, {
                     name = name,

@@ -3,7 +3,7 @@ local storage = require('storage')
 local pretty = require('cc.pretty').pretty_print
 
 local storageServer = storage.storageServer()
-local success, errors, transfered, results = storageServer.storeItems({{ source = 'chest1', amount = 'all' }}, {})
+local success, errors, transfered, results = storageServer.retrieveItems({{ destination = 'minecraft:chest_20', amount = 3, item = 'minecraft:netherrack' }}, {})
 pretty({success, errors, transfered, results})
 
 local monitor = peripheral.find('monitor') --[[@as Monitor]]
