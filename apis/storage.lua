@@ -472,6 +472,8 @@ function storage.storageServer()
                 end
                 local canReceive = item.maxCount - inDestinationSlot
 
+                print(slotI, iDestSlot)
+
                 if
                     (destItem == nil or (destItem.name == item.name and destItem.nbt == item.nbt))
                     and canReceive > 0
@@ -480,12 +482,9 @@ function storage.storageServer()
                         and amountLeft > 0
                         and canReceive > 0
                     do -- for each slot in storage chest
-                        -- end conditions
 
                         local slotID = slots[slotI]
 
-                        print(canReceive)
-                        print("GET", slotI)
 
                         local chest, chestSlot = getStorageChestFromSlotID(slotID)
                         local chestObj = peripheral.wrap(chest.name)
@@ -496,7 +495,6 @@ function storage.storageServer()
                         end
 
                         local actuallyTransfered = math.min(item.maxCount, reqAmount, canReceive, amount)
-                        print(actuallyTransfered, item.maxCount, reqAmount, canReceive, amount)
 
                         if not nono then
                             destinationPeriph.pullItems(chest.name, chestSlot, actuallyTransfered, destSlot)
