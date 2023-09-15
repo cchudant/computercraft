@@ -5,8 +5,8 @@ term.setCursorPos(1, 1)
 
 local childEnv = {}
 setmetatable(childEnv, { __index = _ENV })
--- childEnv.shell = shell
--- childEnv.multishell = multishell
+childEnv.shell = shell
+childEnv.multishell = multishell
 
 local function setPaths(firmware)
 	shell.setPath(shell.path() .. ":" .. firmware .. "/programs")
