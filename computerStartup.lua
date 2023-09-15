@@ -24,7 +24,7 @@ local function setPaths(firmware)
 	local newRequire, newPackage = require('cc.require').make(childEnv, firmware .. "/apis")
 	childEnv.require = newRequire
 	childEnv.package = newPackage
-	print(newPackage.path)
+	print('hello', newPackage.path)
 end
 
 if JUST_FLASHED ~= nil then
