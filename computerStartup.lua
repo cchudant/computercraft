@@ -22,8 +22,8 @@ else
 	setPaths("/firmware")
 end
 
-_ENV.require = childEnv.require
-_ENV.package = childEnv.package
+-- require = childEnv.require
+local env = setmetatable(childEnv, { __index = _G })
 
 local controlApi = childEnv.require("controlApi")
 if JUST_FLASHED == nil then
@@ -37,9 +37,9 @@ parallel.waitForAny(
 	function()
 		if fs.exists("/autorun.lua") then
 			-- shell.run("autorun")
-			os.run(childEnv, "/autorun.lua")
+			os.run(env, "/autorun.lua")
 		else
-			os.run(childEnv, shell.resolveProgram("shell"))
+			os.run(env, shell.resolveProgram("shell"))
 		end
 	end
 )
