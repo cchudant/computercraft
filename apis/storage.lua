@@ -504,6 +504,8 @@ function storage.storageServer()
                         end
                     end
 
+                    print('t', chest.name, chestSlot, toTransfer, destSlot)
+
                     if not nono then
                         destinationPeriph.pullItems(chest.name, chestSlot, toTransfer, destSlot)
     
