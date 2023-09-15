@@ -477,7 +477,6 @@ function storage.storageServer()
                     (destItem == nil or (destItem.name == item.name and destItem.nbt == item.nbt))
                     and canReceive > 0
                 then
-                    print(canReceive)
                     while slotI >= 1
                         and amountLeft > 0
                     do -- for each slot in storage chest
@@ -485,6 +484,7 @@ function storage.storageServer()
 
                         local slotID = slots[slotI]
 
+                        print(canReceive)
                         print("GET", slotI)
 
                         local chest, chestSlot = getStorageChestFromSlotID(slotID)
