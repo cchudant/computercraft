@@ -21,11 +21,15 @@ local newModule = setmetatable({}, { __index = module })
 function newModule.make(...)
 	local r, p = module.make(...)
 	p.loaded["cc.require"] = newModule
-	p.path = p.path .. ";" .. firmwareDir .. "/apis/?.lua;" .. firmwareDir .. "/apis/?;" .. firmwareDir .. "/apis/?/init.lua"
+	p.path = p.path ..
+		";" .. firmwareDir .. "/apis/?.lua;" .. firmwareDir .. "/apis/?;" .. firmwareDir .. "/apis/?/init.lua"
 	return r, p
 end
 
-local newRequire, newPackage = newModule.make(childEnv, firmwareDir .. "/apis")
+local newRequire, newPackage = newModule.make(
+	setmetatable({}, { __index = _ENV }),
+	firmwareDir .. "/apis"
+)
 require, package = newRequire, newPackage
 
 local originalDofile = dofile
