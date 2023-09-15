@@ -471,6 +471,7 @@ function storage.storageServer()
                     inDestinationSlot = destItem.count
                 end
                 local canReceive = item.maxCount - inDestinationSlot
+                print(canReceive)
 
                 while true do -- for each slot in storage chest
                     -- end conditions
