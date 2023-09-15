@@ -1,0 +1,11 @@
+{
+    "Lua.workspace.userThirdParty": [
+        "lib"
+    ],
+    "Lua.diagnostics.globals": [
+        "require",
+        "type",
+        "pairs",
+        "tostring"
+    ]
+}

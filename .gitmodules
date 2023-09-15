@@ -1,0 +1,3 @@
+[submodule "lib/lua-ls-cc-tweaked"]
+	path = lib/lua-ls-cc-tweaked
+	url = git@github.com:nvim-computercraft/lua-ls-cc-tweaked.git

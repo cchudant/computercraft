@@ -1,3 +1,4 @@
+local controlApi = require("controlApi")
 os.loadAPI("/firmware/apis/mine2.lua")
 
 local offsetDepth, offsetRight, offsetHeight, depth, right, height, targetFuelLevel = ...

@@ -1,18 +1,11 @@
-function arrayContains(array, item)
-	for _, v in ipairs(array) do
-		if item == v then
-			return true
-		end
-	end
-	return false
-end
+local util = require("util")
 
 function selectItem(turtle, items)
 	if type(items) == 'string' then items = {items} end
 
 	for slot=1,16 do
 		local detail = turtle.getItemDetail(slot)
-		if detail ~= nil and arrayContains(items, detail.name) then
+		if detail ~= nil and util.arrayContains(items, detail.name) then
 			turtle.select(slot)
 			return true
 		end
@@ -76,7 +69,7 @@ function dropExcessItems(turtle, removeList, keepNStacks, force)
 	if not force then
 		for slot=1,16 do
 			local detail = turtle.getItemDetail(slot)
-			if detail ~= nil and arrayContains(removeList, detail.name) then
+			if detail ~= nil and util.arrayContains(removeList, detail.name) then
 				nStacks = nStacks + 1
 			end
 		end
@@ -86,7 +79,7 @@ function dropExcessItems(turtle, removeList, keepNStacks, force)
 		for slot=16,1,-1 do
 			local detail = turtle.getItemDetail(slot)
 			local found = false
-			if detail ~= nil and arrayContains(removeList, detail.name) then
+			if detail ~= nil and util.arrayContains(removeList, detail.name) then
 				removed = removed + 1
 				turtle.select(slot)
 				turtle.dropDown()
@@ -322,7 +315,7 @@ function protectedDig(side)
 		else success, detail = turtle.inspect() end
 
 		if success then
-			if arrayContains(turtlesIds, detail.name) then
+			if util.arrayContains(turtlesIds, detail.name) then
 				if messageShown < 3 then
 					print("turtle in " .. side)
 					messageShown = messageShown + 1

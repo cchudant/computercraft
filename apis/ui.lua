@@ -1,7 +1,9 @@
-os.loadAPI("/firmware/apis/util.lua")
+local util = require("util")
 
----@class UIObject
-UIObject = {
+local ui = {}
+
+---@class ui.UIObject
+ui.UIObject = {
     transparent = false,
     marginLeft = 0,
     marginTop = 0,
@@ -20,7 +22,7 @@ UIObject = {
 }
 
 ---@diagnostic disable-next-line: duplicate-set-field
-function UIObject:__newindex(index, value)
+function ui.UIObject:__newindex(index, value)
     if index == 'margin' then
         self.marginLeft = value
         self.marginRight = value
@@ -37,42 +39,43 @@ function UIObject:__newindex(index, value)
 end
 
 ---@diagnostic disable-next-line: duplicate-set-field
-function UIObject:new(o)
+---@return ui.UIObject
+function ui.UIObject:new(o)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
     if o.marginX ~= nil then
-        UIObject.__newindex(o, 'marginX', o.marginX)
+        ui.UIObject.__newindex(o, 'marginX', o.marginX)
         o.marginX = nil
     end
     if o.marginY ~= nil then
-        UIObject.__newindex(o, 'marginY', o.marginY)
+        ui.UIObject.__newindex(o, 'marginY', o.marginY)
         o.marginY = nil
     end
     if o.margin ~= nil then
-        UIObject.__newindex(o, 'margin', o.margin)
+        ui.UIObject.__newindex(o, 'margin', o.margin)
         o.margin = nil
     end
 
     return o
 end
 
-function UIObject:draw(term, x, y, requestedW, requestedH) end
+function ui.UIObject:draw(term, x, y, requestedW, requestedH) end
 
-function UIObject:getSize(requestedW, requestedH) return 0, 0 end
+function ui.UIObject:getSize(requestedW, requestedH) return 0, 0 end
 
-function UIObject:onMount(term) end
+function ui.UIObject:onMount(term) end
 
-function UIObject:onUnmount(term) end
+function ui.UIObject:onUnmount(term) end
 
-function UIObject:onMonitorTouch(x, y, requestedW, requestedH) end
+function ui.UIObject:onMonitorTouch(x, y, requestedW, requestedH) end
 
-function UIObject:onClick(x, y, button, requestedW, requestedH) end
+function ui.UIObject:onClick(x, y, button, requestedW, requestedH) end
 
-function UIObject:onMouseClick(x, y, button, requestedW, requestedH) end
+function ui.UIObject:onMouseClick(x, y, button, requestedW, requestedH) end
 
----@class Block: UIObject
-Block = {
+---@class ui.Block: ui.UIObject
+ui.Block = {
     ---@type number|nil|'100%'
     width = nil,
     ---@type number|nil|'100%'
@@ -119,8 +122,8 @@ Block = {
     ---@type 'right'|'bottom'
     childrenDirection = 'right',
 }
-Block = UIObject:new(Block)
-function Block:__newindex(index, value)
+ui.Block = ui.UIObject:new(ui.Block)
+function ui.Block:__newindex(index, value)
     if index == 'padding' then
         self.paddingLeft = value
         self.paddingRight = value
@@ -133,39 +136,40 @@ function Block:__newindex(index, value)
         self.paddingTom = value
         self.paddingBottom = value
     end
-    UIObject.__newindex(self, index, value)
+    ui.UIObject.__newindex(self, index, value)
 end
 
-function Block:new(o)
-    UIObject.new(self, o)
+---@return ui.Block
+function ui.Block:new(o)
+    ui.UIObject.new(self, o)
     if o.paddingX ~= nil then
-        Block.__newindex(o, 'paddingX', o.paddingX)
+        ui.Block.__newindex(o, 'paddingX', o.paddingX)
         o.paddingX = nil
     end
     if o.paddingY ~= nil then
-        Block.__newindex(o, 'paddingY', o.paddingY)
+        ui.Block.__newindex(o, 'paddingY', o.paddingY)
         o.paddingY = nil
     end
     if o.padding ~= nil then
-        Block.__newindex(o, 'padding', o.padding)
+        ui.Block.__newindex(o, 'padding', o.padding)
         o.padding = nil
     end
     return o
 end
 
-function Block:onMount(term)
+function ui.Block:onMount(term)
     for _, child in ipairs(self) do
         child:onMount(term)
     end
 end
 
-function Block:onUnmount(term)
+function ui.Block:onUnmount(term)
     for _, child in ipairs(self) do
         child:onUnmount(term)
     end
 end
 
----@param self Block
+---@param self ui.Block
 local function computeContent(self, blockWidth, blockHeight, start, func)
     if blockWidth == nil then blockWidth = 0 end
     if blockHeight == nil then blockHeight = 0 end
@@ -261,7 +265,7 @@ local function sizeFromContentSize(self, contentW, contentH, requestedW, request
     return usedWidth, usedHeight
 end
 
-function Block:getSize(requestedW, requestedH)
+function ui.Block:getSize(requestedW, requestedH)
     if requestedW == nil then requestedW = self.paddingLeft + self.paddingRight end
     if requestedH == nil then requestedH = self.paddingTop + self.paddingBottom end
     local contentW, contentH = computeContent(
@@ -355,7 +359,7 @@ local function computeFullTiling(self, blockWidth, blockHeight, contentW, conten
         end)
 end
 
-function Block:draw(term, x, y, requestedW, requestedH)
+function ui.Block:draw(term, x, y, requestedW, requestedH)
     if self.transparent then return end
     local blockWidth = requestedW - self.paddingLeft - self.paddingRight
     local blockHeight = requestedH - self.paddingTop - self.paddingBottom
@@ -417,21 +421,21 @@ local function findChildAt(self, x, y, requestedW, requestedH)
     return foundChild, relX, relY
 end
 
-function Block:onMonitorTouch(x, y, requestedW, requestedH)
+function ui.Block:onMonitorTouch(x, y, requestedW, requestedH)
     local child, relX, relY = findChildAt(self, x, y, requestedW, requestedH)
     if child then
         child:onMonitorTouch(relX, relY, requestedW, requestedH)
     end
 end
 
-function Block:onClick(x, y, button, requestedW, requestedH)
+function ui.Block:onClick(x, y, button, requestedW, requestedH)
     local child, relX, relY = findChildAt(self, x, y, requestedW, requestedH)
     if child then
         child:onMonitorTouch(relX, relY, button, requestedW, requestedH)
     end
 end
 
-function Block:onMouseClick(x, y, button, requestedW, requestedH)
+function ui.Block:onMouseClick(x, y, button, requestedW, requestedH)
     local child, relX, relY = findChildAt(self, x, y, requestedW, requestedH)
     if child then
         child:onMonitorTouch(relX, relY, button, requestedW, requestedH)
@@ -455,19 +459,25 @@ local function stringDisplaySize(s)
     return maxWidth, maxHeight
 end
 
-Text = UIObject:new {
+---@class ui.Text: ui.UIObject
+ui.Text = {
+    transparent = false,
     text = nil,
     backgroundColor = nil,
     textColor = nil,
+    width = nil,
+    height = nil
 }
-function Text:new(obj)
-    UIObject.new(self, obj)
+ui.Text = ui.UIObject:new(ui.Text)
+---@return ui.Text
+function ui.Text:new(obj)
+    ui.UIObject.new(self, obj)
     obj.text = obj.text
     obj.width, obj.height = stringDisplaySize(obj.text)
     return obj
 end
 
-function Text:draw(term, x, y, parentW, parentH)
+function ui.Text:draw(term, x, y, parentW, parentH)
     if self.transparent then return end
     if self.backgroundColor ~= nil then
         term.setBackgroundColor(self.backgroundColor)
@@ -478,7 +488,7 @@ function Text:draw(term, x, y, parentW, parentH)
     term.setCursorPos(x, y)
     local offsetWidth, offsetHeight = 0, 0
     for i = 1, string.len(self.text) do
-        local c = self.text:sub(i, i)
+        local c = string.sub(self.text, i, i)
 
         if offsetWidth < parentW and offsetHeight < parentH then
             term.write(c)
@@ -493,11 +503,11 @@ function Text:draw(term, x, y, parentW, parentH)
     end
 end
 
-function Text:getSize()
+function ui.Text:getSize()
     return self.width, self.height
 end
 
-TextInput = UIObject:new {
+ui.TextInput = {
     text = "",
     backgroundColor = nil,
     textColor = nil,
@@ -507,8 +517,9 @@ TextInput = UIObject:new {
     _globalOnChar = nil,
     _globalOnKey = nil
 }
+ui.TextInput = ui.UIObject:new(ui.TextInput)
 
-function TextInput:draw(term, x, y, parentW, parentH)
+function ui.TextInput:draw(term, x, y, parentW, parentH)
     if self.transparent then return end
     if self.backgroundColor ~= nil then
         term.setBackgroundColor(self.backgroundColor)
@@ -518,22 +529,22 @@ function TextInput:draw(term, x, y, parentW, parentH)
     end
     term.setCursorPos(x, y)
     -- the -1 is because the blink position takes a char
-    local shownText = self.text:sub(math.max(string.len(self.text) - self.width - 1, 0), string.len(self.text))
+    local shownText = string.sub(self.text, math.max(string.len(self.text) - self.width - 1, 0), string.len(self.text))
     term.write(shownText)
 
-    local left = self.width - shownText:len()
+    local left = self.width - string.len(shownText)
     for _ = 1, left do
         term.write(' ')
     end
 
     if self.focus then
-        term.blinkPositionX, term.blinkPositionY = x + shownText:len(), y
+        term.blinkPositionX, term.blinkPositionY = x + string.len(shownText), y
         term.blinkBackgroundColor = self.backgroundColor
         term.blinkTextColor = self.textColor
     end
 end
 
-function TextInput:onMount(term)
+function ui.TextInput:onMount(term)
     self._globalOnChar = function(_, c)
         self.text = self.text .. c
     end
@@ -546,12 +557,12 @@ function TextInput:onMount(term)
     term.addGlobalListener('key', self._globalOnKey)
 end
 
-function TextInput:onUnmount(term)
+function ui.TextInput:onUnmount(term)
     term.removeGlobalListener('char', self._globalOnChar)
     term.removeGlobalListener('key', self._globalOnKey)
 end
 
-function TextInput:getSize()
+function ui.TextInput:getSize()
     return self.width, self.height
 end
 
@@ -602,8 +613,9 @@ local function redraw(obj, termObj)
     end
 end
 
----@diagnostic disable-next-line: lowercase-global
-function drawLoop(obj, termObj)
+---@param obj ui.UIObject
+---@param termObj Redirect
+function ui.drawLoop(obj, termObj)
     termObj = wrapTerm(termObj or term)
 
     obj:onMount(termObj)
@@ -639,3 +651,5 @@ function drawLoop(obj, termObj)
 
     obj:onUnmount(termObj)
 end
+
+return ui

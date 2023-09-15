@@ -1,6 +1,10 @@
-os.loadAPI("/firmware/apis/ui.lua")
+local ui = require('ui')
+local storage = require('storage')
 
-local monitor = peripheral.find('monitor')
+local storageServer = storage.storageServer()
+local success, errors, transfered, results = storageServer.storeItems({{ source = 'chest1', amount = 'all' }}, {})
+
+local monitor = peripheral.find('monitor') --[[@as Monitor]]
 monitor.setTextScale(0.5)
 
 ui.drawLoop(

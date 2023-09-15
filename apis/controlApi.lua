@@ -1,35 +1,26 @@
-VERSION_MAJOR = 2
+local controlApi = {}
 
-local file = fs.open("/firmware/commits", "r")
+controlApi.VERSION_MAJOR = 2
+
+local file = fs.open("/firmware/commits", "r") --[[@as ReadHandle]]
 local commits = file.readAll()
-commits = commits:gsub("%s+", "")
+commits = string.gsub(commits --[[@as string]], "%s+", "")
 
-VERSION_MINOR = tonumber(commits)
+controlApi.VERSION_MINOR = tonumber(commits)
 
-VERSION = VERSION_MAJOR .. '.' .. VERSION_MINOR
-PROTOCOL_STRING = 'CONTROL'
+controlApi.VERSION = controlApi.VERSION_MAJOR .. '.' .. controlApi.VERSION_MINOR
+controlApi.PROTOCOL_STRING = 'CONTROL'
 
-function _isVersionGreater(versionMajorA, versionMinorA, versionMajorB, versionMinorB)
+local function isVersionGreater(versionMajorA, versionMinorA, versionMajorB, versionMinorB)
 	return versionMajorA > versionMajorB or
 			(versionMajorA == versionMajorB and versionMinorA > versionMinorB)
 end
 
-local hasLocation = true
-function _getLocation()
-	if not hasLocation then return nil end
-	x, y, z = gps.locate()
-	if x ~= nil then
-		return x, y, z
-	end
-	hasLocation = false
-	return nil
-end
-
-_isSetup = false
-function _setup()
+local _isSetup = false
+local function setupModem()
 	if _isSetup then return end
 
-	function modem_side()
+	local function modemSide()
 		for _,per in ipairs(peripheral.getNames()) do
 			if peripheral.getType(per) == "modem" then
 				return per
@@ -38,7 +29,7 @@ function _setup()
 		return nil, "No modem on cumputer!"
 	end
 
-	local side, err = modem_side()
+	local side, err = modemSide()
 	if side == nil then error(err) end
 
 	rednet.open(side)
@@ -46,19 +37,29 @@ function _setup()
 	return true
 end
 
-function protocolReceive(command, sender, timeout, nonce)
-	_setup()
+---Block until a matching message is received
+---@param command string? command or nil if we want to match any commands
+---@param sender number? computerid of the sender or nil if we want to match all of them
+---@param timeout number? timeout in seconds - if nil, it will block forever
+---@param nonce string? optionally match a specific nonce
+---@return any? args the received arguments or nil if timeout expired
+---@return string? command the received command
+---@return number? sender the sender who sent this message
+---@return string? nonce the received nonce
+function controlApi.protocolReceive(command, sender, timeout, nonce)
+	setupModem()
 	local startTime = os.clock()
 	local elapsed = 0
 	while true do
-		local to_wait = nil
+		local toWait = nil
 		if timeout ~= nil then
-			to_wait = timeout - elapsed
+			toWait = timeout - elapsed
 		end
 
-		local snd, message = rednet.receive(to_wait)
+		---@diagnostic disable-next-line: param-type-mismatch
+		local snd, message = controlApi.rednet.receive(toWait)
 
-		if type(message) == 'table' and message.protocol == PROTOCOL_STRING and
+		if type(message) == 'table' and message.protocol == controlApi.PROTOCOL_STRING and
 				(sender == nil or sender == snd) and
 				(command == nil or message.command == command) and
 				(nonce == nil or message.nonce == nonce) then
@@ -71,19 +72,31 @@ function protocolReceive(command, sender, timeout, nonce)
 		end
 	end
 end
-function protocolSend(client, command, args, nonce)
-	_setup()
-	rednet.send(client, {
-		protocol = PROTOCOL_STRING,
+
+---Send a message to a client
+---@param clientID number client id
+---@param command string command
+---@param args any? args
+---@param nonce string? nonce
+function controlApi.protocolSend(clientID, command, args, nonce)
+	setupModem()
+	rednet.controlApi.send(clientID, {
+		protocol = controlApi.PROTOCOL_STRING,
 		command = command,
 		args = args,
 		nonce = nonce,
 	})
 end
-function protocolBroadcast(command, args, nonce)
-	_setup()
-	rednet.broadcast({
-		protocol = PROTOCOL_STRING,
+
+---Broadcast a message
+---@param command string command
+---@param args any? args
+---@param nonce string? nonce
+function controlApi.protocolBroadcast(command, args, nonce)
+	setupModem()
+	---@diagnostic disable-next-line: missing-parameter
+	controlApi.rednet.broadcast({
+		protocol = controlApi.PROTOCOL_STRING,
 		command = command,
 		args = args,
 		nonce = nonce,
@@ -91,12 +104,12 @@ function protocolBroadcast(command, args, nonce)
 end
 
 -- A task that serves Remote Term requests
-function _remoteTermSourceTask(shell)
+local function remoteTermSourceTask(shell)
 	local clientid
 	local nonce
 
-	_, _, clientid, nonce = protocolReceive('connectTerm')
-	protocolSend(clientid, 'connectedTerm', nil, nonce)
+	_, _, clientid, nonce = controlApi.protocolReceive('connectTerm')
+	controlApi.protocolSend(clientid --[[@as number]], 'connectedTerm', nil, nonce)
 
 	local methods = {
 		"write", "blit", "clear", "clearLine", "getCursorPos", "setCursorPos", "setCursorBlink",
@@ -105,17 +118,17 @@ function _remoteTermSourceTask(shell)
 		"getBackgroundColor", "getBackgroundColour"
 	}
 
-	function taskSend()
+	local function taskSend()
 		while true do
 			term.clear()
 			term.setCursorPos(1, 1)
 
-			termObj = {}
-			native = term.native()
+			local termObj = {}
+			local native = term.native()
 
 			for _,method in ipairs(methods) do
 				termObj[method] = function(...)
-					protocolSend(clientid, 'term', {
+					controlApi.protocolSend(clientid --[[@as number]], 'term', {
 						method = method,
 						args = {...},
 					}, nonce)
@@ -127,41 +140,42 @@ function _remoteTermSourceTask(shell)
 			shell.run("shell")
 			term.redirect(native)
 
-			protocolSend(clientid, 'endTerm', nil, nonce)
+			controlApi.protocolSend(clientid --[[@as number]], 'endTerm', nil, nonce)
 			clientid = nil
 		end
 	end
-	function taskReceive()
+	local function taskReceive()
 		while true do
-			args = protocolReceive('termEvent', clientid, nil, nonce)
-			os.queueEvent(args.event, unpack(args.args))
+			local args = controlApi.protocolReceive('termEvent', clientid, nil, nonce)
+			os.queueEvent(args.event, table.unpack(args.args))
 		end
 	end
 	parallel.waitForAny(taskReceive, taskSend)
 end
 
--- A task that connects to a Remote Term client by id
-function remoteTermClient(sourceid)
+---A task that connects to a Remote Term client by id
+---@param sourceid number
+function controlApi.remoteTermClient(sourceid)
 	local nonce
-	function taskReceiveEnd()
-		protocolReceive('endTerm', sourceid, nil, nonce)
+	local function taskReceiveEnd()
+		controlApi.protocolReceive('endTerm', sourceid, nil, nonce)
 	end
-	function taskReceive()
+	local function taskReceive()
 		term.clear()
 		term.setCursorPos(1, 1)
 
 		while true do
-			args = protocolReceive('term', sourceid, nil, nonce)
-			ret = table.pack(
-				term[args.method](unpack(args.args))
+			local args = controlApi.protocolReceive('term', sourceid, nil, nonce)
+			local ret = table.pack(
+				term[args.method](table.unpack(args.args))
 			)
 		end
 	end
-	function taskSend()
+	local function taskSend()
 		while true do
-			bag = {os.pullEvent()}
-			event = bag[1]
-			args = {}
+			local bag = {os.pullEvent()}
+			local event = bag[1]
+			local args = {}
 			for i = 2,#bag do
 				args[i-1] = bag[i]
 			end
@@ -174,7 +188,7 @@ function remoteTermClient(sourceid)
 
 			for _,ev in pairs(all_events) do
 				if ev == event and sourceid ~= nil then
-					protocolSend(sourceid, 'termEvent', {
+					controlApi.protocolSend(sourceid, 'termEvent', {
 						event = ev,
 						args = args,
 					}, nonce)
@@ -184,14 +198,14 @@ function remoteTermClient(sourceid)
 		end
 	end
 
-	local _, _, _, nonce_ = protocolSend(sourceid, 'connectTerm')
+	local _, _, _, nonce_ = controlApi.protocolSend(sourceid, 'connectTerm')
 	nonce = nonce_
-	protocolReceive('connectedTerm', nil, nil, nonce)
+	controlApi.protocolReceive('connectedTerm', nil, nil, nonce)
 
 	parallel.waitForAny(taskReceive, taskSend, taskReceiveEnd)
 end
 
-function _remoteControlTask(shell)
+local function remoteControlTask(shell)
 	local control_commands = {
 		identify = function(arg)
 			return {
@@ -199,8 +213,8 @@ function _remoteControlTask(shell)
 				label = os.getComputerLabel(),
 				-- location = {_getLocation()},
 				uptime = os.clock(),
-				turtle = turtle or nil,
-				pocket = pocket or nil,
+				turtle = not not turtle,
+				pocket = not not pocket,
 				fuel = turtle and turtle.getFuelLevel(),
 			}
 		end,
@@ -208,21 +222,21 @@ function _remoteControlTask(shell)
 		turtle = function(arg)
 			if not turtle then return end 
 			if type(arg.method) == 'string' and type(arg.args) == 'table' then
-				return table.pack(turtle[arg.method](unpack(arg.args)))
+				return table.pack(turtle[arg.method](table.unpack(arg.args)))
 			end
 		end,
 		currentUpdate = function(arg)
-			return { versionMajor = VERSION_MAJOR, versionMinor = VERSION_MINOR }
+			return { versionMajor = controlApi.VERSION_MAJOR, versionMinor = controlApi.VERSION_MINOR }
 		end,
 		getUpdate = function(arg)
 			local codeTable = {}
-			function makeCodeTable(path)
+			local function makeCodeTable(path)
 				for i,el in ipairs(fs.list(path)) do
 					local fullpath = fs.combine(path, el)
 					if fs.isDir(fullpath) then
 						makeCodeTable(fullpath)
 					else -- is file
-						file = fs.open(fullpath, 'r')
+						file = fs.open(fullpath, 'r') --[[@as ReadHandle]]
 						codeTable[fullpath] = file.readAll()
 						file.close()
 					end
@@ -233,43 +247,53 @@ function _remoteControlTask(shell)
 
 			return {
 				files = codeTable,
-				versionMajor = VERSION_MAJOR,
-				versionMinor = VERSION_MINOR,
+				versionMajor = controlApi.VERSION_MAJOR,
+				versionMinor = controlApi.VERSION_MINOR,
 			}
 		end
 	}
 
 	while true do
-		local args, command, sender, nonce = protocolReceive()
+		local args, command, sender, nonce = controlApi.protocolReceive()
 		local cmd = control_commands[command]
 		-- for shutdown and reboot, send rep before running command
 		if cmd == 'shutdown' then
-			protocolSend(sender, 'shutdownRep', nil, nonce)
+			controlApi.protocolSend(sender --[[@as number]], 'shutdownRep', nil, nonce)
 			os.shutdown()
 		elseif cmd == 'reboot' then
-			protocolSend(sender, 'rebootRep', nil, nonce)
+			controlApi.protocolSend(sender --[[@as number]], 'rebootRep', nil, nonce)
 			os.reboot()
 		elseif cmd == 'updateCode' then
-			protocolSend(sender, 'updateCodeRep', nil, nonce)
-			autoUpdate()
+			controlApi.protocolSend(sender --[[@as number]], 'updateCodeRep', nil, nonce)
+			controlApi.autoUpdate()
 		elseif cmd ~= nil then
 			local ret = cmd(args)
-			protocolSend(sender, command .. "Rep", ret, nonce)
+			controlApi.protocolSend(sender --[[@as number]], command .. "Rep", ret, nonce)
 		end
 	end
 end
 
-function _sourceTask(shell)
+function controlApi.sourceTask(shell)
 	parallel.waitForAll(
-		function() _remoteControlTask(shell) end,
-		function() _remoteTermSourceTask(shell) end
+		function() remoteControlTask(shell) end,
+		function() remoteTermSourceTask(shell) end
 	)
 end
 
-function _handleIdentify(arg, x, y, z)
-	arg.id = sourceid
+---@class IdentifyRep
+---@field location number[]? x y z
+---@field distance number?
+---@field id number
+---@field label string?
+---@field uptime number
+---@field turtle boolean
+---@field pocket boolean
+---@field fuel number?
+
+---@return IdentifyRep
+local function handleIdentify(arg, x, y, z)
 	if x ~= nil then
-		local dist = vector.new(unpack(arg.location)) - vector.new(x, y, z)
+		local dist = vector.new(table.unpack(arg.location)) - vector.new(x, y, z)
 		arg.distance = dist:length()
 	else
 		arg.distance = nil
@@ -277,18 +301,23 @@ function _handleIdentify(arg, x, y, z)
 	return arg
 end
 
-function broadcastCommandRoundtrip(command, args, timeout)
+---Broadcast a command, wait until a timeout and collect all the received answers
+---@param command string command
+---@param args any? args
+---@param timeout number? defaults to 1s
+---@return { args: any?, id: number? }[] answers
+function controlApi.broadcastCommandRoundtrip(command, args, timeout)
 	if timeout == nil then timeout = 1 end
 
-	local nonce = newNonce()
+	local nonce = controlApi.newNonce()
 
-	protocolBroadcast(command, args, nonce)
+	controlApi.protocolBroadcast(command, args, nonce)
 
 	local startTime = os.clock()
 	local elapsed = 0
 	local reps = {}
 	while true do
-		local ret, _, sourceid = protocolReceive(command .. 'Rep', nil, timeout - elapsed, nonce)
+		local ret, _, sourceid = controlApi.protocolReceive(command .. 'Rep', nil, timeout - elapsed, nonce)
 		local elapsed = os.clock() - startTime
 
 		table.insert(reps, { args = ret, id = sourceid })
@@ -299,56 +328,71 @@ function broadcastCommandRoundtrip(command, args, timeout)
 	end
 	return reps
 end
-function newNonce()
+
+---Create a new random nonce
+---@return string
+function controlApi.newNonce()
 	return tostring(math.floor(math.random() * 10000000))
 end
-function sendRoundtrip(sourceid, command, arg)
-	local nonce = newNonce()
-	protocolSend(sourceid, command, arg, nonce)
-	local ret = protocolReceive(command .. 'Rep', sourceid, nil, nonce)
+
+---Send a message and wait for a response
+---@param sourceid number? computerid of the peer
+---@param command string command
+---@param arg any? arg
+---@return any? ret the return value
+function controlApi.sendRoundtrip(sourceid, command, arg)
+	local nonce = controlApi.newNonce()
+	controlApi.protocolSend(sourceid --[[@as number]], command, arg, nonce)
+	local ret = controlApi.protocolReceive(command .. 'Rep', sourceid, nil, nonce)
 	return ret
 end
 
-function listAvailable(timeout)
-	local reps = broadcastCommandRoundtrip('identify', nil, timeout)
+---List all reachable peers
+---@param timeout any
+---@return IdentifyRep[]
+function controlApi.listAvailable(timeout)
+	local reps = controlApi.broadcastCommandRoundtrip('identify', nil, timeout)
 
-	local x, y, z = nil --_getLocation()
 	local available = {}
 	for _,rep in ipairs(reps) do
 		if rep.args ~= nil then
 			rep.args.id = rep.id
-			table.insert(available, _handleIdentify(rep.args, x, y, z))
+			table.insert(available, handleIdentify(rep.args))
 		end
 	end
 	return available
 end
 
--- this function may reboot
-function autoUpdate(timeout)
-	local reps = broadcastCommandRoundtrip('currentUpdate', nil, timeout)
+---perform an autoupdate over the air
+---this function may reboot
+---@param timeout number? defaults to 1s
+---@return boolean success always false, since we reboot on success
+---@return integer peers number of peers available
+function controlApi.autoUpdate(timeout)
+	local reps = controlApi.broadcastCommandRoundtrip('currentUpdate', nil, timeout)
 
-	local maxVer = {versionMajor = VERSION_MAJOR, versionMinor = VERSION_MINOR}
+	local maxVer = {versionMajor = controlApi.VERSION_MAJOR, versionMinor = controlApi.VERSION_MINOR}
 	for _,rep in ipairs(reps) do
 		if rep.args ~= nil and
-				_isVersionGreater(rep.args.versionMajor, rep.args.versionMinor, maxVer.versionMajor, maxVer.versionMinor) then
+				isVersionGreater(rep.args.versionMajor, rep.args.versionMinor, maxVer.versionMajor, maxVer.versionMinor) then
 			maxVer = rep.args
 			maxVer.id = rep.id
 		end
 	end
 
-	if _isVersionGreater(maxVer.versionMajor, maxVer.versionMinor, VERSION_MAJOR, VERSION_MINOR) then
+	if isVersionGreater(maxVer.versionMajor, maxVer.versionMinor, controlApi.VERSION_MAJOR, controlApi.VERSION_MINOR) then
 		-- need to update
-		local rep = sendRoundtrip(maxVer.id, 'getUpdate')
+		local rep = controlApi.sendRoundtrip(maxVer.id, 'getUpdate')
 
 		-- apply update
 		for k,v in pairs(rep.files) do
-			function mkdirs(path)
+			local function mkdirs(path)
 				if path == '' then return end
 				mkdirs(fs.getDir(path))
 				fs.makeDir(path)
 			end
 			mkdirs(fs.getDir(k))
-			local file = fs.open(k, 'w')
+			local file = fs.open(k, 'w') --[[@as WriteHandle]]
 			file.write(v)
 			file.close()
 		end
@@ -356,25 +400,32 @@ function autoUpdate(timeout)
 		print("Firmware flashed over the air!")
 		print("Rebooting...")
 		os.reboot()
+		return true, #reps
 	else
-		return false, table.getn(reps)
+		return false, #reps
 	end
 end
 
-function waitForReady(sourceid, timeout, command)
+---Wait for a specific message to be emitted by a peer
+---@param sourceid number computer id of the peer
+---@param timeout number? defaults to 1s
+---@param command string? the command the peer should emit or 'identify' if not provided
+---@param args any? args associated with the command
+---@return any? response the answer
+function controlApi.waitForReady(sourceid, timeout, command, args)
 	if command == nil then command = 'identify' end
 	if timeout == nil then timeout = 1 end
 	if timeout == -1 then timeout = nil end
-	local nonce = newNonce()
+	local nonce = controlApi.newNonce()
 
 	local rep
-	function receive()
-		rep = protocolReceive(command .. 'Rep', sourceid, timeout, nonce)
+	local function receive()
+		rep = controlApi.protocolReceive(command .. 'Rep', sourceid, timeout, nonce)
 	end
 
-	function send()
+	local function send()
 		while true do
-			protocolSend(sourceid, command, args, nonce)
+			controlApi.protocolSend(sourceid, command, args, nonce)
 			os.sleep(1)
 		end
 	end
@@ -383,7 +434,11 @@ function waitForReady(sourceid, timeout, command)
 	return rep
 end
 
-function connectControl(sourceid)
+
+---Remote control a computer
+---@param sourceid number the computer id
+---@return ConnectControl
+function controlApi.connectControl(sourceid)
 	local turtleFunctions = {
 		"craft", "forward", "back", "up", "down", "turnLeft", "turnRight", "select",
 		"getSelectedSlot", "getItemCount", "getItemSpace", "getItemDetail", "equipLeft",
@@ -394,28 +449,36 @@ function connectControl(sourceid)
 		"transferTo"
 	}
 
+	---@class TurtleControl
+	---@field id number
 	local turtle = { id = sourceid }
 	for _,method in ipairs(turtleFunctions) do
+		---@diagnostic disable-next-line: assign-type-mismatch
 		turtle[method] = function(...)
-			local ret = sendRoundtrip(sourceid, 'turtle', {
+			local ret = controlApi.sendRoundtrip(sourceid, 'turtle', {
 				method = method,
 				args = {...},
 			})
 			os.sleep(1)
-			return unpack(ret)
+			return table.unpack(ret)
 		end
 	end
 
-	return {
+	---@class ConnectControl
+	---@field id number
+	---@field turtle TurtleControl
+	local control = {
 		id = sourceid,
 		identify = function() 
-			local args = sendRoundtrip(sourceid, 'identify')
-			local x, y, z = nil --_getLocation()
-			return _handleIdentify(args, x, y, z)
+			local args = controlApi.sendRoundtrip(sourceid, 'identify')
+			return handleIdentify(args)
 		end,
-		shutdown = function() sendRoundtrip(sourceid, 'shutdown') end,
-		reboot = function() sendRoundtrip(sourceid, 'reboot') end,
-		shellRun = function(command) return sendRoundtrip(sourceid, 'shellRun', command) end,
+		shutdown = function() controlApi.sendRoundtrip(sourceid, 'shutdown') end,
+		reboot = function() controlApi.sendRoundtrip(sourceid, 'reboot') end,
+		shellRun = function(command) return controlApi.sendRoundtrip(sourceid, 'shellRun', command) end,
 		turtle = turtle
 	}
+	return control
 end
+
+return controlApi

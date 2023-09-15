@@ -1,4 +1,6 @@
-function arrayConcat(...)
+local util = {}
+
+function util.arrayConcat(...)
     local newTable = {}
     for _,arr in ipairs({...}) do
         for _,el in ipairs(arr) do
@@ -8,7 +10,7 @@ function arrayConcat(...)
     return newTable
 end
 
-function arrayEvery(arr, func)
+function util.arrayEvery(arr, func)
     for i,el in ipairs(arr) do
         if not func(el, i, arr) then
             return false
@@ -17,7 +19,7 @@ function arrayEvery(arr, func)
     return true
 end
 
-function arrayAny(arr, func)
+function util.arrayAny(arr, func)
     for i,el in ipairs(arr) do
         if func(el, i, arr) then
             return true
@@ -26,7 +28,7 @@ function arrayAny(arr, func)
     return false
 end
 
-function arrayFilter(arr, func)
+function util.arrayFilter(arr, func)
     local newTable = {}
     for i,el in ipairs(arr) do
         if func(el, i, arr) then
@@ -36,7 +38,7 @@ function arrayFilter(arr, func)
     return newTable
 end
 
-function arrayFind(arr, func)
+function util.arrayFind(arr, func)
     for i,el in ipairs(arr) do
         if func(el, i, arr) then
             return el
@@ -45,7 +47,7 @@ function arrayFind(arr, func)
     return nil
 end
 
-function arrayFindIndex(arr, func)
+function util.arrayFindIndex(arr, func)
     for i,el in ipairs(arr) do
         if func(el, i, arr) then
             return i
@@ -54,7 +56,7 @@ function arrayFindIndex(arr, func)
     return 0
 end
 
-function arrayFindLast(arr, func)
+function util.arrayFindLast(arr, func)
     for i = #arr, 1, -1 do
         local el = arr[i]
         if func(el, i, arr) then
@@ -64,7 +66,7 @@ function arrayFindLast(arr, func)
     return nil
 end
 
-function arrayFindLastIndex(arr, func)
+function util.arrayFindLastIndex(arr, func)
     for i = #arr, 1, -1 do
         local el = arr[i]
         if func(el, i, arr) then
@@ -74,7 +76,7 @@ function arrayFindLastIndex(arr, func)
     return 0
 end
 
-function arrayFlat(arr, depth)
+function util.arrayFlat(arr, depth)
     local function arrFlat(newTable, arr, depth)
         if type(arr) == 'table' and (depth == nil or depth > 0) then
             for i,el in ipairs(arr) do
@@ -92,7 +94,7 @@ function arrayFlat(arr, depth)
     return newTable
 end
 
-function arrayFlatMap(arr, func, depth)
+function util.arrayFlatMap(arr, func, depth)
     local function arrFlat(newTable, arr, depth)
         if type(arr) == 'table' and (depth == nil or depth > 0) then
             for i,el in ipairs(arr) do
@@ -111,14 +113,14 @@ function arrayFlatMap(arr, func, depth)
     return newTable
 end
 
-function arrayForEach(arr, func)
+function util.arrayForEach(arr, func)
     for i,el in ipairs(arr) do
         func(el, i, arr)
     end
     return arr
 end
 
-function arrayContains(arr, elem)
+function util.arrayContains(arr, elem)
     for i,el in ipairs(arr) do
         if elem == el then
             return true
@@ -127,7 +129,7 @@ function arrayContains(arr, elem)
     return false
 end
 
-function arrayIndexOf(arr, elem)
+function util.arrayIndexOf(arr, elem)
     for i,el in ipairs(arr) do
         if elem == el then
             return i
@@ -136,7 +138,7 @@ function arrayIndexOf(arr, elem)
     return 0
 end
 
-function arrayLastIndexOf(arr, elem)
+function util.arrayLastIndexOf(arr, elem)
     for i = #arr, 1, -1 do
         local el = arr[i]
         if elem == el then
@@ -146,7 +148,7 @@ function arrayLastIndexOf(arr, elem)
     return 0
 end
 
-function arrayJoin(arr, separator)
+function util.arrayJoin(arr, separator)
     if separator == nil then separator = ',' end
     local res = ''
     for i,el in ipairs(arr) do
@@ -159,7 +161,7 @@ function arrayJoin(arr, separator)
     return res
 end
 
-function arrayMap(arr, func)
+function util.arrayMap(arr, func)
     local newTable = {}
     for i,el in ipairs(arr) do
         local newEl = func(el)
@@ -168,26 +170,26 @@ function arrayMap(arr, func)
     return newTable
 end
 
-function arrayPop(arr)
+function util.arrayPop(arr)
     return table.remove(arr, #arr)
 end
 
-function arrayPush(arr, el)
+function util.arrayPush(arr, el)
     return table.insert(arr, el)
 end
 
-function arrayLen(arr)
+function util.arrayLen(arr)
     return #arr
 end
 
-function arrayReduce(arr, func, accumulator)
+function util.arrayReduce(arr, func, accumulator)
     for i,v in ipairs(arr) do
         accumulator = func(accumulator, v, i, arr)
     end
     return accumulator
 end
 
-function arrayReduceRight(arr, func, accumulator)
+function util.arrayReduceRight(arr, func, accumulator)
     for i = #arr, 1, -1 do
         local v = arr[i]
         accumulator = func(accumulator, v, i, arr)
@@ -195,7 +197,7 @@ function arrayReduceRight(arr, func, accumulator)
     return accumulator
 end
 
-function arrayReverse(arr)
+function util.arrayReverse(arr)
     local newTable = {}
     for i = #arr, 1, -1 do
         local v = arr[i]
@@ -204,12 +206,12 @@ function arrayReverse(arr)
     return newTable
 end
 
-function arrayShift(arr)
+function util.arrayShift(arr)
     return table.remove(arr, 1)
 end
 
 -- does not support negative indexes yet
-function arraySlice(arr, start, end_)
+function util.arraySlice(arr, start, end_)
     local newTable = {}
     for i = start, end_ do
         local v = arr[i]
@@ -218,11 +220,11 @@ function arraySlice(arr, start, end_)
     return newTable
 end
 
-function arraySort(arr, func)
+function util.arraySort(arr, func)
     return table.sort(arr, func)
 end
 
-function arrayUnshift(arr, ...)
+function util.arrayUnshift(arr, ...)
     local index = 1
     for _,v in ipairs({...}) do
         table.insert(arr, v, index)
@@ -231,7 +233,23 @@ function arrayUnshift(arr, ...)
     return #arr
 end
 
-function objectEntries(obj)
+function util.objectKeys(obj)
+    local table = {}
+    for k,_ in pairs(obj) do
+        table.insert(table, k)
+    end
+    return table
+end
+
+function util.objectValues(obj)
+    local table = {}
+    for _,v in pairs(obj) do
+        table.insert(table, v)
+    end
+    return table
+end
+
+function util.objectEntries(obj)
     local table = {}
     for k,v in pairs(obj) do
         table.insert(table, { k, v })
@@ -239,7 +257,7 @@ function objectEntries(obj)
     return table
 end
 
-function objectFromEntries(entries)
+function util.objectFromEntries(entries)
     local obj = {}
     for _,v in ipairs(entries) do
         local k,el = table.unpack(v)
@@ -248,10 +266,12 @@ function objectFromEntries(entries)
     return obj
 end
 
-function defaultArgs(options, defaults)
-	for k,v in pairs(defaults) do
+function util.defaultArgs(options, defaults)
+	for k,_ in pairs(defaults) do
 		if options[k] == nil then
 			options[k] = defaults[k]
 		end
 	end
 end
+
+return util

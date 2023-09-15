@@ -1,0 +1,7 @@
+lua-ls-ccc-tweaked
+.vscode
+items
+.gitignore
+.git
+.gitmodules
+sourceDiskStartup.lua

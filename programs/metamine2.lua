@@ -1,3 +1,4 @@
+local controlApi = require("controlApi")
 os.loadAPI("/firmware/apis/mine2.lua")
 
 local FUEL = 'minecraft:dried_kelp_block'
