@@ -488,7 +488,7 @@ function storage.storageServer()
 
                 print(item.maxCount, amountLeft, amount)
                 pretty(item)
-                local toTransfer = math.max(item.maxCount, math.min(amountLeft, amount))
+                local toTransfer = math.min(item.maxCount, amountLeft, amount)
                 local willClearSlot = toTransfer >= amount
 
                 print(toTransfer, willClearSlot)
