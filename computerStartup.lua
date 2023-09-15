@@ -12,6 +12,8 @@ childEnv.multishell = multishell
 
 function newShell.run(...)
 	print("Run", package.path, require, ...)
+	_G.require = childEnv.require
+	_G.package = childEnv.package
 	return shell.run(...)
 end
 function newShell.execute(...)
