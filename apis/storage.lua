@@ -203,7 +203,7 @@ function storage.storageServer()
 
         local function handleOneRequest(ireq, req, results, nono)
             local sourcePeriph, error = openNonStorage(req.source)
-            if sourcePeriph == nil then
+            if sourcePeriph == false then
                 return {
                     request = ireq,
                     reason = error,
