@@ -190,6 +190,8 @@ function storage.storageServer()
     ---@field nbt string?
     ---@field source string
     ---@field slot string
+    ---@field amount number amount transfered into the inventory
+    ---@field newAmount number the new amount now in inventory
 
     ---@param requests StoreItemsRequest[]
     ---@param options StoreItemsOptions
@@ -385,6 +387,8 @@ function storage.storageServer()
     ---@field nbt string?
     ---@field destination string
     ---@field slot string
+    ---@field amount number amount transfered into the inventory
+    ---@field newAmount number the new amount now in inventory
 
     ---@param requests RetrieveItemsRequest[]
     ---@param options RetrieveItemsOptions
@@ -458,12 +462,12 @@ function storage.storageServer()
                     destinationSlotI = destinationSlotI + 1
                     local detail = destinationPeriph.getItemDetail(slot)
                     if detail == nil then
-                        return slot, item.maxCount
+                        return slot, item.maxCount, 0
                     end
                     if detail.name == item.name and detail.nbt == item.nbt
                         and detail.count < detail.maxCount
                     then
-                        return slot, detail.maxCount - detail.count
+                        return slot, detail.maxCount - detail.count, detail.count
                     end
                 end
             end
@@ -491,7 +495,7 @@ function storage.storageServer()
                 local willClearSlot = toTransfer >= amount
 
                 while toTransfer > 0 do
-                    local destSlot, canReceive = nextSlotInDest()
+                    local destSlot, canReceive, inInv = nextSlotInDest()
                     if destSlot == nil then
                         if req.amountMustBeExact then
                             return nil, {
@@ -526,7 +530,9 @@ function storage.storageServer()
                         nbt = item.nbt,
                         destination = req.destination,
                         slot = destSlot,
-                        request = ireq
+                        request = ireq,
+                        amount = actuallyTransfered,
+                        newAmount = inInv + actuallyTransfered,
                     })
                 end
             end
