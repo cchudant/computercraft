@@ -7,20 +7,18 @@ local childEnv = {}
 setmetatable(childEnv, { __index = _ENV })
 local newShell = {}
 setmetatable(newShell, { __index = shell })
-childEnv.shell = newShell
+childEnv.shell = shell
 childEnv.multishell = multishell
 
-function newShell.run(...)
-	_G.require = childEnv.require
-	_G.package = childEnv.package
-	_ENV.require = childEnv.require
-	_ENV.package = childEnv.package
-	print("Run", package.path, require, ...)
-	return shell.run(...)
-end
-function newShell.execute(...)
-	print("execute", ...)
-	return shell.execute(...)
+local load = load
+function childEnv.load(ld, source, mode, env)
+	print(ld, source, mode, env)
+	if env == nil then
+		env = childEnv
+	end
+	env.require = childEnv.require
+	env.package = childEnv.package
+	return load(ld, source, mode, env)
 end
 
 local function setPaths(firmware)
@@ -38,12 +36,6 @@ if JUST_FLASHED ~= nil then
 else
 	setPaths("/firmware")
 end
-
--- require = childEnv.require
--- package = childEnv.package
--- package = childEnv.package
-
--- require = childEnv.require
 
 local controlApi = childEnv.require("controlApi")
 if JUST_FLASHED == nil then
