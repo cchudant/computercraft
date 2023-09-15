@@ -1,8 +1,10 @@
 local ui = require('ui')
 local storage = require('storage')
+local pretty = require('cc.pretty').pretty_print
 
 local storageServer = storage.storageServer()
 local success, errors, transfered, results = storageServer.storeItems({{ source = 'chest1', amount = 'all' }}, {})
+pretty({success, errors, transfered, results})
 
 local monitor = peripheral.find('monitor') --[[@as Monitor]]
 monitor.setTextScale(0.5)
