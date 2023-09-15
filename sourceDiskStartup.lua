@@ -1,10 +1,11 @@
 local function mkdirs(path)
+    print(path)
     if path == '' then return end
     mkdirs(path)
     fs.makeDir(path)
 end
 local function arrayContains(arr, elem)
-    for i, el in ipairs(arr) do
+    for _, el in ipairs(arr) do
         if elem == el then
             return true
         end
