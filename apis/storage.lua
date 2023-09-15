@@ -493,7 +493,12 @@ function storage.storageServer()
 
                         local chest, chestSlot = getStorageChestFromSlotID(slotID)
                         local chestObj = peripheral.wrap(chest.name)
-                        local amount = chestObj.getItemDetail(chestSlot).count
+                        local amount = item.maxCount
+                        local destDetail = chestObj.getItemDetail(chestSlot)
+                        if destDetail ~= nil then
+                            amount = destDetail.count
+                        end
+
 
                         -- local willClearSlot = toTransfer >= amount
 
@@ -516,6 +521,7 @@ function storage.storageServer()
 
                             -- update state
                             itemIDToAmounts[itemID] = itemIDToAmounts[itemID] - actuallyTransfered
+                            print(canReceive, actuallyTransfered)
                             if actuallyTransfered >= canReceive then
                                 print("REMOVE", slotI)
                                 table.remove(slots, slotI)
