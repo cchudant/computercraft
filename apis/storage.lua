@@ -256,6 +256,7 @@ function storage.storageServer()
                     local beginSlot = #slots
                     for i = #slots, 1, -1 do
                         local slotID = slots[i]
+                        print(slots, i, slots[i])
                         local chest, chestSlot = getStorageChestFromSlotID(slotID)
                         local chestObj = peripheral.wrap(chest.name)
                         local amount = chestObj.getItemDetail(chestSlot).count
