@@ -53,7 +53,7 @@ parallel.waitForAny(
 	function()
 		if fs.exists("/autorun.lua") then
 			-- shell.run("autorun")
-			os.run(childEnv, shell.resolveProgram("shell"), "/autorun.lua")
+			os.run(childEnv, "/autorun.lua")
 		else
 			os.run(childEnv, shell.resolveProgram("shell"))
 		end
