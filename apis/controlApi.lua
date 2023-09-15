@@ -57,7 +57,7 @@ function controlApi.protocolReceive(command, sender, timeout, nonce)
 		end
 
 		---@diagnostic disable-next-line: param-type-mismatch
-		local snd, message = controlApi.rednet.receive(toWait)
+		local snd, message = rednet.receive(toWait)
 
 		if type(message) == 'table' and message.protocol == controlApi.PROTOCOL_STRING and
 				(sender == nil or sender == snd) and
@@ -95,7 +95,7 @@ end
 function controlApi.protocolBroadcast(command, args, nonce)
 	setupModem()
 	---@diagnostic disable-next-line: missing-parameter
-	controlApi.rednet.broadcast({
+	rednet.broadcast({
 		protocol = controlApi.PROTOCOL_STRING,
 		command = command,
 		args = args,
