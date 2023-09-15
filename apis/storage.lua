@@ -190,7 +190,7 @@ function storage.storageServer()
     ---@field nbt string?
     ---@field source string
     ---@field slot string
-    ---@field amount number amount transfered into the inventory
+    ---@field taken number amount transfered into the inventory
     ---@field newAmount number the new amount now in inventory
 
     ---@param requests StoreItemsRequest[]
@@ -224,6 +224,9 @@ function storage.storageServer()
                     break
                 end
                 print(sourceSlot, detail and detail.name)
+
+                local transferedFromSlot = 0
+                local originalAmount = detail.count
 
                 -- find the item id
                 local item = util.arrayFind(uniqueItems, function(obj)
@@ -284,6 +287,7 @@ function storage.storageServer()
 
                         local toTransfer = math.min(item.maxCount - amount, needToPush)
                         transfered = transfered + toTransfer
+                        transferedFromSlot = transferedFromSlot + toTransfer
 
                         if not nono then
                             sourcePeriph.pushItems(chest.name, sourceSlot, toTransfer, chestSlot)
@@ -340,6 +344,8 @@ function storage.storageServer()
                         nbt = item.nbt,
                         source = req.source,
                         slot = sourceSlot,
+                        taken = transferedFromSlot,
+                        newAmount = originalAmount + transferedFromSlot,
                         request = ireq
                     })
 
