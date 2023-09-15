@@ -33,13 +33,11 @@ local f = fs.open('/disk/firmware/.deployignore', 'r')
 if f ~= nil then
     while true do
         local line = f.readLine()
-        print(line)
         if line == nil then break end
         table.insert(ignoreList, line)
     end
     f.close()
 end
-os.sleep(100)
 
 copyFiles('/disk/firmware', '/firmware', function(path, dest)
     if arrayContains(ignoreList, path) or arrayContains(ignoreList, fs.getName(path)) then
