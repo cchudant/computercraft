@@ -6,14 +6,11 @@ local storageServer = storage.storageServer()
 local success, errors, transfered, results = storageServer.retrieveItems(
     {{
         destination = 'minecraft:chest_20',
-        amount = 3,
+        amount = 'all',
         name = 'minecraft:dried_kelp_block',
-        amountMustBeExact = true,
         slots = {1, 2},
     }},
-    {
-        allOrNothing = true
-    }
+    {}
 )
 pretty({success, errors, transfered, results})
 -- print(success)
