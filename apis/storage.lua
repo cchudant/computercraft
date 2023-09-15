@@ -519,6 +519,8 @@ function storage.storageServer()
     
                     if reqAmount ~= 'all' then
                         amountLeft = amountLeft - toTransfer
+                        toTransfer = math.max(item.maxCount, math.min(amountLeft, amount))
+                        willClearSlot = toTransfer >= amount
                     end
     
                     table.insert(results, {
