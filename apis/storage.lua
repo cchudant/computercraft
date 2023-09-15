@@ -494,7 +494,7 @@ function storage.storageServer()
                 print(toTransfer, willClearSlot)
 
                 while toTransfer > 0 do
-                    local destSlot = nextSlotInDest()
+                    local destSlot, canReceive = nextSlotInDest()
                     if destSlot == nil then
                         if req.amountMustBeExact then
                             return nil, {
@@ -507,12 +507,13 @@ function storage.storageServer()
                     end
 
                     print('t', chest.name, chestSlot, toTransfer, destSlot)
+                    local actuallyTransfered = math.min(toTransfer, canReceive)
 
                     if not nono then
-                        destinationPeriph.pullItems(chest.name, chestSlot, toTransfer, destSlot)
+                        destinationPeriph.pullItems(chest.name, chestSlot, actuallyTransfered, destSlot)
     
                         -- update state
-                        itemIDToAmounts[itemID] = itemIDToAmounts[itemID] - toTransfer
+                        itemIDToAmounts[itemID] = itemIDToAmounts[itemID] - actuallyTransfered
                         if willClearSlot then
                             table.remove(slots, i)
                             table.insert(emptySlots, slotID)
@@ -520,9 +521,8 @@ function storage.storageServer()
                     end
     
                     if reqAmount ~= 'all' then
-                        amountLeft = amountLeft - toTransfer
-                        toTransfer = math.max(item.maxCount, math.min(amountLeft, amount))
-                        willClearSlot = toTransfer >= amount
+                        toTransfer = toTransfer - actuallyTransfered
+                        amountLeft = amountLeft - actuallyTransfered
                     end
     
                     table.insert(results, {
