@@ -150,18 +150,18 @@ function storage.storageServer()
 
     local function openNonStorage(periph)
         if util.arrayAny(storageChests, function(c) return c.name == periph end) then
-            return false, "destination is a storage chest"
+            return nil, "destination is a storage chest"
         end
 
         if util.arrayContains(bannedPeripheralNames, periph) then
-            return false, "destination is not on network"
+            return nil, "destination is not on network"
         end
         local destinationPeriph = peripheral.wrap(periph)
         if destinationPeriph == nil then
-            return false, "peripheral cannot be found"
+            return nil, "peripheral cannot be found"
         end
         if not peripheral.hasType(periph, 'inventory') then
-            return false, "destination is not an inventory"
+            return nil, "destination is not an inventory"
         end
         return destinationPeriph
     end
@@ -203,8 +203,8 @@ function storage.storageServer()
 
         local function handleOneRequest(ireq, req, results, nono)
             local sourcePeriph, error = openNonStorage(req.source)
-            if sourcePeriph == false then
-                return {
+            if sourcePeriph == nil then
+                return nil, {
                     request = ireq,
                     reason = error,
                 }
@@ -306,7 +306,7 @@ function storage.storageServer()
 
                     -- not enough space in storage
                     if needToPush > 0 and req.amountMustBeExact then
-                        return {
+                        return nil, {
                             request = ireq,
                             reason = "not enough space in storage"
                         }
