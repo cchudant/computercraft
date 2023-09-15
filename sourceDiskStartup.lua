@@ -1,6 +1,6 @@
 local function mkdirs(path)
     if path == '' then return end
-    mkdirs(path)
+    mkdirs(fs.getDir(path))
     fs.makeDir(fs.getName(path))
 end
 local function arrayContains(arr, elem)
