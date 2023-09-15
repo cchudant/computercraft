@@ -310,7 +310,7 @@ function storage.storageServer()
                         local chest, chestSlot = getStorageChestFromSlotID(slotID)
 
                         pretty(item)
-                        local toTransfer = math.min(item.maxCount, needToPush)
+                        local toTransfer = math.min(detail.maxCount, needToPush)
                         transfered = transfered + toTransfer
                         needToPush = needToPush - toTransfer
 
