@@ -61,8 +61,9 @@ function storage.storageServer()
 
     local function getStorageChestFromSlotID(slotID)
         for _, storChest in pairs(storageChests) do
+            print(storChest.firstSlotId, storChest.size, slotID)
             if slotID >= storChest.firstSlotId and
-                slotID < storChest.firstSlotId + storChest.size
+                slotID <= storChest.firstSlotId + storChest.size
             then
                 return storChest, slotID - storChest.firstSlotId
             end
