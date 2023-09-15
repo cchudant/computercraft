@@ -491,6 +491,8 @@ function storage.storageServer()
                 local toTransfer = math.max(item.maxCount, math.min(amountLeft, amount))
                 local willClearSlot = toTransfer >= amount
 
+                print(toTransfer, willClearSlot)
+
                 while toTransfer > 0 do
                     local destSlot = nextSlotInDest()
                     if destSlot == nil then
