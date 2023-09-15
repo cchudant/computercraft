@@ -61,7 +61,6 @@ function storage.storageServer()
 
     local function getStorageChestFromSlotID(slotID)
         for _, storChest in pairs(storageChests) do
-            print(storChest.firstSlotId, storChest.size, slotID)
             if slotID >= storChest.firstSlotId and
                 slotID <= storChest.firstSlotId + storChest.size
             then
@@ -140,8 +139,7 @@ function storage.storageServer()
         for _, slots in pairs(itemIDToSlots) do
             local amounts = {} -- [slotid]: number of items
 
-            for i, slotID in ipairs(slots) do
-                print(i, slotID)
+            for _, slotID in ipairs(slots) do
                 local chest, chestSlot = getStorageChestFromSlotID(slotID)
                 local chestObj = peripheral.wrap(chest.name)
                 amounts[slotID] = chestObj.getItemDetail(chestSlot).count
