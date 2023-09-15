@@ -27,7 +27,6 @@ local function setPaths(firmware)
 	newPackage.path = newPackage.path .. ";" .. firmware .. "/apis/?.lua;" .. firmware .. "/apis/?;" .. firmware .. "/apis/?/init.lua"
 	childEnv.require = newRequire
 	childEnv.package = newPackage
-	print('hello', newPackage.path)
 end
 
 if JUST_FLASHED ~= nil then
