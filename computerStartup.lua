@@ -16,6 +16,7 @@ function childEnv.load(ld, source, mode, env)
 	if env == nil then
 		env = childEnv
 	end
+	env.load = childEnv.load
 	env.require = childEnv.require
 	env.package = childEnv.package
 	return load(ld, source, mode, env)
