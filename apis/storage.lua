@@ -317,7 +317,7 @@ function storage.storageServer()
                         if not nono then
                             table.remove(emptySlots, emptySlotI)
                             sourcePeriph.pushItems(chest.name, sourceSlot, toTransfer, chestSlot)
-                            itemIDToAmounts[itemID] = itemIDToAmounts[itemID] + toTransfer
+                            itemIDToAmounts[itemID] = (itemIDToAmounts[itemID] or 0) + toTransfer
                         end
 
                         if reqAmount ~= 'all' and reqAmount ~= 'slot' then
@@ -524,6 +524,8 @@ function storage.storageServer()
 
                             -- update state
                             itemIDToAmounts[itemID] = itemIDToAmounts[itemID] - actuallyTransfered
+                            if itemIDToAmounts[itemID] == 0 then itemIDToAmounts[itemID] = nil end
+
                             if actuallyTransfered >= amount then
                                 table.remove(slots, slotI)
                                 table.insert(emptySlots, slotID)
