@@ -18,6 +18,8 @@ else
 	firmwareDir = "/firmware"
 end
 
+shell.setPath(shell.path() .. ":" .. firmwareDir .. "/programs")
+
 -- fix require importing
 -- this is a hack
 
@@ -30,16 +32,26 @@ function newModule.make(...)
 	p.path = p.path .. ";" .. firmwareDir .. "/apis/?.lua;" .. firmwareDir .. "/apis/?;" .. firmwareDir .. "/apis/?/init.lua"
 	return r, p
 end
-package.loaded["cc.require"] = newModule
+
+local newRequire, newPackage = newModule.make(childEnv, firmwareDir .. "/apis")
+childEnv.require = newRequire
+childEnv.package = newPackage
+require, package = newRequire, newPackage
+
+local originalDofile = dofile
+function newDofile(filename)
+	if filename == "rom/modules/main/cc/require.lua" then
+		return newModule
+	end
+
+	return originalDofile(filename)
+end
+childEnv.dofile = newDofile
+dofile = newDofile
 
 -- end hack
 
-shell.setPath(shell.path() .. ":" .. firmwareDir .. "/programs")
-local newRequire, newPackage = require('cc.require').make(childEnv, firmwareDir .. "/apis")
-childEnv.require = newRequire
-childEnv.package = newPackage
 
-_ENV.require, _ENV.package = newRequire, newPackage
 
 local controlApi = childEnv.require("controlApi")
 if JUST_FLASHED == nil then
