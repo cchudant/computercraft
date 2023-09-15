@@ -253,7 +253,7 @@ function storage.storageServer()
                     local slots = itemIDToSlots[itemID] or {}
 
                     -- find the first non maxed out stack
-                    local beginSlot = #slots
+                    local beginSlot = #slots+1
                     for i = #slots, 1, -1 do
                         local slotID = slots[i]
                         print(slots, i, slots[i])
