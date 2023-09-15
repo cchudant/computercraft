@@ -231,7 +231,7 @@ function storage.storageServer()
                         obj.nbt == detail.nbt
                 end)
 
-                if chest == nil then
+                if item == nil then
                     -- new item id
                     
                     item = {
@@ -261,7 +261,7 @@ function storage.storageServer()
                         local chestObj = peripheral.wrap(chest.name)
                         local amount = chestObj.getItemDetail(chestSlot).count
 
-                        if amount == item.maxCount then
+                        if amount == detail.maxCount then
                             break
                         end
                         beginSlot = i
@@ -282,7 +282,7 @@ function storage.storageServer()
                         local chestObj = peripheral.wrap(chest.name)
                         local amount = chestObj.getItemDetail(chestSlot).count
 
-                        local toTransfer = math.min(item.maxCount - amount, needToPush)
+                        local toTransfer = math.min(detail.maxCount - amount, needToPush)
                         transfered = transfered + toTransfer
 
                         if not nono then
