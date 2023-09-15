@@ -528,7 +528,7 @@ function storage.storageServer()
                 end
                 if req.slots ~= nil then
                     iDestSlot = iDestSlot + 1
-                    destSlot = req.slots[iDestSlot]
+                    destSlot = req.slots[iDestSlot] or destPeriphSize + 1
                 else
                     destSlot = destSlot + 1
                 end
