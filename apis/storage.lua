@@ -489,7 +489,7 @@ function storage.storageServer()
 
                         local slotID = slots[slotI]
 
-                        print(slotID)
+                        print("GET", slotI)
 
                         local chest, chestSlot = getStorageChestFromSlotID(slotID)
                         local chestObj = peripheral.wrap(chest.name)
@@ -517,6 +517,7 @@ function storage.storageServer()
                             -- update state
                             itemIDToAmounts[itemID] = itemIDToAmounts[itemID] - actuallyTransfered
                             if actuallyTransfered >= canReceive then
+                                print("REMOVE", slotI)
                                 table.remove(slots, slotI)
                                 table.insert(emptySlots, slotID)
                                 slotI = slotI - 1
