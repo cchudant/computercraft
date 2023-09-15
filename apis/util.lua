@@ -305,7 +305,7 @@ function util.parallelGroup(...)
                 end
             end
             func(addCoroutines)
-            os.queueEvent("parallelGroup:end:" .. nonce)
+            os.queueEvent("parallelGroup:end:" .. nonce, coroutineID)
         end)
         nCoroutines = nCoroutines + 1
 	end
@@ -313,15 +313,17 @@ function util.parallelGroup(...)
 	while nCoroutines > 0 do
 		local bag = {os.pullEvent()}
 		if bag[1] == "parallelGroup:add:" .. nonce then
-            local func = addedCoroutines[bag[2]]
-            addedCoroutines[bag[2]] = nil
-			coroutines[bag[2]] = coroutine.create(function()
+            local coroutineID = bag[2]
+            local func = addedCoroutines[coroutineID]
+            addedCoroutines[coroutineID] = nil
+			coroutines[coroutineID] = coroutine.create(function()
 				func()
-                os.queueEvent("parallelGroup:end:" .. nonce)
+                os.queueEvent("parallelGroup:end:" .. nonce, coroutineID)
 			end)
             nCoroutines = nCoroutines + 1
         elseif bag[1] == "parallelGroup:end:" .. nonce then
-            coroutines[bag[2]] = nil
+            local coroutineID = bag[2]
+            coroutines[coroutineID] = nil
             nCoroutines = nCoroutines - 1
         else
             for k,co in pairs(coroutines) do
