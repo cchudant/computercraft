@@ -458,13 +458,11 @@ function storage.storageServer()
 
             local destSlot = 1
             local iDestSlot = 1
-            while true do -- for each retrieve chest slot
-                -- end conditions
-                if destSlot > destPeriphSize then break end
-                if req.slots ~= nil and iDestSlot > #req.slots then break end
-                if slotI < 1 then break end
-                if amountLeft == 0 then break end
-
+            while destSlot <= destPeriphSize
+                and (req.slots == nil or iDestSlot <= #req.slots)
+                and slotI >= 1
+                and amountLeft > 0
+            do -- for each retrieve chest slot
                 local destItem = destinationPeriph.getItemDetail(destSlot)
 
                 local totalTransferedToSlot = 0
@@ -474,18 +472,16 @@ function storage.storageServer()
                 end
                 local canReceive = item.maxCount - inDestinationSlot
 
+
                 if
                     (destItem == nil or (destItem.name == item.name and destItem.nbt == item.nbt))
                     and canReceive > 0
                 then
-                    while true do -- for each slot in storage chest
+                    print(canReceive)
+                    while slotI >= 1
+                        and amountLeft > 0
+                    do -- for each slot in storage chest
                         -- end conditions
-                        if slotI < 1 then
-                            break
-                        end
-                        if amountLeft == 0 then
-                            break
-                        end
 
                         local slotID = slots[slotI]
 
