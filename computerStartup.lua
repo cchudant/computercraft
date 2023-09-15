@@ -3,11 +3,6 @@ local JUST_FLASHED = ...
 term.clear()
 term.setCursorPos(1, 1)
 
-local childEnv = {}
-setmetatable(childEnv, { __index = _ENV })
-childEnv.shell = shell -- shell
-childEnv.multishell = multishell -- multishell
-
 local firmwareDir
 if JUST_FLASHED ~= nil then
 	print("Firmware flashed!")
@@ -31,8 +26,6 @@ function newModule.make(...)
 end
 
 local newRequire, newPackage = newModule.make(childEnv, firmwareDir .. "/apis")
-childEnv.require = newRequire
-childEnv.package = newPackage
 require, package = newRequire, newPackage
 
 local originalDofile = dofile
@@ -43,12 +36,11 @@ local function newDofile(filename)
 
 	return originalDofile(filename)
 end
-childEnv.dofile = newDofile
 dofile = newDofile
 
 -- end hack
 
-local controlApi = childEnv.require("controlApi")
+local controlApi = require("controlApi")
 if JUST_FLASHED == nil then
 	controlApi.autoUpdate()
 end
@@ -59,9 +51,9 @@ parallel.waitForAny(
 	function() controlApi.sourceTask(shell) end,
 	function()
 		if fs.exists("/autorun.lua") then
-			os.run(childEnv, "/rom/programs/shell.lua", "/autorun.lua")
+			os.run(_ENV, "/rom/programs/shell.lua", "/autorun.lua")
 		else
-			os.run(childEnv, "/rom/programs/shell.lua")
+			os.run(_ENV, "/rom/programs/shell.lua")
 		end
 	end
 )
