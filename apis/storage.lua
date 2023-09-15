@@ -399,7 +399,7 @@ function storage.storageServer()
         local function handleOneRequest(ireq, req, results, nono)
             local destinationPeriph, error = openNonStorage(req.destination)
             if destinationPeriph == nil then
-                return {
+                return nil, {
                     request = ireq,
                     reason = error,
                 }
@@ -410,6 +410,15 @@ function storage.storageServer()
                 return obj.name == req.name and
                     not (req.nbt ~= nil and obj.nbt == req.nbt)
             end)
+            if item == nil then
+                if req.amountMustBeExact then
+                    return nil, {
+                        request = ireq,
+                        reason = "not enough items",
+                    }
+                end
+                return 0
+            end
             local itemID = item.id
 
             local reqAmount = req.amount
