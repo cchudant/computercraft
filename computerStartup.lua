@@ -7,8 +7,8 @@ local childEnv = {}
 setmetatable(childEnv, { __index = _ENV })
 local newShell = {}
 setmetatable(newShell, { __index = shell })
-childEnv.shell = shell
-childEnv.multishell = multishell
+childEnv.shell = nil -- shell
+childEnv.multishell = nil -- multishell
 
 local firmwareDir
 if JUST_FLASHED ~= nil then
@@ -52,9 +52,9 @@ parallel.waitForAny(
 	function() controlApi.sourceTask(shell) end,
 	function()
 		if fs.exists("/autorun.lua") then
-			os.run(childEnv, "/autorun.lua")
+			os.run(childEnv, "/rom/programs/shell", "/autorun.lua")
 		else
-			os.run(childEnv, shell.resolveProgram("shell"))
+			os.run(childEnv, "/rom/programs/shell")
 		end
 	end
 )
