@@ -10,9 +10,9 @@ childEnv.multishell = multishell
 
 local function setPaths(firmware)
 	shell.setPath(shell.path() .. ":" .. firmware .. "/programs")
-	local newRequire = require('cc.require').make(childEnv, firmware .. "/apis")
+	local newRequire, newPackage = require('cc.require').make(childEnv, firmware .. "/apis")
 	childEnv.require = newRequire
-	childEnv.package = package
+	childEnv.package = newPackage
 end
 
 if JUST_FLASHED ~= nil then
