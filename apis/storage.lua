@@ -250,7 +250,7 @@ function storage.storageServer()
                     and (req.slots == nil or util.arrayContains(req.slots, sourceSlot))
                 then
                     local itemID = item.id
-                    local slots = itemIDToSlots[itemID]
+                    local slots = itemIDToSlots[itemID] or {}
 
                     -- find the first non maxed out stack
                     local beginSlot = #slots
