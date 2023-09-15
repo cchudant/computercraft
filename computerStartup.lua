@@ -5,8 +5,19 @@ term.setCursorPos(1, 1)
 
 local childEnv = {}
 setmetatable(childEnv, { __index = _ENV })
-childEnv.shell = shell
+local newShell = {}
+setmetatable(newShell, { __index = shell })
+childEnv.shell = newShell
 childEnv.multishell = multishell
+
+function newShell.run(...)
+	print("Run", ...)
+	return shell.run(...)
+end
+function newShell.execute(...)
+	print("execute", ...)
+	return shell.execute(...)
+end
 
 local function setPaths(firmware)
 	shell.setPath(shell.path() .. ":" .. firmware .. "/programs")
@@ -22,8 +33,9 @@ else
 	setPaths("/firmware")
 end
 
-require = childEnv.require
-package = childEnv.package
+-- require = childEnv.require
+-- package = childEnv.package
+-- package = childEnv.package
 
 -- require = childEnv.require
 local env = setmetatable(childEnv, { __index = _G })
