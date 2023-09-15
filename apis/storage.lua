@@ -405,7 +405,7 @@ function storage.storageServer()
         local function handleOneRequest(ireq, req, results, nono)
             local destinationPeriph, error = openNonStorage(req.destination)
             if destinationPeriph == nil then
-                return nil, {
+                return 0, {
                     request = ireq,
                     reason = error,
                 }
@@ -418,7 +418,7 @@ function storage.storageServer()
             end)
             if item == nil then
                 if req.amountMustBeExact then
-                    return nil, {
+                    return 0, {
                         request = ireq,
                         reason = "not enough items",
                     }
@@ -435,7 +435,7 @@ function storage.storageServer()
             -- do we have enough?
             if itemIDToAmounts[itemID] < reqAmount then
                 if req.amountMustBeExact then
-                    return nil, {
+                    return 0, {
                         request = ireq,
                         reason = "not enough items",
                     }
@@ -499,21 +499,6 @@ function storage.storageServer()
                             amount = destDetail.count
                         end
 
-
-                        -- local willClearSlot = toTransfer >= amount
-
-                        -- while req.amount == 'all' or reqAmount > 0 do
-                        if destSlot == nil then
-                            if req.amountMustBeExact then
-                                return nil, {
-                                    request = ireq,
-                                    reason = "not enough space in destination inventory"
-                                }
-                            else
-                                break
-                            end
-                        end
-
                         local actuallyTransfered = math.min(item.maxCount, reqAmount, canReceive, amount)
 
                         if not nono then
@@ -553,6 +538,14 @@ function storage.storageServer()
                 end
             end
 
+            if req.amountMustBeExact and
+                (destSlot > destPeriphSize or (req.slots ~= nil and iDestSlot > #req.slots)) then
+                return reqAmount - amountLeft, {
+                    request = ireq,
+                    reason = "not enough space in destination inventory"
+                }
+            end
+
             return reqAmount - amountLeft
         end
 
@@ -585,7 +578,7 @@ function storage.storageServer()
         if #errors == 0 then
             return true, nil, totalTransfered, results
         else
-            return false, errors
+            return false, errors, totalTransfered
         end
     end
 
