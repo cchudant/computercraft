@@ -9,7 +9,7 @@ local success, errors, transfered, results = storageServer.storeItems(
         amount = 1,
         -- name = 'minecraft:dried_kelp_block',
         -- slots = {1, 2},
-        amountMustBeExact = true,
+        -- amountMustBeExact = true,
     }},
     {}
 )
