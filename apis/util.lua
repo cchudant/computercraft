@@ -314,6 +314,7 @@ function util.parallelGroup(...)
 		local bag = {os.pullEvent()}
 		if bag[1] == "parallelGroup:add:" .. nonce then
             local coroutineID = bag[2]
+            print("Add", coroutineID)
             local func = addedCoroutines[coroutineID]
             addedCoroutines[coroutineID] = nil
 			coroutines[coroutineID] = coroutine.create(function()
@@ -323,9 +324,11 @@ function util.parallelGroup(...)
             nCoroutines = nCoroutines + 1
         elseif bag[1] == "parallelGroup:end:" .. nonce then
             local coroutineID = bag[2]
+            print("End", coroutineID)
             coroutines[coroutineID] = nil
             nCoroutines = nCoroutines - 1
         else
+            print("Other", bag[1])
             for k,co in pairs(coroutines) do
                 local filter = filters[k]
 
