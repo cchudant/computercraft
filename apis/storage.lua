@@ -466,8 +466,11 @@ function storage.storageServer()
                 local totalTransferedToSlot = 0
 
                 local destItem = destinationPeriph.getItemDetail(destSlot)
-                local inDestinationSlot = destItem.count
-                local canReceive = destItem.maxCount - inDestinationSlot
+                local inDestinationSlot = 0
+                if destItem ~= nil then
+                    inDestinationSlot = destItem.count
+                end
+                local canReceive = item.maxCount - inDestinationSlot
 
                 while true do -- for each slot in storage chest
                     -- end conditions
