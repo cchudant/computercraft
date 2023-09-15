@@ -5,10 +5,8 @@ term.setCursorPos(1, 1)
 
 local childEnv = {}
 setmetatable(childEnv, { __index = _ENV })
-local newShell = {}
-setmetatable(newShell, { __index = shell })
-childEnv.shell = nil -- shell
-childEnv.multishell = nil -- multishell
+childEnv.shell = shell -- shell
+childEnv.multishell = multishell -- multishell
 
 local firmwareDir
 if JUST_FLASHED ~= nil then
@@ -20,14 +18,13 @@ end
 
 shell.setPath(shell.path() .. ":" .. firmwareDir .. "/programs")
 
--- fix require importing
+-- fix require importing with the shell program
 -- this is a hack
 
 local module = require("cc.require")
-local newModule = setmetatable({ hello = '999999' }, { __index = module })
+local newModule = setmetatable({}, { __index = module })
 function newModule.make(...)
 	local r, p = module.make(...)
-	print("MAKE!!")
 	p.loaded["cc.require"] = newModule
 	p.path = p.path .. ";" .. firmwareDir .. "/apis/?.lua;" .. firmwareDir .. "/apis/?;" .. firmwareDir .. "/apis/?/init.lua"
 	return r, p
@@ -39,7 +36,7 @@ childEnv.package = newPackage
 require, package = newRequire, newPackage
 
 local originalDofile = dofile
-function newDofile(filename)
+local function newDofile(filename)
 	if filename == "rom/modules/main/cc/require.lua" then
 		return newModule
 	end
@@ -50,8 +47,6 @@ childEnv.dofile = newDofile
 dofile = newDofile
 
 -- end hack
-
-
 
 local controlApi = childEnv.require("controlApi")
 if JUST_FLASHED == nil then
