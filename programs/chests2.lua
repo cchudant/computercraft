@@ -4,8 +4,8 @@ local pretty = require('cc.pretty').pretty_print
 
 local storageServer = storage.storageServer()
 local success, errors, transfered, results = storageServer.retrieveItems({{ destination = 'minecraft:chest_20', amount = 3, item = 'minecraft:netherrack' }}, {})
--- pretty({success, errors, transfered, results})
-print(success)
+pretty({success, errors, transfered, results})
+-- print(success)
 
 local monitor = peripheral.find('monitor') --[[@as Monitor]]
 monitor.setTextScale(0.5)
