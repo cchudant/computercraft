@@ -110,11 +110,11 @@ function storage.storageServer()
                     if found ~= nil then itemID = found.id end
 
                     if itemID == nil then
-                        pretty(detail)
+                        local maxCount = periph.getItemLimit(slot)
                         table.insert(uniqueItems, {
                             name = detail.name,
                             nbt = detail.nbt,
-                            maxCount = detail.maxCount,
+                            maxCount = maxCount,
                             id = itemIDCounter,
                         })
                         itemID = itemIDCounter
