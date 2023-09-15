@@ -5,26 +5,28 @@ term.setCursorPos(1, 1)
 
 local childEnv = {}
 setmetatable(childEnv, { __index = _ENV })
-childEnv.shell = shell
-childEnv.multishell = multishell
+-- childEnv.shell = shell
+-- childEnv.multishell = multishell
 
 local function setPaths(firmware)
 	shell.setPath(shell.path() .. ":" .. firmware .. "/programs")
-	r = require('cc.require').make(childEnv, firmware .. "/apis")
-	package = r
-	childEnv.require = r
+	local newRequire = require('cc.require').make(childEnv, firmware .. "/apis")
+	childEnv.require = newRequire
 	childEnv.package = package
-	print(childEnv, childEnv.require, require, firmware .. "/apis")
 end
 
-local controlApi
 if JUST_FLASHED ~= nil then
 	print("Firmware flashed!")
 	setPaths("/disk/firmware")
-	controlApi = childEnv.require("controlApi")
 else
 	setPaths("/firmware")
-	controlApi = childEnv.require("controlApi")
+end
+
+_ENV.require = require
+_ENV.package = package
+
+local controlApi = childEnv.require("controlApi")
+if JUST_FLASHED == nil then
 	controlApi.autoUpdate()
 end
 
