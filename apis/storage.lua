@@ -512,6 +512,7 @@ function storage.storageServer()
 
                         if reqAmount ~= 'all' then
                             amountLeft = amountLeft - actuallyTransfered
+                            canReceive = canReceive - actuallyTransfered
                         end
 
                         totalTransferedToSlot = totalTransferedToSlot + actuallyTransfered
