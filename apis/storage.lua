@@ -472,6 +472,8 @@ function storage.storageServer()
                 end
                 local canReceive = item.maxCount - inDestinationSlot
 
+                print(destItem, destItem and destItem.name, canReceive)
+
                 if
                     (destItem == nil or (destItem.name == item.name and destItem.nbt == item.nbt))
                     and canReceive > 0
