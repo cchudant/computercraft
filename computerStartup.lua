@@ -10,32 +10,35 @@ setmetatable(newShell, { __index = shell })
 childEnv.shell = shell
 childEnv.multishell = multishell
 
-local load = load
-function childEnv.load(ld, source, mode, env)
-	print(ld, source, mode, env)
-	if env == nil then
-		env = childEnv
-	end
-	env.load = childEnv.load
-	env.require = childEnv.require
-	env.package = childEnv.package
-	return load(ld, source, mode, env)
-end
+-- fix require importing
+-- this is a hack
 
-local function setPaths(firmware)
-	shell.setPath(shell.path() .. ":" .. firmware .. "/programs")
-	local newRequire, newPackage = require('cc.require').make(childEnv, firmware .. "/apis")
-	newPackage.path = newPackage.path .. ";" .. firmware .. "/apis/?.lua;" .. firmware .. "/apis/?;" .. firmware .. "/apis/?/init.lua"
-	childEnv.require = newRequire
-	childEnv.package = newPackage
-end
-
+local firmwareDir
 if JUST_FLASHED ~= nil then
 	print("Firmware flashed!")
-	setPaths("/disk/firmware")
+	firmwareDir = "/disk/firmware"
 else
-	setPaths("/firmware")
+	firmwareDir = "/firmware"
 end
+
+
+local module = require("cc.require")
+local newModule = setmetatable({}, { __index = module })
+function newModule.make(...)
+	local r, p = module.make(...)
+	p.path = p.path .. ";" .. firmwareDir .. "/apis/?.lua;" .. firmwareDir .. "/apis/?;" .. firmwareDir .. "/apis/?/init.lua"
+	return r, p
+end
+package.loaded["cc.require"] = newModule
+
+-- end hack
+
+shell.setPath(shell.path() .. ":" .. firmwareDir .. "/programs")
+local newRequire, newPackage = require('cc.require').make(childEnv, firmwareDir .. "/apis")
+newPackage.path = newPackage.path .. ";" .. firmwareDir .. "/apis/?.lua;" .. firmwareDir .. "/apis/?;" .. firmwareDir .. "/apis/?/init.lua"
+childEnv.require = newRequire
+childEnv.package = newPackage
+
 
 local controlApi = childEnv.require("controlApi")
 if JUST_FLASHED == nil then
