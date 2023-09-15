@@ -1,8 +1,7 @@
 local function mkdirs(path)
-    print(path)
     if path == '' then return end
     mkdirs(path)
-    fs.makeDir(path)
+    fs.makeDir(fs.getName(path))
 end
 local function arrayContains(arr, elem)
     for _, el in ipairs(arr) do
