@@ -4,7 +4,7 @@ local pretty = require('cc.pretty').pretty_print
 
 local storageServer = storage.storageServer()
 local success, errors, transfered, results = storageServer.retrieveItems(
-    {{ destination = 'minecraft:chest_20', amount = 3, item = 'minecraft:netherrack', amountMustBeExact = true }}, {}
+    {{ destination = 'minecraft:chest_20', amount = 3, item = 'minecraft:dried_kelp_block', amountMustBeExact = true }}, {}
 )
 pretty({success, errors, transfered, results})
 -- print(success)
