@@ -428,12 +428,12 @@ function storage.storageServer()
             local itemID = item.id
 
             local reqAmount = req.amount
-            if req.amount == 'stack' then
+            if req.amount == 'stack' or req.amount == 'all' then
                 reqAmount = item.maxCount
             end
 
             -- do we have enough?
-            if itemIDToAmounts[itemID] == nil or itemIDToAmounts[itemID] < reqAmount then
+            if itemIDToAmounts[itemID] < reqAmount then
                 if req.amountMustBeExact then
                     return 0, {
                         request = ireq,
@@ -446,9 +446,6 @@ function storage.storageServer()
 
             -- traverse the slots array
             local amountLeft = reqAmount
-            if reqAmount == 'all' then
-                amountLeft = item.maxCount
-            end
 
             -- local destSlot, canReceive, inInv = nextSlotInDest()
 
