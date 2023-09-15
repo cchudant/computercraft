@@ -459,7 +459,6 @@ function storage.storageServer()
                         end
                         slot = req.slots[destinationSlotI]
                     end
-                    destinationSlotI = destinationSlotI + 1
                     local detail = destinationPeriph.getItemDetail(slot)
                     if detail == nil then
                         return slot, item.maxCount, 0
@@ -469,6 +468,7 @@ function storage.storageServer()
                     then
                         return slot, detail.maxCount - detail.count, detail.count
                     end
+                    destinationSlotI = destinationSlotI + 1
                 end
             end
 
