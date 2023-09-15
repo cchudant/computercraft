@@ -462,6 +462,8 @@ function storage.storageServer()
                 -- end conditions
                 if destSlot > destPeriphSize then break end
                 if req.slots ~= nil and iDestSlot > #req.slots then break end
+                if slotI < 1 then break end
+                if amountLeft == 0 then break end
 
                 local destItem = destinationPeriph.getItemDetail(destSlot)
 
@@ -522,7 +524,6 @@ function storage.storageServer()
                             -- update state
                             itemIDToAmounts[itemID] = itemIDToAmounts[itemID] - actuallyTransfered
                             if actuallyTransfered >= amount then
-                                print("REMOVE", slotI)
                                 table.remove(slots, slotI)
                                 table.insert(emptySlots, slotID)
                                 slotI = slotI - 1
