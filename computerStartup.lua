@@ -10,9 +10,6 @@ setmetatable(newShell, { __index = shell })
 childEnv.shell = shell
 childEnv.multishell = multishell
 
--- fix require importing
--- this is a hack
-
 local firmwareDir
 if JUST_FLASHED ~= nil then
 	print("Firmware flashed!")
@@ -21,11 +18,15 @@ else
 	firmwareDir = "/firmware"
 end
 
+-- fix require importing
+-- this is a hack
 
 local module = require("cc.require")
 local newModule = setmetatable({}, { __index = module })
 function newModule.make(...)
 	local r, p = module.make(...)
+	print("MAKE!!")
+	p.loaded["cc.require"] = newModule
 	p.path = p.path .. ";" .. firmwareDir .. "/apis/?.lua;" .. firmwareDir .. "/apis/?;" .. firmwareDir .. "/apis/?/init.lua"
 	return r, p
 end
@@ -35,7 +36,6 @@ package.loaded["cc.require"] = newModule
 
 shell.setPath(shell.path() .. ":" .. firmwareDir .. "/programs")
 local newRequire, newPackage = require('cc.require').make(childEnv, firmwareDir .. "/apis")
-newPackage.path = newPackage.path .. ";" .. firmwareDir .. "/apis/?.lua;" .. firmwareDir .. "/apis/?;" .. firmwareDir .. "/apis/?/init.lua"
 childEnv.require = newRequire
 childEnv.package = newPackage
 
