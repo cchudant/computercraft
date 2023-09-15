@@ -407,8 +407,7 @@ function storage.storageServer()
 
             -- find the item id
             local item = util.arrayFind(uniqueItems, function(obj)
-                print(obj.name, req.name, obj.nbt, req.nbt)
-                return obj.name == req.name and
+                return obj.name == req.item and
                     not (req.nbt ~= nil and obj.nbt == req.nbt)
             end)
             if item == nil then
