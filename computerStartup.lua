@@ -17,6 +17,7 @@ shell.setPath(shell.path() .. ":" .. firmwareDir .. "/programs")
 -- this is a hack
 
 local module = require("cc.require")
+
 local newModule = setmetatable({}, { __index = module })
 function newModule.make(...)
 	local r, p = module.make(...)
@@ -32,6 +33,7 @@ local newRequire, newPackage = newModule.make(
 	_ENV,
 	firmwareDir .. "/apis"
 )
+_G.require, _G.package = nil, nil
 _ENV.require, _ENV.package = newRequire, newPackage
 
 local originalDofile = dofile
