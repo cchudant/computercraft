@@ -165,6 +165,20 @@ function util.arrayJoin(arr, separator)
     return res
 end
 
+if fs then
+    -- computercraft
+    local pretty = require('cc.pretty').pretty_print
+    function util.prettyPrint(...)
+        pretty(...)
+    end
+else
+    -- unit testing
+    local inspect = require('inspect')
+    function util.prettyPrint(...)
+        print(table.unpack(util.arrayMap({...}, inspect)))
+    end
+end
+
 ---@generic T
 ---@generic U
 ---@param arr T[]

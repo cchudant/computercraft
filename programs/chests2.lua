@@ -1,7 +1,7 @@
 local ui = require('ui')
 local storage = require('storage')
 local storageUI = require('storage.ui')
-local pretty = require('cc.pretty').pretty_print
+local util = require('util')
 
 local startStorageServer, storageConnection = storage.storageServer({
     crafters = { inventory = "minecraft:chest_27", computerID = 28 },
@@ -9,7 +9,7 @@ local startStorageServer, storageConnection = storage.storageServer({
     craft = true,
 })
 
-print("2", startStorageServer, storageConnection)
+util.prettyPrint("2", startStorageServer, storageConnection)
 
 local monitor = peripheral.find('monitor') --[[@as Monitor]]
 monitor.setTextScale(0.5)
