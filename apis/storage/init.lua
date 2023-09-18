@@ -249,6 +249,7 @@ function storage.storageServer(settings, storageID)
         print("running")
         util.parallelGroup(
             function(addTask) -- network requests
+                print("a")
                 while true do
                     local args, _, sender, nonce = controlApi.protocolReceive("storage")
                     handleRpc(addTask, args, function(ret)
@@ -257,6 +258,7 @@ function storage.storageServer(settings, storageID)
                 end
             end,
             function(addTask) -- local requests
+                print("b")
                 while true do
                     print("pulling storage")
                     local _, args, nonce = os.pullEvent("storage:" .. (storageID or ""))
@@ -267,11 +269,13 @@ function storage.storageServer(settings, storageID)
                 end
             end,
             function(_) -- run craft manager if present
+                print("c")
                 if storageState.craftManager then
                     storageState.craftManager.runManager(storageState)
                 end
             end,
             function(_) -- set up
+                print("d")
                 storageState.isUp = true
                 print("storage is up")
                 os.queueEvent("storage:up:"  .. (storageID or ""))
