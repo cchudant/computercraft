@@ -1,5 +1,5 @@
-local controlApi = require("controlApi")
-os.loadAPI("/firmware/apis/mine2.lua")
+local control = require("apis.control")
+local mine2 = require("apis.mine2")
 
 local offsetDepth, offsetRight, offsetHeight, depth, right, height, targetFuelLevel = ...
 if offsetDepth == nil or offsetRight == nil or offsetHeight == nil or depth == nil or right == nil or height == nil or targetFuelLevel == nil then
@@ -22,12 +22,12 @@ while turtle.getFuelLevel() < targetFuelLevel do
 	if mine2.selectItem(turtle, FUEL) then
 		turtle.refuel(1)
 	else
-		controlApi.protocolBroadcast('metamine:refuelGive', nil, nonce)
+		control.protocolBroadcast('metamine:refuelGive', nil, nonce)
 		os.sleep(0.1)
 	end
 end
-controlApi.protocolBroadcast('metamine:refuelDone', nil, nonce)
-local targetFuelLevel, _, snd, nonce = controlApi.protocolReceive('metamine:start')
+control.protocolBroadcast('metamine:refuelDone', nil, nonce)
+local targetFuelLevel, _, snd, nonce = control.protocolReceive('metamine:start')
 
 print(offsetDepth, offsetRight, offsetHeight, depth, right, height)
 
@@ -65,7 +65,7 @@ mine2.digCuboid(turtle, {
 
 print("finished")
 
-local _, _, snd, nonce = controlApi.protocolReceive('metamine:back')
+local _, _, snd, nonce = control.protocolReceive('metamine:back')
 
 print("backing")
 
@@ -90,4 +90,4 @@ print("back!")
 
 mine2.removeUselessItems(turtle, true)
 
-controlApi.protocolSend(snd, 'metamine:backRep', nil, nonce)
+control.protocolSend(snd, 'metamine:backRep', nil, nonce)

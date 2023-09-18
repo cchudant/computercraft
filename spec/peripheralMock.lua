@@ -1,4 +1,4 @@
-local util = require("util")
+local util = require("apis.util")
 local inspect = require('inspect')
 
 local peripheralMock = {}

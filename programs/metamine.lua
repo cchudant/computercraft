@@ -1,4 +1,4 @@
-os.loadAPI("/firmware/apis/mine2.lua")
+local mine2 = require("apis.mine2")
 
 local FUEL = 'minecraft:dried_kelp_block'
 
@@ -75,11 +75,11 @@ function placeTurtle(side, depth, right, height)
 		west = 3,
 	}
 
-	local control = controlApi.connectControl(id)
+	local control = control.connectControl(id)
 	local remoteTurtle = control.turtle
 	repeat
 		print("waiting for " .. id)
-	until controlApi.waitForReady(id, 15)
+	until control.waitForReady(id, 15)
 
 	while remoteTurtle.getFuelLevel() < mine2.digCuboidFuelRequired(depth, right, height) do
 		print("refueling " .. id)

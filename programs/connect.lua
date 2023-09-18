@@ -1,4 +1,4 @@
-local controlApi = require("controlApi")
+local control = require("apis.control")
 
 local computerID = ...
 if computerID == nil then
@@ -6,4 +6,4 @@ if computerID == nil then
 	return 1
 end
 
-controlApi.remoteTermClient(tonumber(computerID) --[[@as number]])
+control.remoteTermClient(tonumber(computerID) --[[@as number]])

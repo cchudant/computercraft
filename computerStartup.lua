@@ -47,15 +47,15 @@ dofile = newDofile
 
 -- end hack
 
-local controlApi = require("controlApi")
+local control = require("apis.control")
 if JUST_FLASHED == nil then
-	controlApi.autoUpdate()
+	control.autoUpdate()
 end
 
-print("Running ControlAPI " .. controlApi.VERSION .. " on computer " .. os.getComputerID() .. ".")
+print("Running control " .. control.VERSION .. " on computer " .. os.getComputerID() .. ".")
 
 parallel.waitForAny(
-	function() controlApi.sourceTask(shell) end,
+	function() control.sourceTask(shell) end,
 	function()
 		if fs.exists("/autorun.lua") then
 			os.run(_ENV, "/rom/programs/shell.lua", "/autorun.lua")
