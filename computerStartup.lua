@@ -30,7 +30,7 @@ local newRequire, newPackage = newModule.make(
 	_ENV,
 	firmwareDir .. "/apis"
 )
-require, package = newRequire, newPackage
+_ENV.require, _ENV.package = newRequire, newPackage
 
 local originalDofile = dofile
 local function newDofile(filename)
