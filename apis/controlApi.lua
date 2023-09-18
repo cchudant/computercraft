@@ -86,7 +86,7 @@ end
 ---@param nonce string? nonce
 function controlApi.protocolSend(clientID, command, args, nonce)
 	setupModem()
-	rednet.controlApi.send(clientID, {
+	rednet.send(clientID, {
 		protocol = controlApi.PROTOCOL_STRING,
 		command = command,
 		args = args,
