@@ -5,3 +5,4 @@ items
 .git
 .gitmodules
 sourceDiskStartup.lua
+spec
