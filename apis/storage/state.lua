@@ -227,6 +227,23 @@ function storageState.makeStorageDriverState()
     end
 
     function state.initialStateSetup(settings)
+        if settings.craft then
+            initFromCraftsFile(settings)
+
+            -- fill up crafters
+            local crafters = {}
+            for _, c in ipairs(settings.crafters) do
+                local crafter = craft.craftingTurtleProcessor(c.computerid, c.inventory)
+                local methodID = util.arrayFind(state.craftMethods, function(method)
+                    return method.name == "crafting"
+                end)
+                crafters[methodID] = crafters[methodID] or {}
+                table.insert(crafters[methodID], crafter)
+            end
+
+            state.craftManager = craft.makeManager(crafters)
+        end
+
         -- fill up storageChests
         for _, name in ipairs(settings.storageChests) do
             local p = peripheral.wrap(name)
@@ -282,23 +299,6 @@ function storageState.makeStorageDriverState()
             table.sort(slots, function(slotA, slotB)
                 return amounts[slotB] < amounts[slotA]
             end)
-        end
-
-        if settings.craft then
-            initFromCraftsFile(settings)
-
-            -- fill up crafters
-            local crafters = {}
-            for _, c in ipairs(settings.crafters) do
-                local crafter = craft.craftingTurtleProcessor(c.computerid, c.inventory)
-                local methodID = util.arrayFind(state.craftMethods, function(method)
-                    return method.name == "crafting"
-                end)
-                crafters[methodID] = crafters[methodID] or {}
-                table.insert(crafters[methodID], crafter)
-            end
-
-            state.craftManager = craft.makeManager(crafters)
         end
     end
 
