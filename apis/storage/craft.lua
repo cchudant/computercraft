@@ -18,6 +18,7 @@ function craft.craftingTurtleTask()
     local craftSlots = { 1, 2, 3, 5, 6, 7, 9, 10, 11 }
     while true do
         local craft, _, sender, nonce = controlApi.protocolReceive("storage:craft", nil, nil, nil)
+        print("Got a jod")
         ---@cast craft { inputAmount: number, inputs: number[] }
 
         for inputI, i in ipairs(craftSlots) do
@@ -47,7 +48,7 @@ end
 ---@return CraftProcessor
 function craft.craftingTurtleProcessor(turtleid, chestName)
     ---@class CraftProcessor
-    local processor = { }
+    local processor = {}
 
     ---@param craft { inputAmount: number, inputs: number[] }
     ---@param storageState StorageState
@@ -106,6 +107,7 @@ function craft.makeManager(crafters)
         state.taskIDCounter = state.taskIDCounter + 1
 
         table.insert(state.tasks, task)
+        print("queue event")
         os.queueEvent("storage:craft:newTask")
         os.pullEvent("storage:craft:finished:" .. id)
     end
@@ -152,6 +154,7 @@ function craft.makeManager(crafters)
                 doingTaskI = (doingTaskI + 1) % #state.tasks
 
                 if foundTask then
+                    print("crafting")
                     crafter.craft(foundCraft, storageState)
 
                     if #foundCraft.crafts == 0 then
@@ -165,7 +168,9 @@ function craft.makeManager(crafters)
                         os.queueEvent("storage:craft:finished:" .. foundTask.id)
                     end
                 else
+                    print("pulling newtask")
                     os.pullEvent("storage:craft:newTask")
+                    print("pulled newtask")
                 end
             end
         end
