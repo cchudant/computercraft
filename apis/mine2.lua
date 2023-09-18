@@ -1,9 +1,11 @@
 local util = require("apis.util")
 
-function selectItem(turtle, items)
-	if type(items) == 'string' then items = {items} end
+local mine2 = {}
 
-	for slot=1,16 do
+function mine2.selectItem(turtle, items)
+	if type(items) == 'string' then items = { items } end
+
+	for slot = 1, 16 do
 		local detail = turtle.getItemDetail(slot)
 		if detail ~= nil and util.arrayContains(items, detail.name) then
 			turtle.select(slot)
@@ -60,13 +62,14 @@ local toRemove = {
 	"minecraft:calcite",
 	"minecraft:smooth_basalt"
 }
-function removeUselessItems(turtle, force)
-	dropExcessItems(turtle, toRemove, 3, force)
+function mine2.removeUselessItems(turtle, force)
+	mine2.dropExcessItems(turtle, toRemove, 3, force)
 end
-function dropExcessItems(turtle, removeList, keepNStacks, force)
+
+function mine2.dropExcessItems(turtle, removeList, keepNStacks, force)
 	local nStacks = 0
 	if not force then
-		for slot=1,16 do
+		for slot = 1, 16 do
 			local detail = turtle.getItemDetail(slot)
 			if detail ~= nil and util.arrayContains(removeList, detail.name) then
 				nStacks = nStacks + 1
@@ -75,7 +78,7 @@ function dropExcessItems(turtle, removeList, keepNStacks, force)
 	end
 	if nStacks > keepNStacks or force then
 		local removed = 0
-		for slot=16,1,-1 do
+		for slot = 16, 1, -1 do
 			local detail = turtle.getItemDetail(slot)
 			local found = false
 			if detail ~= nil and util.arrayContains(removeList, detail.name) then
@@ -83,7 +86,7 @@ function dropExcessItems(turtle, removeList, keepNStacks, force)
 				turtle.select(slot)
 				turtle.dropDown()
 			end
-			if removed > keepNStacks-1 then
+			if removed > keepNStacks - 1 then
 				break
 			end
 		end
@@ -91,36 +94,40 @@ function dropExcessItems(turtle, removeList, keepNStacks, force)
 	end
 end
 
-function defaultArgs(options, defaults)
-	for k,v in pairs(defaults) do
-		if options[k] == nil then
-			options[k] = defaults[k]
+function mine2.travelCuboid(turtle, options)
+	local function turnRight()
+		if options.right < 0 then
+			turtle.turnLeft()
+		else
+			turtle.turnRight()
 		end
 	end
-end
-
-function travelCuboid(turtle, options)
-	function turnRight()
-		if options.right < 0 then turtle.turnLeft()
-		else turtle.turnRight() end
+	local function turnLeft()
+		if options.right < 0 then
+			turtle.turnRight()
+		else
+			turtle.turnLeft()
+		end
 	end
-	function turnLeft()
-		if options.right < 0 then turtle.turnRight()
-		else turtle.turnLeft() end
-	end
-	function forward()
+	local function forward()
 		while not turtle.forward() do end
 	end
-	function up()
-		if options.height < 0 then while not turtle.down() do end
-		else while not turtle.up() do end end
+	local function up()
+		if options.height < 0 then
+			while not turtle.down() do end
+		else
+			while not turtle.up() do end
+		end
 	end
-	function down()
-		if options.height < 0 then while not turtle.up() do end
-		else while not turtle.down() do end end
+	local function down()
+		if options.height < 0 then
+			while not turtle.up() do end
+		else
+			while not turtle.down() do end
+		end
 	end
 
-	funcs = {
+	local funcs = {
 		turnRight = turnRight,
 		turnLeft = turnLeft,
 		up = up,
@@ -128,7 +135,7 @@ function travelCuboid(turtle, options)
 		forward = forward,
 	}
 
-	defaultArgs(options, {
+	options = util.defaultArgs(options, {
 		depth = nil,
 		right = nil,
 		height = nil,
@@ -158,83 +165,83 @@ function travelCuboid(turtle, options)
 	if options.right == nil then error("No right bound for cubeoid") end
 	if options.height == nil then error("No height bound for cubeoid") end
 	if options.depth < 0 then error("Depth cannot be negative") end
-	
+
 	if options.height == 0 or options.right == 0 or options.depth == 0 then
 		return
 	end
 
 	local depth = options.depth
-	local right = math.abs(options.right) 
+	local right = math.abs(options.right)
 	local height = math.abs(options.height)
 
-	function line(x, bottom, up)
-	    for i = 1,x do
-	        options.runBeforeEveryStep(funcs, bottom, up)
-	        funcs.forward()
-	    	options.runAfterEveryStep(funcs, bottom, up)
-	    end
+	local function line(x, bottom, up)
+		for i = 1, x do
+			options.runBeforeEveryStep(funcs, bottom, up)
+			funcs.forward()
+			options.runAfterEveryStep(funcs, bottom, up)
+		end
 	end
 
-	function layer(bottom, up)
+	local function layer(bottom, up)
 		if depth == 1 then
 			-- special case
 			turnRight()
-			line(right-1, bottom, up)
+			line(right - 1, bottom, up)
 			turnRight()
 			turnRight()
-			line(right-1, bottom, up)
+			line(right - 1, bottom, up)
 			turnRight()
 		elseif right == 1 then
 			-- special case
-			line(depth-1, bottom, up)
+			line(depth - 1, bottom, up)
 			turnRight()
 			turnRight()
-			line(depth-1, bottom, up)
+			line(depth - 1, bottom, up)
 			turnRight()
 			turnRight()
 		else
 			line(1, bottom, up)
 
-			local fullRoundtrip = math.floor(right/2)
-		    for i = 1,fullRoundtrip-1 do
-		        line(depth-2, bottom, up)
-		        turnRight()
-		        line(1, bottom, up)
-		        turnRight()
-		        line(depth-2, bottom, up)
-		        turnLeft()
-		        line(1, bottom, up)
-		        turnLeft()
-		    end
-		    if right % 2 == 0 then
-		        line(depth-2, bottom, up)
-		        turnRight()
-		        line(1, bottom, up)
-		        turnRight()
-		        line(depth-1, bottom, up)
-		    else
-		        line(depth-2, bottom, up)
-		        turnRight()
-		        line(1, bottom, up)
-		        turnRight()
-		        line(depth-2, bottom, up)
-		        turnLeft()
-		        line(1, bottom, up)
-		        turnLeft()
-
-		        line(depth-2, bottom, up)
-		        turnRight()
-		        turnRight()
-				line(depth-1, bottom, up)
+			local fullRoundtrip = math.floor(right / 2)
+			for i = 1, fullRoundtrip - 1 do
+				line(depth - 2, bottom, up)
+				turnRight()
+				line(1, bottom, up)
+				turnRight()
+				line(depth - 2, bottom, up)
+				turnLeft()
+				line(1, bottom, up)
+				turnLeft()
 			end
-	        turnRight()
-	        line(right-1, bottom, up)
-	        turnRight()
-	    end
+			if right % 2 == 0 then
+				line(depth - 2, bottom, up)
+				turnRight()
+				line(1, bottom, up)
+				turnRight()
+				line(depth - 1, bottom, up)
+			else
+				line(depth - 2, bottom, up)
+				turnRight()
+				line(1, bottom, up)
+				turnRight()
+				line(depth - 2, bottom, up)
+				turnLeft()
+				line(1, bottom, up)
+				turnLeft()
+
+				line(depth - 2, bottom, up)
+				turnRight()
+				turnRight()
+				line(depth - 1, bottom, up)
+			end
+			turnRight()
+			line(right - 1, bottom, up)
+			turnRight()
+		end
 	end
 
 	local heightStep = options.heightStep
-	local nUpSteps = math.ceil(height/heightStep)
+	local nUpSteps = math.ceil(height / heightStep)
 
 	local firstNGoUp = 1
 	local firstUp = false
@@ -266,7 +273,7 @@ function travelCuboid(turtle, options)
 		options.prepareSameLevel(funcs, firstBottom, firstUp)
 	end
 
-	for i = 1,nUpSteps do
+	for i = 1, nUpSteps do
 		if i == 1 and heightStep == 3 then
 			layer(firstBottom, firstUp)
 		else
@@ -278,20 +285,20 @@ function travelCuboid(turtle, options)
 			if i == 1 and heightStep == 3 then
 				nGoUp = firstNGoUp
 			end
-			for i = 1,nGoUp do
+			for i = 1, nGoUp do
 				options.runBeforeHeightStep(funcs, isDownwards)
-			    funcs.up()
+				funcs.up()
 				options.runAfterHeightStep(funcs, isDownwards)
 			end
 		end
 	end
-	for i = 1,nUpSteps-1 do
+	for i = 1, nUpSteps - 1 do
 		local nGoUp = heightStep
 		if i == 1 and heightStep == 3 then
 			nGoUp = firstNGoUp
 		end
 
-		for j = 1,nGoUp do
+		for j = 1, nGoUp do
 			funcs.down()
 		end
 	end
@@ -301,17 +308,22 @@ function travelCuboid(turtle, options)
 	options.finish()
 end
 
-function digCuboidFuelRequired(depth, right, height)
+function mine2.digCuboidFuelRequired(depth, right, height)
 	return math.ceil(depth / 3) * right * height + 200
 end
-function protectedDig(side)
+
+function mine2.protectedDig(side)
 	local messageShown = 0
 	local ret
 	while true do
 		local success, detail
-		if side == 'down' then success, detail = turtle.inspectDown()
-		elseif side == 'up' then success, detail = turtle.inspectUp()
-		else success, detail = turtle.inspect() end
+		if side == 'down' then
+			success, detail = turtle.inspectDown()
+		elseif side == 'up' then
+			success, detail = turtle.inspectUp()
+		else
+			success, detail = turtle.inspect()
+		end
 
 		if success then
 			if util.arrayContains(turtlesIds, detail.name) then
@@ -322,15 +334,23 @@ function protectedDig(side)
 
 				os.sleep(0.1)
 			else
-				if side == 'down' then ret = turtle.digDown()
-				elseif side == 'up' then ret = turtle.digUp()
-				else ret = turtle.dig() end
+				if side == 'down' then
+					ret = turtle.digDown()
+				elseif side == 'up' then
+					ret = turtle.digUp()
+				else
+					ret = turtle.dig()
+				end
 				break
 			end
 		else
-			if side == 'down' then ret = turtle.digDown()
-			elseif side == 'up' then ret = turtle.digUp()
-			else ret = turtle.dig() end
+			if side == 'down' then
+				ret = turtle.digDown()
+			elseif side == 'up' then
+				ret = turtle.digUp()
+			else
+				ret = turtle.dig()
+			end
 			break
 		end
 	end
@@ -340,44 +360,54 @@ function protectedDig(side)
 	return ret
 end
 
-function digCuboid(turtle, options)
-	function dig()
-		while protectedDig('front') do end
+function mine2.digCuboid(turtle, options)
+	local replaceLiquid
+	local function dig()
+		while mine2.protectedDig('front') do end
 	end
-	function digDown()
-		while protectedDig('down') do end
+	local function digDown()
+		while mine2.protectedDig('down') do end
 		replaceLiquid(turtle, 'down')
 	end
-	function digUp()
-		while protectedDig('up') do end
+	local function digUp()
+		while mine2.protectedDig('up') do end
 		replaceLiquid(turtle, 'up')
 	end
 
 	function replaceLiquid(turtle, dir)
 		local success, detail
-		if dir == 'down' then success, detail = turtle.inspectDown()
-		else  success, detail = turtle.inspectUp() end
+		if dir == 'down' then
+			success, detail = turtle.inspectDown()
+		else
+			success, detail = turtle.inspectUp()
+		end
 
 		if success and (detail.name == lava or detail.name == water) and detail.state.level == 0 then
-			if not selectItem(turtle, canReplaceLiquid) then
+			if not mine2.selectItem(turtle, canReplaceLiquid) then
 				return
 			end
 
-			if dir == 'down' then turtle.placeDown()
-			else turtle.placeUp() end
+			if dir == 'down' then
+				turtle.placeDown()
+			else
+				turtle.placeUp()
+			end
 
-			if dir == 'down' then digDown()
-			else digUp() end
+			if dir == 'down' then
+				digDown()
+			else
+				digUp()
+			end
 
 			turtle.select(1)
 		end
 	end
 
-	if turtle.getFuelLevel() < digCuboidFuelRequired(options.depth, options.right, options.height) then
+	if turtle.getFuelLevel() < mine2.digCuboidFuelRequired(options.depth, options.right, options.height) then
 		error("not enough fuel")
 	end
 
-	defaultArgs(options, {
+	options = util.defaultArgs(options, {
 		depth = nil,
 		right = nil,
 		height = nil,
@@ -390,8 +420,8 @@ function digCuboid(turtle, options)
 			end
 			if up then
 				digUp()
-			end				
-			removeUselessItems(turtle)
+			end
+			mine2.removeUselessItems(turtle)
 		end,
 		prepareSameLevel = function(funcs, bottom, up)
 			dig()
@@ -406,36 +436,50 @@ function digCuboid(turtle, options)
 		prepareUpOne = function(funcs, isDownwards)
 			dig()
 			funcs.forward()
-			if isDownwards then digDown() 
-			else digUp() end
+			if isDownwards then
+				digDown()
+			else
+				digUp()
+			end
 			funcs.up()
-			if isDownwards then digDown() 
-			else digUp() end
+			if isDownwards then
+				digDown()
+			else
+				digUp()
+			end
 		end,
 		runBeforeHeightStep = function(funcs, isDownwards)
-			if isDownwards then digDown() 
-			else digUp() end
+			if isDownwards then
+				digDown()
+			else
+				digUp()
+			end
 		end,
 		runAfterHeightStep = function(funcs, isDownwards)
-			if isDownwards then digDown() 
-			else digUp() end
+			if isDownwards then
+				digDown()
+			else
+				digUp()
+			end
 		end,
 		finish = function()
-			removeUselessItems(turtle, true)
+			mine2.removeUselessItems(turtle, true)
 			turtle.back()
 		end,
 		heightStep = 3,
 	})
 
-	travelCuboid(turtle, options)
+	mine2.travelCuboid(turtle, options)
 end
 
-function clearLava(turtle, options)
-	defaultArgs(options, {
+function mine2.clearLava(turtle, options)
+	util.defaultArgs(options, {
 		depth = nil,
 		right = nil,
 		height = nil,
 	})
 
-	travelCuboid(turtle, options)
+	mine2.travelCuboid(turtle, options)
 end
+
+return mine2
