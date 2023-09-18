@@ -1,5 +1,5 @@
-local controlApi = require("controlApi")
-os.loadAPI("/firmware/apis/mine2.lua")
+local control = require("apis.control")
+local mine2 = require("apis.mine2")
 
 local FUEL = 'minecraft:dried_kelp_block'
 
@@ -31,7 +31,7 @@ if nTurtles == 0 then
 end
 
 function turtleFinishTask(id)
-	controlApi.waitForReady(id, -1, 'metamine:back')
+	control.waitForReady(id, -1, 'metamine:back')
 
 	print(id .. ' break')
 	local success, detail = turtle.inspect()
@@ -105,13 +105,13 @@ function turtleFinishTask(id)
 end
 
 function turtleTask(id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height)
-	local control = controlApi.connectControl(id)
+	local control = control.connectControl(id)
 	local remoteTurtle = control.turtle
 
 	for i = 1,nLeft do
 		remoteTurtle.turnLeft()
 	end
-	controlApi.protocolSend(id, 'metamine:start')
+	control.protocolSend(id, 'metamine:start')
 
 	print(id .. ' started')
 end
@@ -179,18 +179,18 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 		west = 3,
 	}
 
-	local control = controlApi.connectControl(id)
+	local control = control.connectControl(id)
 	local remoteTurtle = control.turtle
 	repeat
 		print("waiting for " .. id)
-	until controlApi.waitForReady(id, 15)
+	until control.waitForReady(id, 15)
 
 	local fuelRequired = mine2.digCuboidFuelRequired(depth, right, height) + (depth + right + height)*2 + 100
 
-	controlApi.protocolSend(id, 'shellRun', "/firmware/programs/metamineCb "..offsetDepth.." "..offsetRight.." "..offsetHeight.." "..depth.." "..right.." "..height.." "..fuelRequired)
+	control.protocolSend(id, 'shellRun', "/firmware/programs/metamineCb "..offsetDepth.." "..offsetRight.." "..offsetHeight.." "..depth.." "..right.." "..height.." "..fuelRequired)
 	function receiveGive()
 		while true do
-			controlApi.protocolReceive('metamine:refuelGive', id)
+			control.protocolReceive('metamine:refuelGive', id)
 
 			print("refueling " .. id)
 			local displayed = 1
@@ -205,7 +205,7 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 		end
 	end
 	function receiveDone()
-		controlApi.protocolReceive('metamine:refuelDone', id)
+		control.protocolReceive('metamine:refuelDone', id)
 	end
 
 	parallel.waitForAny(receiveDone, receiveGive)

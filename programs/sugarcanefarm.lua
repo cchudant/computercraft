@@ -1,4 +1,4 @@
-os.loadAPI("/firmware/apis/mine2.lua")
+local mine2 = require("apis.mine2")
 
 -- local depth, right, height = ...
 -- if depth == nil or right == nil or height == nil then

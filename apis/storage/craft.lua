@@ -1,6 +1,6 @@
-local util = require("util")
-local controlApi = require("controlApi")
-local transfers = require("storage.transfers")
+local util = require("apis.util")
+local control = require("apis.control")
+local transfers = require("apis.storage.transfers")
 
 local craft = {}
 
@@ -17,8 +17,8 @@ function craft.craftingTurtleTask()
     print("Serving crafting requests")
     local craftSlots = { 1, 2, 3, 5, 6, 7, 9, 10, 11 }
     while true do
-        local craft, _, sender, nonce = controlApi.protocolReceive("storage:craft", nil, nil, nil)
-        print("Got a jod")
+        local craft, _, sender, nonce = control.protocolReceive("storage:craft", nil, nil, nil)
+        print("Got a job")
         ---@cast craft { inputAmount: number, inputs: number[] }
 
         for inputI, i in ipairs(craftSlots) do
@@ -41,7 +41,7 @@ function craft.craftingTurtleTask()
         end
 
         print("Done one request")
-        controlApi.protocolSend(sender, "storage:craftRep", nil, nonce)
+        control.protocolSend(sender, "storage:craftRep", nil, nonce)
     end
 end
 
@@ -65,7 +65,7 @@ function craft.craftingTurtleProcessor(turtleid, chestName)
             end
         end
         print("Send to ", turtleid)
-        controlApi.sendRoundtrip(turtleid, "storage:craft", craft)
+        control.sendRoundtrip(turtleid, "storage:craft", craft)
         transfers.transfer(storageState, {
             type = "storeItems",
             source = chestName,

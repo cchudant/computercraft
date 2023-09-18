@@ -1,6 +1,5 @@
-local ui = require('ui')
-local storage = require('storage')
-local pretty = require('cc.pretty').pretty_print
+local ui = require("apis.ui")
+local storage = require("apis.storage")
 
 local storageUI = {}
 ---@param term Redirect

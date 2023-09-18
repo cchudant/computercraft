@@ -17,20 +17,23 @@ shell.setPath(shell.path() .. ":" .. firmwareDir .. "/programs")
 -- this is a hack
 
 local module = require("cc.require")
+
 local newModule = setmetatable({}, { __index = module })
 function newModule.make(...)
 	local r, p = module.make(...)
 	p.loaded["cc.require"] = newModule
 	p.path = p.path ..
-		";" .. firmwareDir .. "/apis/?.lua;" .. firmwareDir .. "/apis/?;" .. firmwareDir .. "/apis/?/init.lua"
+		";" .. firmwareDir .. "/?.lua;" .. firmwareDir .. "/?;" .. firmwareDir .. "/?/init.lua"
+
 	return r, p
 end
 
 local newRequire, newPackage = newModule.make(
-	setmetatable({}, { __index = _ENV }),
+	_ENV,
 	firmwareDir .. "/apis"
 )
-require, package = newRequire, newPackage
+_G.require, _G.package = newRequire, newPackage
+_ENV.require, _ENV.package = newRequire, newPackage
 
 local originalDofile = dofile
 local function newDofile(filename)
@@ -44,15 +47,15 @@ dofile = newDofile
 
 -- end hack
 
-local controlApi = require("controlApi")
+local control = require("apis.control")
 if JUST_FLASHED == nil then
-	controlApi.autoUpdate()
+	control.autoUpdate()
 end
 
-print("Running ControlAPI " .. controlApi.VERSION .. " on computer " .. os.getComputerID() .. ".")
+print("Running control " .. control.VERSION .. " on computer " .. os.getComputerID() .. ".")
 
 parallel.waitForAny(
-	function() controlApi.sourceTask(shell) end,
+	function() control.sourceTask(shell) end,
 	function()
 		if fs.exists("/autorun.lua") then
 			os.run(_ENV, "/rom/programs/shell.lua", "/autorun.lua")

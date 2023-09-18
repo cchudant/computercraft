@@ -1,7 +1,7 @@
-local ui = require('ui')
-local storage = require('storage')
-local storageUI = require('storage.ui')
-local util = require('util')
+local ui = require("apis.ui")
+local storage = require("apis.storage")
+local storageUI = require("apis.storage.ui")
+local util = require("apis.util")
 
 local startStorageServer, makeStorageConnection = storage.storageServer({
     crafters = {{ inventory = "minecraft:chest_30", computerID = 28 }},

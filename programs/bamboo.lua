@@ -1,4 +1,4 @@
-local mine2 = require("mine2")
+local mine2 = require("apis.mine2")
 
 -- local depth, right, height = ...
 -- if depth == nil or right == nil or height == nil then
@@ -17,7 +17,7 @@ function placeDirt(depth, right)
         height = 1,
         prepareSameLevel = function(funcs, firstBottom, firstUp) end,
         runBeforeEveryStep = function(funcs)
-            mine2.selectItem("minecraft:dirt")
+            mine2.selectItem(turtle, "minecraft:dirt")
             turtle.placeDown()
         end,
         finish = function() end,

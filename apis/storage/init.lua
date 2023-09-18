@@ -1,8 +1,8 @@
-local controlApi = require("controlApi")
-local util = require("util")
-local storageState = require("storage.state")
-local storageTransfers = require('storage.transfers')
-local storageCraft = require('storage.craft')
+local control = require("apis.control")
+local util = require("apis.util")
+local storageState = require("apis.storage.state")
+local storageTransfers = require("apis.storage.transfers")
+local storageCraft = require("apis.storage.craft")
 
 local storage = {}
 
@@ -218,7 +218,7 @@ function storage.remoteConnect(computerID, storageID)
     local driver = {}
     for _, k in ipairs(storageDriverKeys) do
         driver[k] = function(...)
-            return controlApi.sendRoundtrip(computerID, "storage:" .. (storageID or ""), {
+            return control.sendRoundtrip(computerID, "storage:" .. (storageID or ""), {
                 storageUniqueID = storageID,
                 method = k,
                 args = {...},
@@ -247,9 +247,9 @@ function storage.storageServer(settings, storageID)
         util.parallelGroup(
             function(addTask) -- network requests
                 while true do
-                    local args, _, sender, nonce = controlApi.protocolReceive("storage")
+                    local args, _, sender, nonce = control.protocolReceive("storage")
                     handleRpc(addTask, args, function(ret)
-                        controlApi.protocolSend(sender --[[@as number]], "storageRep", ret, nonce)
+                        control.protocolSend(sender --[[@as number]], "storageRep", ret, nonce)
                     end)
                 end
             end,

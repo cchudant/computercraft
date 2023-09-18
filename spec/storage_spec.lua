@@ -1,6 +1,6 @@
-package.path = package.path .. ";./apis/?;./apis/?.lua;./apis/?/init.lua"
+package.path = package.path .. ";./?;./?.lua;./?/init.lua"
 package.path = package.path .. ";./spec/?;./spec/?.lua;./spec/?/init.lua"
-local util = require("util")
+local util = require("apis.util")
 local inspect = require('inspect')
 local peripheralMock = require("peripheralMock")
 local storage = require("apis.storage")

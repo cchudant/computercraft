@@ -1,4 +1,4 @@
-os.loadAPI("/firmware/apis/mine2.lua")
+local mine2 = require("apis.mine2")
 
 depth = 15
 right = 5
