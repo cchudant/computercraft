@@ -504,7 +504,7 @@ function util.parallelGroup(...)
         end
         for k, co in pairs(coroutines) do
             if filters[k] == nil or filters[k] == bag[1] or bag[1] == 'terminate' then
-                print("filters for k are " .. (filters[k] or ""))
+                print("filters for k are " .. (filters[k] or "") .. " event " .. bag[1])
                 if coroutine.status(co) ~= 'dead' then
                     local bag = {coroutine.resume(co, table.unpack(bag))}
                     local ok, filter = table.unpack(bag)
