@@ -228,6 +228,8 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
                     item = state.itemIDToItemInfo(itemID)
                     amountInStorage = state.itemIDToAmounts[itemID] or 0
 
+                    print(itemID, amountInStorage)
+
                     if amountLeft == 'stack' then
                         amountLeft = item.maxCount or 999 -- there are 0 left in storage
                         reqAmount = item.maxCount
