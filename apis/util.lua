@@ -478,11 +478,8 @@ function util.parallelGroup(...)
     while nCoroutines > 0 do
         local bag = { os.pullEvent() }
 
-        print(bag[1])
-
         if bag[1] == "parallelGroup:add:" .. nonce then
             local coroutineID = bag[2]
-            print("Add", coroutineID)
             local func = addedCoroutines[coroutineID]
             addedCoroutines[coroutineID] = nil
             coroutines[coroutineID] = coroutine.create(function()

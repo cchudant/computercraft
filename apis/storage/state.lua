@@ -312,7 +312,6 @@ function storageState.makeStorageDriverState()
         end
 
         if addIt and item == nil then
-            print("Add new item", detail.name)
             -- new item id
             item = {
                 name = detail.name,

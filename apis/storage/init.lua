@@ -151,6 +151,8 @@ function storage.newStorageDriver(settings, serverID)
     function storageDriver.craftItem(itemArg, amount)
         local steps, missing, consumed = storageCraft.craftLookup(state, itemArg, amount)
 
+        util.prettyPrint(state.itemIDToAmounts)
+
         local function converIdsToName(arr)
             return util.objectMap(arr, function(k, v)
                 if k < 0 then
@@ -194,7 +196,6 @@ function storage.localConnect(storageID)
     for _, k in ipairs(storageDriverKeys) do
         driver[k] = function(...)
             local nonce = util.newNonce()
-            print("queueEvent 22")
             os.queueEvent("storage:" .. (storageID or ""), {
                 storageUniqueID = storageID,
                 method = k,
@@ -202,7 +203,6 @@ function storage.localConnect(storageID)
             }, nonce)
             while true do
                 local _, args, nonce_ = os.pullEvent("storage:"  .. (storageID or "") .. "Rep")
-                print("!!!")
                 if nonce_ == nonce then
                     return args
                 end
@@ -246,10 +246,8 @@ function storage.storageServer(settings, storageID)
                 end
             end)
         end
-        print("running")
         util.parallelGroup(
             function(addTask) -- network requests
-                print("a")
                 while true do
                     local args, _, sender, nonce = controlApi.protocolReceive("storage")
                     handleRpc(addTask, args, function(ret)
@@ -258,24 +256,19 @@ function storage.storageServer(settings, storageID)
                 end
             end,
             function(addTask) -- local requests
-                print("b")
                 while true do
-                    print("pulling storage")
                     local _, args, nonce = os.pullEvent("storage:" .. (storageID or ""))
-                    print("got storage")
                     handleRpc(addTask, args, function(ret)
                         os.queueEvent("storage:" .. (storageID or "") .. "Rep", ret, nonce)
                     end)
                 end
             end,
             function(_) -- run craft manager if present
-                print("c")
                 if storageState.craftManager then
                     storageState.craftManager.runManager(storageState)
                 end
             end,
             function(_) -- set up
-                print("d")
                 storageState.isUp = true
                 print("storage is up")
                 os.queueEvent("storage:up:"  .. (storageID or ""))
@@ -285,16 +278,14 @@ function storage.storageServer(settings, storageID)
 
     print(storage, storage.localConnect(storageDriver.getID()))
 
-
-    local function localConnection()
+    local function makeLocalConnection()
         if not storageState.isUp then
-            print("pull up")
             os.pullEvent("storage:up:"  .. (storageID or ""))
         end
         return storage.localConnect(storageDriver.getID())
     end
 
-    return start, localConnection
+    return start, makeLocalConnection
 end
 
 return storage
