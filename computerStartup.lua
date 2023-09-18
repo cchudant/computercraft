@@ -23,6 +23,8 @@ function newModule.make(...)
 	p.loaded["cc.require"] = newModule
 	p.path = p.path ..
 		";" .. firmwareDir .. "/apis/?.lua;" .. firmwareDir .. "/apis/?;" .. firmwareDir .. "/apis/?/init.lua"
+
+	print("r, p", r, p)
 	return r, p
 end
 
