@@ -23,7 +23,7 @@ function newModule.make(...)
 	local r, p = module.make(...)
 	p.loaded["cc.require"] = newModule
 	p.path = p.path ..
-		";" .. firmwareDir .. "/apis/?.lua;" .. firmwareDir .. "/apis/?;" .. firmwareDir .. "/apis/?/init.lua"
+		";" .. firmwareDir .. "/?.lua;" .. firmwareDir .. "/?;" .. firmwareDir .. "/?/init.lua"
 
 	return r, p
 end
