@@ -64,6 +64,7 @@ function craft.craftingTurtleProcessor(turtleid, chestName)
                 }, { acceptIDs = true })
             end
         end
+        print("Send to ", turtleid)
         controlApi.sendRoundtrip(turtleid, "storage:craft", craft)
         transfers.transfer(storageState, {
             type = "storeItems",
@@ -188,10 +189,6 @@ function craft.makeManager(crafters)
                 table.insert(tasks, crafterTask(storageState, method, crafter))
             end
         end
-
-        util.prettyPrint(tasks)
-
-        print("Run manager 222")
 
         parallel.waitForAll(table.unpack(tasks))
     end
