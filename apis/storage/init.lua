@@ -151,8 +151,6 @@ function storage.newStorageDriver(settings, serverID)
     function storageDriver.craftItem(itemArg, amount)
         local steps, missing, consumed = storageCraft.craftLookup(state, itemArg, amount)
 
-        util.prettyPrint(state.itemIDToAmounts)
-
         local function converIdsToName(arr)
             return util.objectMap(arr, function(k, v)
                 if k < 0 then
@@ -170,6 +168,8 @@ function storage.newStorageDriver(settings, serverID)
         if missing then
             return false, converIdsToName(missing)
         end
+
+        print("can craft and will")
 
         ---@cast steps Steps
         state.craftManager.runCraft(steps)
