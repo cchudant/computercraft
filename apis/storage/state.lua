@@ -254,6 +254,8 @@ function storageState.makeStorageDriverState()
                     local item = state.getItemInfo(detail, true, periph.getItemLimit(slot))
                     local itemID = item.id
 
+                    print("ItemID ", itemID)
+
                     -- update itemIDToSlots and itemIDToAmounts
 
                     local slots = state.itemIDToSlots[itemID] or {}
@@ -311,6 +313,8 @@ function storageState.makeStorageDriverState()
             item.maxCount = detail.maxCount or maxCount
         end
 
+        print("Get info", detail.name)
+
         if addIt and item == nil then
             -- new item id
             item = {
@@ -319,7 +323,6 @@ function storageState.makeStorageDriverState()
                 id = state.itemIDCounter,
                 maxCount = detail.maxCount or maxCount,
             }
-            print("New ID", state.itemIDCounter)
             table.insert(state.items, item)
             state.itemIDCounter = state.itemIDCounter + 1
         end
