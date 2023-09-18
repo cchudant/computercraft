@@ -18,7 +18,7 @@ function craft.craftingTurtleTask()
     local craftSlots = { 1, 2, 3, 5, 6, 7, 9, 10, 11 }
     while true do
         local craft, _, sender, nonce = controlApi.protocolReceive("storage:craft", nil, nil, nil)
-        print("Got a jod")
+        print("Got a job")
         ---@cast craft { inputAmount: number, inputs: number[] }
 
         for inputI, i in ipairs(craftSlots) do

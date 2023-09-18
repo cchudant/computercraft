@@ -27,7 +27,7 @@ function newModule.make(...)
 end
 
 local newRequire, newPackage = newModule.make(
-	setmetatable({}, { __index = _ENV }),
+	_ENV,
 	firmwareDir .. "/apis"
 )
 require, package = newRequire, newPackage
