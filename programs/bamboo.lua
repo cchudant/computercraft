@@ -25,4 +25,4 @@ function placeDirt(depth, right)
 end
 
 
-placeDirt(32, 16)
+placeDirt(32, 14)
