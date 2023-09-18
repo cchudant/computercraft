@@ -115,6 +115,7 @@ function craft.makeManager(crafters)
 
     local function crafterTask(storageState, method, crafter)
         return function()
+            print("task starting")
             local doingTaskI = 0
             while true do
                 -- choose a task
