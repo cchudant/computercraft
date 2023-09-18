@@ -471,11 +471,15 @@ function util.parallelGroup(...)
             func(addTask)
             os.queueEvent("parallelGroup:end:" .. nonce, coroutineID)
         end)
+        coroutines[coroutineID].resume()
         nCoroutines = nCoroutines + 1
     end
 
     while nCoroutines > 0 do
         local bag = { os.pullEvent() }
+
+        print(bag[1])
+
         if bag[1] == "parallelGroup:add:" .. nonce then
             local coroutineID = bag[2]
             print("Add", coroutineID)
@@ -485,6 +489,7 @@ function util.parallelGroup(...)
                 func()
                 os.queueEvent("parallelGroup:end:" .. nonce, coroutineID)
             end)
+            coroutines[coroutineID].resume()
             nCoroutines = nCoroutines + 1
         elseif bag[1] == "parallelGroup:end:" .. nonce then
             local coroutineID = bag[2]
