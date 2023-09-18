@@ -56,7 +56,7 @@ function craft.craftingTurtleProcessor(turtleid, chestName)
     function processor.craft(storageState, craft)
         for shapeI, slot in ipairs(craft.inputs) do
             if slot ~= 0 then
-                print({
+                util.prettyPrint({
                     type = "retrieveItems",
                     name = slot,
                     destination = chestName,
