@@ -1,4 +1,4 @@
-local control = require("control")
+local control = require("apis.control")
 
 local a = ...
 
