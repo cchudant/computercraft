@@ -229,10 +229,11 @@ function storage.remoteConnect(computerID, storageID)
 end
 
 ---@param storageID number?
+---@param settings Settings
 ---@return fun() startStorageServer function to start the server
 ---@return StorageConnection storageConnection local connection
-function storage.storageServer(storageID)
-    local storageDriver, storageState = storage.newStorageDriver(storageID)
+function storage.storageServer(settings, storageID)
+    local storageDriver, storageState = storage.newStorageDriver(settings, storageID)
 
     local function start()
         local function handleRpc(addTask, args, answer)
