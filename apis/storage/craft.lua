@@ -187,6 +187,7 @@ function craft.makeManager(crafters)
         local tasks = {}
         for method, crafters in pairs(state.crafters) do
             for _, crafter in ipairs(crafters) do
+                print(method)
                 table.insert(tasks, crafterTask(storageState, method, crafter))
             end
         end
