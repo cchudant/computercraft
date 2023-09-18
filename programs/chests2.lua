@@ -20,7 +20,7 @@ parallel.waitForAny(
     function()
         local connection = makeStorageConnection()
         local success, missing, consumed = connection.craftItem("minecraft:dried_kelp_block", 1)
-        util.prettyPrint({success, missing, consumed})
+        -- util.prettyPrint({success, missing, consumed})
         print('finished')
     end
 )
