@@ -169,7 +169,7 @@ if fs then
     -- computercraft
     local pretty = require('cc.pretty').pretty_print
     function util.prettyPrint(...)
-        for _, v in ipairs({...}) do
+        for _, v in pairs({...}) do
             pretty(v)
         end
     end

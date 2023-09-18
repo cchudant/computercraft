@@ -207,6 +207,7 @@ function storage.localConnect(storageID)
             end
         end
     end
+    util.prettyPrint(storage.makeConnection(driver))
     return storage.makeConnection(driver)
 end
 
