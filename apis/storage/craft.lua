@@ -14,6 +14,7 @@ local craft = {}
 ---@alias Steps { [number]: Step }
 
 function craft.craftingTurtleTask()
+    print("Serving crafting requests")
     local craftSlots = { 1, 2, 3, 5, 6, 7, 9, 10, 11 }
     while true do
         local craft, _, sender, nonce = controlApi.protocolReceive("storage:craft", nil, nil, nil)
@@ -38,6 +39,7 @@ function craft.craftingTurtleTask()
             end
         end
 
+        print("Done one request")
         controlApi.protocolSend(sender, "storage:craftRep", nil, nonce)
     end
 end
