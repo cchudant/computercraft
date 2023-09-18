@@ -161,6 +161,7 @@ function craft.makeManager(crafters)
                 if foundTask then
                     doingTaskI = ((doingTaskI + 1) % #state.tasks) + 1
                     print("crafting")
+                    util.prettyPrint(foundCraft)
                     crafter.craft(foundCraft, storageState)
 
                     if #foundCraft.crafts == 0 then
