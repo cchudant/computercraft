@@ -2,11 +2,17 @@ local controlApi = {}
 
 controlApi.VERSION_MAJOR = 2
 
-local file = fs.open("/firmware/commits", "r") --[[@as ReadHandle]]
-local commits = file.readAll()
-commits = string.gsub(commits --[[@as string]], "%s+", "")
+if fs ~= nil then
 
-controlApi.VERSION_MINOR = tonumber(commits)
+	local file = fs.open("/firmware/commits", "r") --[[@as ReadHandle]]
+	local commits = file.readAll()
+	commits = string.gsub(commits --[[@as string]], "%s+", "")
+	
+	controlApi.VERSION_MINOR = tonumber(commits)
+	
+else
+	controlApi.VERSION_MINOR = 2 -- this is for unit tests
+end
 
 controlApi.VERSION = controlApi.VERSION_MAJOR .. '.' .. controlApi.VERSION_MINOR
 controlApi.PROTOCOL_STRING = 'CONTROL'
