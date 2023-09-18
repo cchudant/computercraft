@@ -246,6 +246,7 @@ function storage.storageServer(settings, storageID)
                 end
             end)
         end
+        print("running")
         util.parallelGroup(
             function(addTask) -- network requests
                 while true do
@@ -285,6 +286,7 @@ function storage.storageServer(settings, storageID)
         if storageState.isUp then
             return
         else
+            print("pull up")
             os.pullEvent("storage:up:"  .. (storageID or ""))
         end
         return storage.localConnect(storageDriver.getID())
