@@ -164,7 +164,7 @@ function craft.makeManager(crafters)
                     util.prettyPrint(foundCraft)
                     crafter.craft(storageState, foundCraft)
 
-                    if #foundTask.staps[taskItemID].crafts == 0 then
+                    if #foundTask.steps[taskItemID].crafts == 0 then
                         table.insert(foundTask.done, taskItemID)
                     end
 
@@ -172,7 +172,7 @@ function craft.makeManager(crafters)
                         -- craft is finished
                         local index = util.arrayIndexOf(state.tasks, foundTask)
                         table.remove(state.tasks, index)
-                        print("queueEveeeeeeennnt")
+                        print("queue finished")
                         os.queueEvent("storage:craft:finished:" .. foundTask.id)
                     end
                 else
