@@ -194,6 +194,7 @@ function storage.localConnect(storageID)
     for _, k in ipairs(storageDriverKeys) do
         driver[k] = function(...)
             local nonce = util.newNonce()
+            print("queueEvent 22")
             os.queueEvent("storage", {
                 storageUniqueID = storageID,
                 method = k,
@@ -201,6 +202,7 @@ function storage.localConnect(storageID)
             }, nonce)
             while true do
                 local _, args, nonce_ = os.pullEvent("storageRep")
+                print("!!!")
                 if nonce_ == nonce then
                     return args
                 end
