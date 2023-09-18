@@ -499,10 +499,13 @@ function util.parallelGroup(...)
         elseif bag[1] == "parallelGroup:end:" .. nonce then
             local coroutineID = bag[2]
             coroutines[coroutineID] = nil
+            filters[coroutineID] = nil
             nCoroutines = nCoroutines - 1
         end
         for k, co in pairs(coroutines) do
+            print("filters for k are " .. filters[k])
             if filters[k] == nil or filters[k] == bag[1] or bag[1] == 'terminate' then
+                print("matching!")
                 if coroutine.status(co) ~= 'dead' then
                     local ok, filter = coroutine.resume(co, table.unpack(bag))
                     if not ok then
