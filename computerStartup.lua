@@ -33,7 +33,7 @@ local newRequire, newPackage = newModule.make(
 	_ENV,
 	firmwareDir .. "/apis"
 )
-_G.require, _G.package = nil, nil
+_G.require, _G.package = newRequire, newPackage
 _ENV.require, _ENV.package = newRequire, newPackage
 
 local originalDofile = dofile
@@ -60,9 +60,9 @@ parallel.waitForAny(
 	function() controlApi.sourceTask(shell) end,
 	function()
 		if fs.exists("/autorun.lua") then
-			os.run(_ENV, "/rom/programs/shell.lua", "/autorun.lua")
+			os.run(_G, "/rom/programs/shell.lua", "/autorun.lua")
 		else
-			os.run(_ENV, "/rom/programs/shell.lua")
+			os.run(_G, "/rom/programs/shell.lua")
 		end
 	end
 )
