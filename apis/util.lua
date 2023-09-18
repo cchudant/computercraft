@@ -169,7 +169,9 @@ if fs then
     -- computercraft
     local pretty = require('cc.pretty').pretty_print
     function util.prettyPrint(...)
-        pretty(...)
+        for _, v in {...} do
+            pretty(v)
+        end
     end
 else
     -- unit testing
