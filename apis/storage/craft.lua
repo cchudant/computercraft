@@ -152,7 +152,7 @@ function craft.makeManager(crafters)
                         end
                     end
 
-                    if foundCraft ~= nil then
+                    if foundTask ~= nil then
                         break
                     end
                 end
@@ -161,7 +161,7 @@ function craft.makeManager(crafters)
                 if foundTask then
                     doingTaskI = ((doingTaskI + 1) % #state.tasks) + 1
                     print("crafting")
-                    util.prettyPrint(foundCraft)
+                    util.prettyPrint(foundTask)
                     crafter.craft(foundCraft, storageState)
 
                     if #foundTask.crafts == 0 then
