@@ -17,7 +17,6 @@ local storage = {}
 function storage.makeConnection(storageDriver)
     ---@class StorageConnection: StorageDriver
     local storageConnection = setmetatable({}, storageDriver)
-    print(storageDriver, storageConnection)
 
     -- function 
 
@@ -269,6 +268,8 @@ function storage.storageServer(settings, storageID)
             end
         )
     end
+
+    print(storage, storage.localConnect(storageDriver.getID()))
 
     return start, storage.localConnect(storageDriver.getID())
 end
