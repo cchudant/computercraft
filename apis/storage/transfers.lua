@@ -190,9 +190,15 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
     if req.items ~= nil then
         itemIDs = state.resolveItemArgs(req.items, acceptIDs)
     else
-        itemIDs = state.resolveItemArg({ name = req.name, nbt = req.nbt, tag = req.tag }, nil, acceptIDs)
+        if acceptIDs and type(req.name) == "number" then
+            itemIDs = {req.name}
+        else
+            itemIDs = state.resolveItemArg({ name = req.name, nbt = req.nbt, tag = req.tag }, nil, acceptIDs)
+        end
     end
     ---@cast itemIDs number[]
+
+    util.prettyPrint(itemIDs)
 
     -- traverse the slots array
     local reqAmount = req.amount
