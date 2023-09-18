@@ -25,22 +25,13 @@ end
 local _isSetup = false
 local function setupModem()
 	if _isSetup then return end
-
-	local function modemSide()
-		for _,per in ipairs(peripheral.getNames()) do
-			if peripheral.getType(per) == "modem" then
-				return per
-			end
-		end
-		return nil, "No modem on cumputer!"
-	end
-
-	local side, err = modemSide()
-	if side == nil then error(err) end
-
-	rednet.open(side)
 	_isSetup = true
-	return true
+
+	for _,per in ipairs(peripheral.getNames()) do
+		if peripheral.getType(per) == "modem" then
+			rednet.open(per)
+		end
+	end
 end
 
 ---Block until a matching message is received
