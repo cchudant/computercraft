@@ -287,9 +287,7 @@ function storage.storageServer(settings, storageID)
 
 
     local function localConnection()
-        if storageState.isUp then
-            return
-        else
+        if not storageState.isUp then
             print("pull up")
             os.pullEvent("storage:up:"  .. (storageID or ""))
         end
