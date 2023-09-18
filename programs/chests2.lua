@@ -4,7 +4,7 @@ local storageUI = require('storage.ui')
 local pretty = require('cc.pretty').pretty_print
 
 local startStorageServer, storageConnection = storage.storageServer({
-    crafters = { inventory = "minecraft:chest_27", computerID = 13 },
+    crafters = { inventory = "minecraft:chest_27", computerID = 28 },
     storageChests = { "minecraft:chest_24", "minecraft:chest_23", "minecraft:chest_22" },
     craft = true,
 })
