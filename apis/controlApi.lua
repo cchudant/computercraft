@@ -65,6 +65,8 @@ function controlApi.protocolReceive(command, sender, timeout, nonce)
 		---@diagnostic disable-next-line: param-type-mismatch
 		local snd, message = rednet.receive(toWait)
 
+		print("rednet recv")
+
 		if type(message) == 'table' and message.protocol == controlApi.PROTOCOL_STRING and
 				(sender == nil or sender == snd) and
 				(command == nil or message.command == command) and
