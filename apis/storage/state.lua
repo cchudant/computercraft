@@ -237,7 +237,7 @@ function storageState.makeStorageDriverState()
                 local crafter = craft.craftingTurtleProcessor(c.computerid, c.inventory)
                 local methodID = util.arrayFind(state.craftMethods, function(method)
                     return method.name == "crafting"
-                end)
+                end).id
                 crafters[methodID] = crafters[methodID] or {}
                 table.insert(crafters[methodID], crafter)
             end
