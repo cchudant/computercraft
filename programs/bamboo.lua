@@ -1,4 +1,3 @@
-print("bamboo, require is", require)
 local mine2 = require("mine2")
 
 -- local depth, right, height = ...

@@ -1,4 +1,3 @@
-print("mine2, require is", require)
 local util = require("util")
 
 function selectItem(turtle, items)

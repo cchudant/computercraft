@@ -25,7 +25,6 @@ function newModule.make(...)
 	p.path = p.path ..
 		";" .. firmwareDir .. "/apis/?.lua;" .. firmwareDir .. "/apis/?;" .. firmwareDir .. "/apis/?/init.lua"
 
-	print("r, p", r, p)
 	return r, p
 end
 
@@ -38,7 +37,6 @@ _ENV.require, _ENV.package = newRequire, newPackage
 
 local originalDofile = dofile
 local function newDofile(filename)
-	print("dofile " .. (filename or "nil"))
 	if filename == "rom/modules/main/cc/require.lua" then
 		return newModule
 	end
