@@ -61,6 +61,7 @@ function craft.craftingTurtleProcessor(turtleid, chestName)
                     destination = chestName,
                     amount = craft.inputAmount,
                     slots = { shapeI },
+                    amountMustBeExact = true,
                 }, { acceptIDs = true }))
             end
         end
