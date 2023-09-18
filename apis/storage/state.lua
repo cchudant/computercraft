@@ -304,7 +304,7 @@ function storageState.makeStorageDriverState()
 
     function state.getItemInfo(detail, addIt, maxCount)
 
-        util.prettyPrint(detail)
+        util.prettyPrint(state.items)
 
         -- find the item id
         local item = util.arrayFind(state.items, function(obj)
