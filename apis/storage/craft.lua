@@ -189,6 +189,8 @@ function craft.makeManager(crafters)
             end
         end
 
+        util.prettyPrint(tasks)
+
         print("Run manager")
 
         parallel.waitForAll(table.unpack(tasks))
