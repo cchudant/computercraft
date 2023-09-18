@@ -506,8 +506,9 @@ function util.parallelGroup(...)
             if filters[k] == nil or filters[k] == bag[1] or bag[1] == 'terminate' then
                 print("filters for k are " .. (filters[k] or ""))
                 if coroutine.status(co) ~= 'dead' then
-                    local ok, filter = coroutine.resume(co, table.unpack(bag))
-                    print("new filter is", filter)
+                    local bag = {coroutine.resume(co, table.unpack(bag))}
+                    local ok, filter = table.unpack(bag)
+                    print("new filter is", table.unpack(bag))
                     if not ok then
                         error(filter, 0)
                     end
