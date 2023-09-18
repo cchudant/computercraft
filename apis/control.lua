@@ -30,7 +30,6 @@ local function setupModem()
 	for _,per in ipairs(peripheral.getNames()) do
 		local a, b = peripheral.getType(per)
 		if a == "modem" and b == nil then -- no wired modems :)
-			print("opening", per)
 			rednet.open(per)
 		end
 	end
@@ -58,8 +57,6 @@ function control.protocolReceive(command, sender, timeout, nonce)
 		---@diagnostic disable-next-line: param-type-mismatch
 		local snd, message = rednet.receive(toWait)
 
-		print("rednet recv")
-
 		if type(message) == 'table' and message.protocol == control.PROTOCOL_STRING and
 				(sender == nil or sender == snd) and
 				(command == nil or message.command == command) and
@@ -81,7 +78,6 @@ end
 ---@param nonce string? nonce
 function control.protocolSend(clientID, command, args, nonce)
 	setupModem()
-	print("send", clientID)
 	rednet.send(clientID, {
 		protocol = control.PROTOCOL_STRING,
 		command = command,

@@ -4,7 +4,7 @@ local storageUI = require("apis.storage.ui")
 local util = require("apis.util")
 
 local startStorageServer, makeStorageConnection = storage.storageServer({
-    crafters = {{ inventory = "minecraft:chest_30", computerID = 28 }},
+    crafters = {{ inventory = "minecraft:chest_30", computerID = 13 }},
     storageChests = { "minecraft:chest_24", "minecraft:chest_23", "minecraft:chest_22" },
     craft = true,
 })
