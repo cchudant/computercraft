@@ -169,8 +169,6 @@ function storage.newStorageDriver(settings, serverID)
             return false, converIdsToName(missing)
         end
 
-        print("can craft and will")
-
         ---@cast steps Steps
         state.craftManager.runCraft(steps)
 
@@ -270,13 +268,10 @@ function storage.storageServer(settings, storageID)
             end,
             function(_) -- set up
                 storageState.isUp = true
-                print("storage is up")
                 os.queueEvent("storage:up:"  .. (storageID or ""))
             end
         )
     end
-
-    print(storage, storage.localConnect(storageDriver.getID()))
 
     local function makeLocalConnection()
         if not storageState.isUp then

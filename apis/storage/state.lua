@@ -234,10 +234,10 @@ function storageState.makeStorageDriverState()
             local crafters = {}
             util.prettyPrint(settings.crafters)
             for _, c in ipairs(settings.crafters) do
-                local crafter = craft.craftingTurtleProcessor(c.computerid, c.inventory)
+                local crafter = craft.craftingTurtleProcessor(c.computerID, c.inventory)
                 local methodID = util.arrayFind(state.craftMethods, function(method)
                     return method.name == "crafting"
-                end)
+                end).id
                 crafters[methodID] = crafters[methodID] or {}
                 table.insert(crafters[methodID], crafter)
             end
@@ -273,8 +273,6 @@ function storageState.makeStorageDriverState()
 
                     local item = state.getItemInfo(detail, true, periph.getItemLimit(slot))
                     local itemID = item.id
-
-                    print("ItemID ", itemID)
 
                     -- update itemIDToSlots and itemIDToAmounts
 
@@ -316,8 +314,6 @@ function storageState.makeStorageDriverState()
         if item ~= nil and addIt and (detail.maxCount or maxCount) ~= nil then
             item.maxCount = detail.maxCount or maxCount
         end
-
-        print("Get info", detail.name)
 
         if addIt and item == nil then
             -- new item id
