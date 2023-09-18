@@ -1,3 +1,4 @@
+print("require util")
 local util = require("util")
 
 function selectItem(turtle, items)
