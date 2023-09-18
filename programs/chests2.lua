@@ -16,9 +16,10 @@ monitor.setTextScale(0.5)
 
 parallel.waitForAny(
     startStorageServer,
-    storageUI.create(monitor, storageConnection),
+    storageUI.create(monitor, storageConnection()),
     function()
-        local success, missing, consumed = storageConnection.craftItem("minecraft:dried_kelp_block", 1)
+        local connection = storageConnection()
+        local success, missing, consumed = connection.craftItem("minecraft:dried_kelp_block", 1)
         pretty({success, missing, consumed})
         print('finished')
     end

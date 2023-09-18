@@ -78,6 +78,8 @@ function storageState.makeStorageDriverState()
         ---@type CraftManager?
         craftManager = nil,
 
+        isUp = false,
+
         -- end storage state
     }
     ---@class CraftFile
