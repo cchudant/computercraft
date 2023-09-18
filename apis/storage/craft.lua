@@ -174,9 +174,7 @@ function craft.makeManager(crafters)
                         os.queueEvent("storage:craft:finished:" .. foundTask.id)
                     end
                 else
-                    print("pulling newtask")
                     os.pullEvent("storage:craft:newTask")
-                    print("pulled newtask")
                 end
             end
         end
@@ -187,7 +185,6 @@ function craft.makeManager(crafters)
         local tasks = {}
         for method, crafters in pairs(state.crafters) do
             for _, crafter in ipairs(crafters) do
-                print("crafter", method, crafter)
                 table.insert(tasks, crafterTask(storageState, method, crafter))
             end
         end
