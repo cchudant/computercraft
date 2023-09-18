@@ -127,6 +127,8 @@ function craft.makeManager(crafters)
                     local roundBobbinI = ((doingTaskI + i) % #state.tasks) + 1
                     local task = state.tasks[roundBobbinI]
 
+                    print("task", task)
+
                     for itemID, craft in ipairs(task.steps) do
                         if not util.arrayContains(task.done, itemID) and craft.method == method then
                             local children = craft.children
