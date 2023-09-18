@@ -9,7 +9,7 @@ local startStorageServer, storageConnection = storage.storageServer({
     craft = true,
 })
 
-util.prettyPrint("2", startStorageServer, storageConnection)
+util.prettyPrint("2", storageConnection)
 
 local monitor = peripheral.find('monitor') --[[@as Monitor]]
 monitor.setTextScale(0.5)
