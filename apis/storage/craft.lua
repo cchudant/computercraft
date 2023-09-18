@@ -55,13 +55,13 @@ function craft.craftingTurtleProcessor(turtleid, chestName)
     function processor.craft(storageState, craft)
         for shapeI, slot in ipairs(craft.inputs) do
             if slot ~= 0 then
-                transfers.transfer(storageState, {
+                print(slot, transfers.transfer(storageState, {
                     type = "retrieveItems",
                     name = slot,
                     destination = chestName,
                     amount = craft.inputAmount,
                     slots = { shapeI },
-                }, { acceptIDs = true })
+                }, { acceptIDs = true }))
             end
         end
         print("Send to ", turtleid)
