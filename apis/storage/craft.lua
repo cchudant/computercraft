@@ -97,7 +97,7 @@ function craft.makeManager(crafters)
 
     ---@param steps Steps
     function state.runCraft(steps)
-        print("a")
+        print("an")
         print("d", util.objectKeys(steps))
         local id = state.taskIDCounter
         local task = {
