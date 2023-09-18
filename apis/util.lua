@@ -472,7 +472,6 @@ function util.parallelGroup(...)
             os.queueEvent("parallelGroup:end:" .. nonce, coroutineID)
         end)
         coroutine.resume(coroutines[coroutineID])
-        coroutines[coroutineID].resume()
         nCoroutines = nCoroutines + 1
     end
 
