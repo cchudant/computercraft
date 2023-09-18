@@ -260,8 +260,6 @@ function craft.craftLookup(state, itemArg, count, consumed)
         local inStorage = (state.itemIDToAmounts[itemID] or 0) - (consumed[itemID] or 0)
         local fullfiled = math.min(count, inStorage)
 
-        print("In Storage", state.itemIDToItemInfo(itemID).name, inStorage)
-
         if fullfiled ~= 0 then
             consumed[itemID] = (consumed[itemID] or 0) + fullfiled
         end

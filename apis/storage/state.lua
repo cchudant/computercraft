@@ -254,6 +254,8 @@ function storageState.makeStorageDriverState()
                     local item = state.getItemInfo(detail, true, periph.getItemLimit(slot))
                     local itemID = item.id
 
+                    print(itemID)
+
                     -- update itemIDToSlots and itemIDToAmounts
 
                     local slots = state.itemIDToSlots[itemID] or {}
