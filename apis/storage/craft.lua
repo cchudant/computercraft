@@ -110,8 +110,7 @@ function craft.makeManager(crafters)
         table.insert(state.tasks, task)
         print("queue event")
         os.queueEvent("storage:craft:newTask")
-        os.pullEvent("storage:craft:finished:" .. id)
-        print("got answer :)")
+        print("got answer :)", os.pullEvent("storage:craft:finished:" .. id))
     end
 
     local function crafterTask(storageState, method, crafter)
