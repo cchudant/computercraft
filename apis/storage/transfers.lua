@@ -217,10 +217,15 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
     do -- for each retrieve chest slot
         local destItem = destinationPeriph.getItemDetail(destSlot)
 
+        print("a")
+
         if slots == nil or slotI < 1 then
-            if destItem == nil then
-                while true do
-                    iItemID = iItemID + 1
+        print("b")
+        if destItem == nil then
+        print("c")
+        while true do
+        print("d")
+        iItemID = iItemID + 1
                     if iItemID > #itemIDs then break end
 
                     -- choose item to retrieve
