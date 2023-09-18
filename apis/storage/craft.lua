@@ -124,7 +124,8 @@ function craft.makeManager(crafters)
                 local foundTask, foundCraft, taskItemID
 
                 for i = 1, #state.tasks do
-                    local roundBobbinI = (doingTaskI + i) % #state.tasks
+                    print(((doingTaskI + i) % #state.tasks) + 1, doingTaskI, i)
+                    local roundBobbinI = ((doingTaskI + i) % #state.tasks) + 1
                     local task = state.tasks[roundBobbinI]
 
                     for itemID, craft in ipairs(task.steps) do
@@ -154,7 +155,7 @@ function craft.makeManager(crafters)
                     end
                 end
 
-                doingTaskI = (doingTaskI + 1) % #state.tasks
+                doingTaskI = ((doingTaskI + 1) % #state.tasks) + 1
 
                 if foundTask then
                     print("crafting")
