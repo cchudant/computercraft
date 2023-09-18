@@ -184,7 +184,7 @@ function storage.newStorageDriver(settings, serverID)
 end
 
 local storageDriverKeys = {
-    "transfer", "batchTransfer", "getID"
+    "transfer", "batchTransfer", "getID", "craftItem"
 }
 
 ---@param storageID number?
