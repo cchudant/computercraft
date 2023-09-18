@@ -119,7 +119,6 @@ function craft.makeManager(crafters)
             local doingTaskI = 0
             while true do
                 -- choose a task
-                print("i am a crafter waiting for a task")
 
                 local foundTask, foundCraft, taskItemID
 
@@ -188,7 +187,7 @@ function craft.makeManager(crafters)
         local tasks = {}
         for method, crafters in pairs(state.crafters) do
             for _, crafter in ipairs(crafters) do
-                table.insert(tasks, crafterTask(method, crafter, storageState))
+                table.insert(tasks, crafterTask(storageState, method, crafter))
             end
         end
 
