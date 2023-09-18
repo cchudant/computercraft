@@ -272,6 +272,7 @@ function storage.storageServer(settings, storageID)
             end,
             function(_) -- set up
                 storageState.isUp = true
+                print("storage is up")
                 os.queueEvent("storage:up:"  .. (storageID or ""))
             end
         )
