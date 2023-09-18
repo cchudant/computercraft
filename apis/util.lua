@@ -259,27 +259,27 @@ function util.arrayUnshift(arr, ...)
 end
 
 function util.objectKeys(obj)
-    local table = {}
+    local tab = {}
     for k, _ in pairs(obj) do
-        table.insert(table, k)
+        table.insert(tab, k)
     end
-    return table
+    return tab
 end
 
 function util.objectValues(obj)
-    local table = {}
+    local tab = {}
     for _, v in pairs(obj) do
-        table.insert(table, v)
+        table.insert(tab, v)
     end
-    return table
+    return tab
 end
 
 function util.objectEntries(obj)
-    local table = {}
+    local tab = {}
     for k, v in pairs(obj) do
-        table.insert(table, { k, v })
+        table.insert(tab, { k, v })
     end
-    return table
+    return tab
 end
 
 function util.objectFromEntries(entries)
