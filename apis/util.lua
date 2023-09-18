@@ -266,6 +266,14 @@ function util.objectKeys(obj)
     return tab
 end
 
+function util.objectCountEntries(obj)
+    local total = 0
+    for _, _ in pairs(obj) do
+        total = total + 1
+    end
+    return total
+end
+
 function util.objectValues(obj)
     local tab = {}
     for _, v in pairs(obj) do

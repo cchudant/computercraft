@@ -97,19 +97,12 @@ function craft.makeManager(crafters)
 
     ---@param steps Steps
     function state.runCraft(steps)
-        print("an")
-        -- util.prettyPrint("d", steps)
-        for k, v in pairs(steps) do
-            print(1)
-            util.prettyPrint(k)
-            print(2)
-        end
         local id = state.taskIDCounter
         local task = {
             steps = steps,
             id = state.taskIDCounter,
             done = {},
-            nSteps = #util.objectKeys(steps)
+            nSteps = util.objectCountEntries(steps)
         }
         print("b")
         state.taskIDCounter = state.taskIDCounter + 1
@@ -118,6 +111,7 @@ function craft.makeManager(crafters)
         print("queue event")
         os.queueEvent("storage:craft:newTask")
         os.pullEvent("storage:craft:finished:" .. id)
+        print("got answer :)")
     end
 
     local function crafterTask(storageState, method, crafter)
@@ -125,6 +119,7 @@ function craft.makeManager(crafters)
             local doingTaskI = 0
             while true do
                 -- choose a task
+                print("i am a crafter waiting for a task")
 
                 local foundTask, foundCraft, taskItemID
 
