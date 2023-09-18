@@ -168,6 +168,7 @@ function craft.makeManager(crafters)
                         -- craft is finished
                         local index = util.arrayIndexOf(state.tasks, foundTask)
                         table.remove(state.tasks, index)
+                        print("queueEveeeeeeennnt")
                         os.queueEvent("storage:craft:finished:" .. foundTask.id)
                     end
                 else
