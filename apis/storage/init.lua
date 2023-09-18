@@ -257,7 +257,9 @@ function storage.storageServer(settings, storageID)
             end,
             function(addTask) -- local requests
                 while true do
+                    print("pulling storage")
                     local _, args, nonce = os.pullEvent("storage")
+                    print("got storage")
                     handleRpc(addTask, args, function(ret)
                         os.queueEvent("storageRep", ret, nonce)
                     end)
