@@ -503,7 +503,7 @@ function util.parallelGroup(...)
             nCoroutines = nCoroutines - 1
         end
         for k, co in pairs(coroutines) do
-            print("filters for k are " .. filters[k])
+            print("filters for k are " .. (filters[k] or ""))
             if filters[k] == nil or filters[k] == bag[1] or bag[1] == 'terminate' then
                 print("matching!")
                 if coroutine.status(co) ~= 'dead' then
