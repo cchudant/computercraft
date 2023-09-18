@@ -13,7 +13,6 @@ function selectItem(turtle, items)
 	return false
 end
 
-
 local turtlesIds = {
 	"computercraft:turtle_normal",
 	"computercraft:turtle_advanced"
