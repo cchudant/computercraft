@@ -242,6 +242,8 @@ function storageState.makeStorageDriverState()
                 table.insert(crafters[methodID], crafter)
             end
 
+            util.prettyPrint(crafters)
+
             state.craftManager = craft.makeManager(crafters)
         end
 
