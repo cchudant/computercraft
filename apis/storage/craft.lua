@@ -161,10 +161,10 @@ function craft.makeManager(crafters)
                 if foundTask then
                     doingTaskI = ((doingTaskI + 1) % #state.tasks) + 1
                     print("crafting")
-                    util.prettyPrint(foundCraft)
+                    util.prettyPrint(foundTask)
                     crafter.craft(foundCraft, storageState)
 
-                    if #foundCraft.crafts == 0 then
+                    if #foundTask.crafts == 0 then
                         table.insert(foundTask.done, taskItemID)
                     end
 
