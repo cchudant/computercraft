@@ -16,7 +16,7 @@ local storage = {}
 ---@return StorageConnection
 function storage.makeConnection(storageDriver)
     ---@class StorageConnection: StorageDriver
-    local storageConnection = setmetatable({}, storageDriver)
+    local storageConnection = setmetatable({}, { __index = storageDriver })
 
     -- function 
 
