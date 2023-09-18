@@ -484,7 +484,7 @@ function util.parallelGroup(...)
     end
 
     while nCoroutines > 0 do
-        local bag = { os.pullEvent() }
+        local bag = table.pack(os.pullEvent())
 
         if bag[1] == "parallelGroup:add:" .. nonce then
             local coroutineID = bag[2]
@@ -506,9 +506,9 @@ function util.parallelGroup(...)
             if filters[k] == nil or filters[k] == bag[1] or bag[1] == 'terminate' then
                 print("filters for k are " .. (filters[k] or "") .. " event " .. bag[1])
                 if coroutine.status(co) ~= 'dead' then
-                    local bag = {coroutine.resume(co, table.unpack(bag))}
-                    local ok, filter = table.unpack(bag)
-                    print("new filter is", table.unpack(bag))
+                    local bag = table.pack(coroutine.resume(co, table.unpack(bag, 1, bag.n)))
+                    local ok, filter = table.unpack(bag, 1, bag.n)
+                    print("new filter is", table.unpack(bag, 1, bag.n))
                     if not ok then
                         error(filter, 0)
                     end
