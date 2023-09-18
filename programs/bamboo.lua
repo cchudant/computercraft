@@ -17,7 +17,7 @@ function placeDirt(depth, right)
         height = 1,
         prepareSameLevel = function(funcs, firstBottom, firstUp) end,
         runBeforeEveryStep = function(funcs)
-            mine2.selectItem("minecraft:dirt")
+            mine2.selectItem(turtle, "minecraft:dirt")
             turtle.placeDown()
         end,
         finish = function() end,
