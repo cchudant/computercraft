@@ -38,6 +38,7 @@ _ENV.require, _ENV.package = newRequire, newPackage
 
 local originalDofile = dofile
 local function newDofile(filename)
+	print("dofile " .. (filename or "nil"))
 	if filename == "rom/modules/main/cc/require.lua" then
 		return newModule
 	end
