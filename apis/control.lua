@@ -30,6 +30,7 @@ local function setupModem()
 	for _,per in ipairs(peripheral.getNames()) do
 		local a, b = peripheral.getType(per)
 		if a == "modem" and b == nil then -- no wired modems :)
+			print("opening", per)
 			rednet.open(per)
 		end
 	end
