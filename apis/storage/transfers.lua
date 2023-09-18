@@ -211,6 +211,7 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
     local destSlot = 1
     local iDestSlot = 1
     local iItemID = 0 -- first round will set to one
+    print("z")
     while destSlot <= destPeriphSize
         and (req.slots == nil or iDestSlot <= #req.slots)
         and (type(amountLeft) ~= "number" or amountLeft > 0)

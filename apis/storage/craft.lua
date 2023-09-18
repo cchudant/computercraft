@@ -50,11 +50,20 @@ function craft.craftingTurtleProcessor(turtleid, chestName)
     ---@class CraftProcessor
     local processor = {}
 
+
     ---@param storageState StorageState
     ---@param craft { inputAmount: number, inputs: number[] }
     function processor.craft(storageState, craft)
         for shapeI, slot in ipairs(craft.inputs) do
             if slot ~= 0 then
+                print({
+                    type = "retrieveItems",
+                    name = slot,
+                    destination = chestName,
+                    amount = craft.inputAmount,
+                    slots = { shapeI },
+                    amountMustBeExact = true,
+                })
                 print(shapeI, slot, transfers.transfer(storageState, {
                     type = "retrieveItems",
                     name = slot,
