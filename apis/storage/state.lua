@@ -265,7 +265,6 @@ function StorageState:initialStateSetup(settings)
 
         -- fill up crafters
         local crafters = {}
-        util.prettyPrint(settings.crafters)
         for _, c in ipairs(settings.crafters) do
             local crafter = craft.CraftingCraftProcessor.new(c.computerID, c.inventory)
             local methodID = util.arrayFind(self.craftMethods, function(method)
@@ -275,7 +274,6 @@ function StorageState:initialStateSetup(settings)
             table.insert(crafters[methodID], crafter)
         end
 
-        util.prettyPrint(crafters)
 
         self.craftManager = craft.CraftManager.new(crafters)
     end
@@ -334,6 +332,8 @@ function StorageState:initialStateSetup(settings)
             return amounts[slotB] < amounts[slotA]
         end)
     end
+
+    util.prettyPrint(self.itemIDToAmounts)
 end
 
 function StorageState:getItemInfo(detail, addIt, maxCount)
