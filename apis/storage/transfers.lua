@@ -225,21 +225,15 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
     local destSlot = 1
     local iDestSlot = 1
     local iItemID = 0 -- first round will set to one
-    print("z")
     while destSlot <= destPeriphSize
         and (req.slots == nil or iDestSlot <= #req.slots)
         and (type(amountLeft) ~= "number" or amountLeft > 0)
     do -- for each retrieve chest slot
         local destItem = destinationPeriph.getItemDetail(destSlot)
 
-        print("a")
-
         if slots == nil or slotI < 1 then
-        print("b")
         if destItem == nil then
-        print("c")
         while true do
-        print("d")
         iItemID = iItemID + 1
                     if iItemID > #itemIDs then break end
 
@@ -247,8 +241,6 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
                     itemID = itemIDs[iItemID]
                     item = state.itemIDToItemInfo(itemID)
                     amountInStorage = state.itemIDToAmounts[itemID] or 0
-
-                    print(itemID, amountInStorage)
 
                     if amountLeft == 'stack' then
                         amountLeft = item.maxCount or 999 -- there are 0 left in storage

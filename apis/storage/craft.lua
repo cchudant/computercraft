@@ -24,9 +24,12 @@ function craft.craftingTurtleTask()
 
         for inputI, i in ipairs(craftSlots) do
             if craft.inputs[inputI] ~= 0 then
-                print('succ', inputI)
                 turtle.select(i)
-                turtle.suck(craft.inputAmount)
+                while turtle.getItemCount(i) ~= craft.inputAmount do
+                    if not turtle.suck(craft.inputAmount) then
+                        os.sleep(0.01)
+                    end
+                end
             end
         end
 
