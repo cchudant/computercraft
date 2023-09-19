@@ -179,7 +179,7 @@ function storage.newStorageDriver(settings, serverID)
         return storageCraft.craftLookup(state, itemArg, count, consumed)
     end
 
-    state.initialStateSetup(settings)
+    state:initialStateSetup(settings)
     return storageDriver, state
 end
 
