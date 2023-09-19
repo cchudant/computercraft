@@ -367,6 +367,7 @@ function craft.craftLookup(state, itemArg, count, consumed)
     end
 
     local missing = handleTags(itemArg, count, consumed, {})
+    assert(#parents == 0)
     if missing then
         return nil, missing
     end
