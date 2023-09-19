@@ -151,11 +151,6 @@ function storage.newStorageDriver(settings, serverID)
     function storageDriver.craftItem(itemArg, amount)
         local steps, missing, consumed = storageCraft.craftLookup(state, itemArg, amount)
 
-        util.prettyPrint(steps, missing) --, consumed)
-
-        print(itemArg, amount)
-        os.sleep(5)
-
         local function converIdsToName(arr)
             return util.objectMap(arr, function(k, v)
                 if k < 0 then
@@ -169,6 +164,11 @@ function storage.newStorageDriver(settings, serverID)
                 end
             end)
         end
+
+        util.prettyPrint(steps, missing, converIdsToName(consumed)) --, consumed)
+
+        print(itemArg, amount)
+        os.sleep(5)
 
         if missing then
             return false, converIdsToName(missing)
