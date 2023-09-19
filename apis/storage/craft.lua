@@ -312,8 +312,8 @@ function craft.craftLookup(state, itemArg, count, consumed)
                         for k, v in pairs(missing_) do
                             missing[k] = (missing[k] or 0) + v
                         end
-                        totalCraftsDone = math.min(available, totalCraftsDone)
                     end
+                    totalCraftsDone = math.min(available, totalCraftsDone)
 
                     table.insert(itemsPerSlot, amounts)
                 end
