@@ -328,7 +328,7 @@ function StorageState:initialStateSetup(settings)
         for _, slotID in ipairs(slots) do
             local chest, chestSlot = self:getStorageChestFromSlotID(slotID)
             local chestObj = peripheral.wrap(chest.name)
-            amounts[slotID] = chestObj.getItemCount(chestSlot)
+            amounts[slotID] = chestObj.getItemDetail(chestSlot).count
         end
         table.sort(slots, function(slotA, slotB)
             return amounts[slotB] < amounts[slotA]
@@ -483,7 +483,7 @@ function StoragePointer:initFirstNonStackI(slots)
             local slotID = slots[index]
             local chest, chestSlot = self.state:getStorageChestFromSlotID(slotID)
             local chestObj = peripheral.wrap(chest.name)
-            local amount = chestObj.getItemCount(chestSlot)
+            local amount = chestObj.getItemDetail(chestSlot).count
 
             if amount >= self.maxCount then
                 break
@@ -534,7 +534,7 @@ function StoragePointer:storeItems(amount, sourceName, sourceSlot)
 
         local chest, chestSlot = self.state:getStorageChestFromSlotID(slotID)
         local chestObj = peripheral.wrap(chest.name)
-        local inSlotAmount = chestObj.getItemCount(chestSlot)
+        local inSlotAmount = chestObj.getItemDetail(chestSlot).count
 
         local toTransfer = math.min(self.maxCount - inSlotAmount, amount - totalTransfered)
         totalTransfered = totalTransfered + toTransfer
@@ -615,7 +615,7 @@ function StoragePointer:retrieveItems(amount, destName, destSlot)
 
         local chest, chestSlot = self.state:getStorageChestFromSlotID(slotID)
         local chestObj = peripheral.wrap(chest.name)
-        local inSlotAmount = chestObj.getItemCount(chestSlot)
+        local inSlotAmount = chestObj.getItemDetail(chestSlot).count
 
         local toTransfer = math.min(inSlotAmount, amount - totalTransfered)
         totalTransfered = totalTransfered + toTransfer
