@@ -535,6 +535,42 @@ function util.defaultArgs(options, defaults)
     return options
 end
 
+---@class Object
+---@field construct fun(o: table): Object
+
+---@generic T
+---@generic U
+---@param class T
+---@param parent U?
+---@return T 
+function util.makeClass(class, parent)
+    local metatable = { __index = class }
+    if parent then
+        setmetatable(class, { __index = parent })
+    end
+    function class.construct(o)
+        setmetatable(o, metatable)
+        return o
+    end
+    return class
+end
+
+---@generic T
+---@generic U
+---@param class T
+---@param parent U?
+---@return T 
+function util.makeAbstractClass(class, parent)
+    local metatable = { __index = class }
+    if parent then
+        setmetatable(class, { __index = parent })
+    end
+    function class.construct(o)
+        error("instanciating abstract class", 2)
+    end
+    return class
+end
+
 ---Create a new random nonce
 ---@return string
 function util.newNonce()

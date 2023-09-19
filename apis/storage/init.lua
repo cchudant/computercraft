@@ -30,7 +30,7 @@ function storage.newStorageDriver(settings, serverID)
     ---@class StorageDriver
     local storageDriver = {}
 
-    local state = storageState.makeStorageDriverState()
+    local state = storageState.StorageState:new()
 
     function storageDriver.getID()
         return serverID
@@ -45,7 +45,7 @@ function storage.newStorageDriver(settings, serverID)
     ---@param nbt string?
     ---@return number
     function storageDriver.getItemAmount(name, nbt)
-        local itemIDs = state.resolveItemArg(name, nbt, false, false)
+        local itemIDs = state:resolveItemArg(name, nbt, false, false)
         ---@cast itemIDs number[]
 
         local total = 0
@@ -59,7 +59,7 @@ function storage.newStorageDriver(settings, serverID)
     ---@param args ItemArg[]
     ---@return number
     function storageDriver.getItemsAmount(args)
-        local itemIDs = state.resolveItemArgs(args, false, false)
+        local itemIDs = state:resolveItemArgs(args, false, false)
         ---@cast itemIDs number[]
 
         local total = 0
@@ -70,7 +70,7 @@ function storage.newStorageDriver(settings, serverID)
     end
 
     function storageDriver.getItemDetails(name, nbt)
-        local itemIDs = state.resolveItemArg(name, nbt, false, false)
+        local itemIDs = state:resolveItemArg(name, nbt, false, false)
         ---@cast itemIDs number[]
 
         if #itemIDs ~= 1 then
@@ -78,7 +78,7 @@ function storage.newStorageDriver(settings, serverID)
         end
 
         local total = state.itemIDToAmounts[itemIDs[1]] or 0
-        local info = state.itemIDToItemInfo(itemIDs[1])
+        local info = state:itemIDToItemInfo(itemIDs[1])
         return {
             name = info.name, nbt = info.nbt,
             count = total, maxCount = info.maxCount,
@@ -157,7 +157,7 @@ function storage.newStorageDriver(settings, serverID)
                     return "#" .. util.arrayFind(state.tags, function(t)
                         return t.id == -k
                     end).name, v
-                elseif k > 0 then
+                else
                     return util.arrayFind(state.items, function(i)
                         return i.id == k
                     end).name, v
@@ -170,7 +170,7 @@ function storage.newStorageDriver(settings, serverID)
         end
 
         ---@cast steps Steps
-        state.craftManager.runCraft(steps)
+        state.craftManager:runCraft(steps)
 
         return true, converIdsToName(consumed)
     end
@@ -263,7 +263,7 @@ function storage.storageServer(settings, storageID)
             end,
             function(_) -- run craft manager if present
                 if storageState.craftManager then
-                    storageState.craftManager.runManager(storageState)
+                    storageState.craftManager:run(storageState)
                 end
             end,
             function(_) -- set up

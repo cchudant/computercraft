@@ -11,7 +11,7 @@ local transfers = {}
 ---@return integer transfered number of items transfered
 ---@return TransferError? error
 function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acceptIDs)
-    local sourcePeriph, error = state.openNonStorage(req.source)
+    local sourcePeriph, error = state:openNonStorage(req.source)
     if sourcePeriph == nil then
         return 0, {
             request = ireq,
@@ -32,103 +32,42 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
 
     local reqItemIDs
     if req.items ~= nil then
-        reqItemIDs = state.resolveItemArgs(req.items, acceptIDs, false, true, nil)
+        reqItemIDs = state:resolveItemArgs(req.items, acceptIDs, false, true, nil)
     elseif req.name ~= nil then
-        reqItemIDs = state.resolveItemArg({ name = req.name, nbt = req.nbt, tag = req.tag }, nil, acceptIDs, false, true,
+        reqItemIDs = state:resolveItemArg({ name = req.name, nbt = req.nbt, tag = req.tag }, nil, acceptIDs, false, true,
             nil)
     end
 
+    local storagePointers = {}
+
     for sourceSlot, detail in pairs(sourceItems) do
+        local originalAmount = detail.count
         if amountLeft == 0 then
             break
         end
 
-        local transferedFromSlot = 0
-        local originalAmount = detail.count
-
         -- find the item id
-        local item = state.getItemInfo(detail, true, sourcePeriph.getItemLimit(sourceSlot))
+        local item = state:getItemInfo(detail, true, sourcePeriph.getItemLimit(sourceSlot))
         local itemID = item.id
 
         if (not reqItemIDs or util.arrayContains(reqItemIDs, itemID))
             and (req.slots == nil or util.arrayContains(req.slots, sourceSlot))
         then
-            local slots = state.itemIDToSlots[itemID] or {}
 
-            -- find the first non maxed out stack
-            local beginSlot = #slots + 1
-            for i = #slots, 1, -1 do
-                local slotID = slots[i]
-                local chest, chestSlot = state.getStorageChestFromSlotID(slotID)
-                local chestObj = peripheral.wrap(chest.name)
-                local amount = chestObj.getItemDetail(chestSlot).count
-
-                if amount == item.maxCount then
-                    break
+            local storagePointer = storagePointers[itemID]
+            if storagePointer == nil then
+                if nono then
+                    storagePointer = state:nonoStoragePointer()
+                else
+                    storagePointer = state:storagePointer(itemID)
                 end
-                beginSlot = i
+                storagePointers[itemID] = storagePointer
             end
 
-            local canPush = detail.count
+            local success, _, transferedFromSlot = storagePointer:storeItems(
+                originalAmount, req.source, sourceSlot)
 
-            -- fill existing slots
-            for i = beginSlot, #slots do
-                if amountLeft == 0 then
-                    break
-                end
-
-                local slotID = slots[i]
-
-                local chest, chestSlot = state.getStorageChestFromSlotID(slotID)
-                local chestObj = peripheral.wrap(chest.name)
-                local amount = chestObj.getItemDetail(chestSlot).count
-
-                local toTransfer = math.min(item.maxCount - amount, canPush, amountLeft_)
-                transfered = transfered + toTransfer
-                canPush = canPush - toTransfer
-                transferedFromSlot = transferedFromSlot + toTransfer
-
-                if not nono then
-                    sourcePeriph.pushItems(chest.name, sourceSlot, toTransfer, chestSlot)
-
-                    -- update state
-                    state.itemIDToAmounts[itemID] = state.itemIDToAmounts[itemID] + toTransfer
-                end
-
-                if reqAmount ~= 'all' and reqAmount ~= 'slot' then
-                    amountLeft = amountLeft - toTransfer
-                end
-            end
-
-            -- occupy empty slots!
-            for emptySlotI = #state.emptySlots, 1, -1 do
-                if canPush <= 0 then break end
-                if amountLeft == 0 then
-                    break
-                end
-
-                local slotID = state.emptySlots[emptySlotI]
-
-                local chest, chestSlot = state.getStorageChestFromSlotID(slotID)
-
-                local toTransfer = math.min(item.maxCount, canPush, amountLeft_)
-                transfered = transfered + toTransfer
-                canPush = canPush - toTransfer
-                transferedFromSlot = transferedFromSlot + toTransfer
-
-                if not nono then
-                    table.remove(state.emptySlots, emptySlotI)
-                    sourcePeriph.pushItems(chest.name, sourceSlot, toTransfer, chestSlot)
-                    state.itemIDToAmounts[itemID] = (state.itemIDToAmounts[itemID] or 0) + toTransfer
-                end
-
-                if reqAmount ~= 'all' and reqAmount ~= 'slot' then
-                    amountLeft = amountLeft - toTransfer
-                end
-            end
-
-            -- not enough space in storage
-            if type(amountLeft) == "number" and amountLeft > 0 and req.amountMustBeExact then
+            if not success and type(amountLeft) == "number" and amountLeft > 0 and req.amountMustBeExact then
                 return transfered, {
                     request = ireq,
                     reason = "not enough space in storage"
@@ -154,7 +93,6 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
         end
     end
 
-    -- not enough space in storage
     if req.amountMustBeExact and type(reqAmount) == "number" and amountLeft > 0 then
         return transfered, {
             request = ireq,
@@ -174,7 +112,7 @@ end
 ---@return integer transfered number of items transfered
 ---@return TransferError? error
 function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, acceptIDs)
-    local destinationPeriph, error = state.openNonStorage(req.destination)
+    local destinationPeriph, error = state:openNonStorage(req.destination)
     if destinationPeriph == nil then
         return 0, {
             request = ireq,
@@ -191,29 +129,27 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
 
     local itemIDs
     if req.items ~= nil then
-        itemIDs = state.resolveItemArgs(req.items, acceptIDs)
+        itemIDs = state:resolveItemArgs(req.items, acceptIDs)
     else
         if acceptIDs and type(req.name) == "number" then
-            itemIDs = {req.name}
+            itemIDs = { req.name }
         else
-            itemIDs = state.resolveItemArg({ name = req.name, nbt = req.nbt, tag = req.tag }, nil, acceptIDs)
+            itemIDs = state:resolveItemArg({ name = req.name, nbt = req.nbt, tag = req.tag }, nil, acceptIDs)
         end
     end
     ---@cast itemIDs number[]
 
     -- traverse the slots array
-    local reqAmount = req.amount
-    local amountLeft = reqAmount
+    local amountLeft = req.amount
 
     local itemID
     local item
     local amountInStorage
     local destPeriphSize = destinationPeriph.size()
 
-    local slots
-    local slotI
-
     local totalTransfered = 0
+
+    local storagePointer
 
     local destSlot = 1
     local iDestSlot = 1
@@ -228,88 +164,66 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
     do -- for each retrieve chest slot
         local destItem = destinationPeriph.getItemDetail(destSlot)
 
-        if slots == nil or slotI < 1 then
-        if destItem == nil then
-        while true do
-        iItemID = iItemID + 1
+        -- cboose an item
+        if storagePointer == nil or storagePointer:getAmount() == 0 then
+            storagePointer = nil
+            local destInfo = destItem and state:getItemInfo(destItem, true)
+
+            if destItem == nil then
+                -- dest is air, find any item
+                while true do
+                    iItemID = iItemID + 1
                     if iItemID > #itemIDs then break end
 
                     -- choose item to retrieve
-                    itemID = itemIDs[iItemID]
-                    item = state.itemIDToItemInfo(itemID)
-                    amountInStorage = state.itemIDToAmounts[itemID] or 0
+                    if nono then
+                        storagePointer = state:nonoStoragePointer()
+                    else
+                        storagePointer = state:storagePointer(itemID)
+                    end
+                    amountInStorage = storagePointer:getAmount()
+                    item = state:itemIDToItemInfo(itemID)
 
                     if amountLeft == 'stack' then
                         amountLeft = item.maxCount or 999 -- there are 0 left in storage
-                        reqAmount = item.maxCount
                     end
-
-                    slots = state.itemIDToSlots[itemID] or {}
-                    slotI = #slots
 
                     if amountInStorage > 0 then
                         break
                     end
                 end
                 if iItemID > #itemIDs then break end
-            else
-                item = state.getItemInfo(destItem, true)
+            elseif util.arrayContains(itemIDs, destInfo.id) then
+                -- dest is not air, continue filling it
                 itemID = item.id
-                slots = state.itemIDToSlots[itemID] or {}
-                slotI = #slots
+                if nono then
+                    storagePointer = state:nonoStoragePointer()
+                else
+                    storagePointer = state:storagePointer(itemID)
+                end
+                item = destInfo
+
+                if amountLeft == 'stack' then
+                    amountLeft = item.maxCount or 999 -- there are 0 left in storage
+                end
             end
         end
 
-        local totalTransferedToSlot = 0
         local inDestinationSlot = 0
         if destItem ~= nil then
             inDestinationSlot = destItem.count
         end
         local canReceive = item.maxCount - inDestinationSlot
 
-        if
-            (destItem == nil or (destItem.name == item.name and destItem.nbt == item.nbt))
-            and canReceive > 0
-        then
-            while slotI >= 1
-                and amountLeft > 0
-                and canReceive > 0
-            do -- for each slot in storage chest
-                local slotID = slots[slotI]
-
-
-                local chest, chestSlot = state.getStorageChestFromSlotID(slotID)
-                local chestObj = peripheral.wrap(chest.name)
-                local amount = item.maxCount
-                local destDetail = chestObj.getItemDetail(chestSlot)
-                if destDetail ~= nil then
-                    amount = destDetail.count
-                end
-
-                local actuallyTransfered = math.min(item.maxCount, amountLeft, canReceive, amount)
-
-                if not nono then
-                    destinationPeriph.pullItems(chest.name, chestSlot, actuallyTransfered, destSlot)
-
-                    -- update state
-                    state.itemIDToAmounts[itemID] = state.itemIDToAmounts[itemID] - actuallyTransfered
-                    if state.itemIDToAmounts[itemID] == 0 then state.itemIDToAmounts[itemID] = nil end
-
-                    if actuallyTransfered >= amount then
-                        table.remove(slots, slotI)
-                        table.insert(state.emptySlots, slotID)
-                        slotI = slotI - 1
-                    end
-                end
-
-                if req.amount ~= 'all' then
-                    amountLeft = amountLeft - actuallyTransfered
-                end
-                canReceive = canReceive - actuallyTransfered
-
-                totalTransfered = totalTransfered + actuallyTransfered
-                totalTransferedToSlot = totalTransferedToSlot + actuallyTransfered
+        local amountInStorage = storagePointer and storagePointer:getAmount()
+        if storagePointer ~= nil and amountInStorage > 0 and canReceive > 0 then
+            local wantTransfer = amountInStorage --[[@as number]]
+            if type(amountLeft) == "number" then
+                wantTransfer = math.min(amountLeft, amountInStorage)
             end
+            local _, _, totalTransferedToSlot = storagePointer:retrieveItems(
+                math.min(wantTransfer, item.maxCount, canReceive),
+                req.destination, destSlot)
 
             if results ~= nil then
                 table.insert(results, {
@@ -331,10 +245,10 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
         end
     end
 
-    if req.amountMustBeExact and iItemID > #itemIDs then
+    if req.amountMustBeExact and amountLeft ~= 0 and amountLeft ~= 'all' then
         return totalTransfered, {
             request = ireq,
-            reason = "not enough items"
+            reason = "not enough items in storage"
         }
     end
 

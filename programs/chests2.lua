@@ -3,6 +3,8 @@ local storage = require("apis.storage")
 local storageUI = require("apis.storage.ui")
 local util = require("apis.util")
 
+local item, amount = ...
+
 local startStorageServer, makeStorageConnection = storage.storageServer({
     crafters = {{ inventory = "minecraft:chest_30", computerID = 13 }},
     storageChests = { "minecraft:chest_24", "minecraft:chest_23", "minecraft:chest_22" },
@@ -19,7 +21,7 @@ parallel.waitForAny(
     -- function() storageUI.runUI(monitor, makeStorageConnection()) end,
     function()
         local connection = makeStorageConnection()
-        local success, missing, consumed = connection.craftItem("minecraft:dried_kelp_block", 30)
+        local success, missing, consumed = connection.craftItem(item, tonumber(amount))
         -- util.prettyPrint({success, missing, consumed})
         print('finished')
     end
