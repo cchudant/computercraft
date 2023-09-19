@@ -165,7 +165,7 @@ function storage.newStorageDriver(settings, serverID)
             end)
         end
 
-        util.prettyPrint(steps, missing) --, consumed)
+        -- util.prettyPrint(steps, missing, consumed)
 
         print(itemArg, amount)
         os.sleep(5)
@@ -173,7 +173,7 @@ function storage.newStorageDriver(settings, serverID)
         if missing then
             return false, converIdsToName(missing)
         end
-
+    
         ---@cast steps Steps
         state.craftManager:runCraft(steps)
 
