@@ -42,7 +42,7 @@ function craft.craftingTurtleTask()
         for i = 1, 16 do
             if turtle.getItemCount(i) > 0 then
                 turtle.select(i)
-                turtle.drop()
+                turtle.drop(64)
             end
         end
 
