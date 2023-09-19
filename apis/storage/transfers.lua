@@ -12,7 +12,6 @@ local transfers = {}
 ---@return TransferError? error
 function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acceptIDs)
     local sourcePeriph, error = state.openNonStorage(req.source)
-    print("opened")
     if sourcePeriph == nil then
         return 0, {
             request = ireq,
@@ -39,12 +38,8 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
             nil)
     end
 
-    print("loop")
-
     for sourceSlot, detail in pairs(sourceItems) do
-        print("sourceitem", sourceSlot)
         if amountLeft == 0 then
-            print("no amount left")
             break
         end
 
@@ -206,8 +201,6 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
     end
     ---@cast itemIDs number[]
 
-    util.prettyPrint(itemIDs)
-
     -- traverse the slots array
     local reqAmount = req.amount
     local amountLeft = reqAmount
@@ -234,8 +227,6 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
         and (type(amountLeft) ~= "number" or amountLeft > 0)
     do -- for each retrieve chest slot
         local destItem = destinationPeriph.getItemDetail(destSlot)
-
-        print("Put to " .. destSlot)
 
         if slots == nil or slotI < 1 then
         if destItem == nil then
@@ -346,8 +337,6 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
             reason = "not enough items"
         }
     end
-
-    print(destSlot, destPeriphSize, iDestSlot, #req.slots)
 
     if req.amountMustBeExact and
         (destSlot > destPeriphSize or (req.slots ~= nil and iDestSlot > #req.slots)) then

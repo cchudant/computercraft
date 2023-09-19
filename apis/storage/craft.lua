@@ -14,12 +14,11 @@ local craft = {}
 ---@alias Steps { [number]: Step }
 
 function craft.craftingTurtleTask()
-    print("Serving crafting requests")
+    print("Serving crafting requests.")
     local craftSlots = { 1, 2, 3, 5, 6, 7, 9, 10, 11 }
     while true do
         local craft, _, sender, nonce = control.protocolReceive("storage:craft", nil, nil, nil)
-        print("Got a job")
-        util.prettyPrint(craft)
+        print("Got a job!")
         ---@cast craft { inputAmount: number, inputs: number[] }
 
         for inputI, i in ipairs(craftSlots) do
@@ -46,7 +45,7 @@ function craft.craftingTurtleTask()
             end
         end
 
-        print("Done one request")
+        print("Done one request.")
         control.protocolSend(sender, "storage:craftRep", nil, nonce)
     end
 end
@@ -62,26 +61,22 @@ function craft.craftingTurtleProcessor(turtleid, chestName)
     function processor.craft(storageState, craft)
         for shapeI, slot in ipairs(craft.inputs) do
             if slot ~= 0 then
-                util.prettyPrint(shapeI, transfers.transfer(storageState, {
+                transfers.transfer(storageState, {
                     type = "retrieveItems",
                     name = slot,
                     destination = chestName,
                     amount = craft.inputAmount,
                     slots = { shapeI },
                     amountMustBeExact = true,
-                }, { acceptIDs = true }))
+                }, { acceptIDs = true })
             end
         end
-        util.prettyPrint(storageState.itemIDToAmounts)
-        print("Send to ", turtleid)
         control.sendRoundtrip(turtleid, "storage:craft", craft)
-        print("Crafter has finished")
-        local success, error, n, results = transfers.transfer(storageState, {
+        transfers.transfer(storageState, {
             type = "storeItems",
             source = chestName,
             amount = "all"
         })
-        util.prettyPrint(success, error, n, results)
     end
 
     return processor
@@ -94,9 +89,10 @@ end
 ---@field nSteps number
 
 ---@param crafters { [number]: CraftProcessor[] }
-function craft.makeManager(crafters)
+---@param state StorageState
+function craft.makeManager(state, crafters)
     ---@class CraftManager
-    local state = {
+    local manager = {
         ---indexed by method id
         ---@type { [number]: CraftProcessor[] }
         crafters = crafters,
@@ -109,38 +105,34 @@ function craft.makeManager(crafters)
     }
 
     ---@param steps Steps
-    function state.runCraft(steps)
-        local id = state.taskIDCounter
+    function manager.runCraft(steps)
+        local id = manager.taskIDCounter
         local task = {
             steps = steps,
-            id = state.taskIDCounter,
+            id = manager.taskIDCounter,
             done = {},
             nSteps = util.objectCountEntries(steps)
         }
-        print("b")
-        state.taskIDCounter = state.taskIDCounter + 1
+        manager.taskIDCounter = manager.taskIDCounter + 1
 
-        table.insert(state.tasks, task)
-        print("queue event")
-        os.queueEvent("storage:craft:newTask")
-        print("got answer :)", os.pullEvent("storage:craft:finished:" .. id))
+        table.insert(manager.tasks, task)
+        os.queueEvent("storage:craft:newTask:" .. (state.storageID or ""))
+        os.pullEvent("storage:craft:finished:" .. (state.storageID or "") .. ":" .. id)
     end
 
     local function crafterTask(storageState, method, crafter)
         return function()
-            print("task starting")
             local doingTaskI = 0
             while true do
                 -- choose a task
 
                 local foundTask, foundCraft, taskItemID
 
-                for i = 1, #state.tasks do
-                    local roundBobbinI = ((doingTaskI + i) % #state.tasks) + 1
-                    local task = state.tasks[roundBobbinI]
+                for i = 1, #manager.tasks do
+                    local roundBobbinI = ((doingTaskI + i) % #manager.tasks) + 1
+                    local task = manager.tasks[roundBobbinI]
 
                     for itemID, craft in pairs(task.steps) do
-                        print(craft.method, method)
                         if not util.arrayContains(task.done, itemID) and craft.method == method then
                             local children = craft.children
                             local childrenDone = true
@@ -151,8 +143,6 @@ function craft.makeManager(crafters)
                                     break
                                 end
                             end
-
-                            print(task.done, children)
 
                             if childrenDone then
                                 -- pop a craft and do it
@@ -171,9 +161,7 @@ function craft.makeManager(crafters)
 
 
                 if foundTask then
-                    doingTaskI = ((doingTaskI + 1) % #state.tasks) + 1
-                    print("crafting")
-                    util.prettyPrint(foundCraft)
+                    doingTaskI = ((doingTaskI + 1) % #manager.tasks) + 1
                     crafter.craft(storageState, foundCraft)
 
                     if #foundTask.steps[taskItemID].crafts == 0 then
@@ -182,22 +170,21 @@ function craft.makeManager(crafters)
 
                     if #foundTask.done >= foundTask.nSteps then
                         -- craft is finished
-                        local index = util.arrayIndexOf(state.tasks, foundTask)
-                        table.remove(state.tasks, index)
-                        print("queue finished")
-                        os.queueEvent("storage:craft:finished:" .. foundTask.id)
+                        local index = util.arrayIndexOf(manager.tasks, foundTask)
+                        table.remove(manager.tasks, index)
+                        os.queueEvent("storage:craft:finished:" .. (state.storageID or "") .. ":" .. foundTask.id)
                     end
                 else
-                    os.pullEvent("storage:craft:newTask")
+                    os.pullEvent("storage:craft:newTask:" .. (state.storageID or ""))
                 end
             end
         end
     end
 
     ---@param storageState StorageState
-    function state.runManager(storageState)
+    function manager.runManager(storageState)
         local tasks = {}
-        for method, crafters in pairs(state.crafters) do
+        for method, crafters in pairs(manager.crafters) do
             for _, crafter in ipairs(crafters) do
                 table.insert(tasks, crafterTask(storageState, method, crafter))
             end
@@ -206,7 +193,7 @@ function craft.makeManager(crafters)
         parallel.waitForAll(table.unpack(tasks))
     end
 
-    return state
+    return manager
 end
 
 ---@param state StorageState

@@ -19,10 +19,12 @@ local function findChests()
 end
 
 ---@return StorageState
-function storageState.makeStorageDriverState()
+function storageState.makeStorageDriverState(storageID)
     ---@class StorageState
     local state = {
         -- begin of storage state
+
+        storageID = storageID,
 
         storageChestIDCounter = 1,
         itemIDCounter = 1,
