@@ -25,12 +25,7 @@ function craft.craftingTurtleTask()
             local itemID = craft.inputs[inputI]
             if itemID ~= 0 and itemID ~= nil then
                 turtle.select(i)
-                repeat
-                    local amount = turtle.getItemCount(i)
-                    if not turtle.suck(craft.inputAmount - amount) then
-                        os.sleep(0.01)
-                    end
-                until amount == craft.inputAmount
+                turtle.suck(craft.inputAmount - amount)
             end
         end
 
@@ -126,8 +121,6 @@ local function crafterTask(self, storageState, method, crafter)
                             end
                         end
 
-                        print("crafting " .. itemID .. " done", childrenDone)
-
                         if childrenDone and #step.crafts > 0 then
                             -- pop a craft and do it
                             local craft = table.remove(step.crafts, #step.crafts)
@@ -143,7 +136,6 @@ local function crafterTask(self, storageState, method, crafter)
             end
 
             if foundCraft then
-                print("do craft")
                 doingTaskI = ((doingTaskI + 1) % #self.tasks) + 1
                 crafter:craft(storageState, foundCraft)
 
@@ -158,9 +150,7 @@ local function crafterTask(self, storageState, method, crafter)
                     os.queueEvent("storage:craft:finished:" .. (self.storageID or "") .. ":" .. foundTask.id)
                 end
             else
-                print("pull new task")
                 os.pullEvent("storage:craft:newTask:" .. (self.storageID or ""))
-                print("pulled new task")
             end
         end
     end
@@ -214,10 +204,7 @@ function CraftingCraftProcessor:craft(storageState, craft)
             }, { acceptIDs = true })
         end
     end
-    print("Send request to crafter and waiting")
     control.sendRoundtrip(self.turtleid, "storage:craft", craft)
-    os.sleep(1)
-    print("Received rep!")
     transfers.transfer(storageState, {
         type = "storeItems",
         source = self.chestName,

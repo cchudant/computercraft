@@ -168,13 +168,6 @@ function storage.newStorageDriver(settings, serverID)
             return util.objectMap(arr, function(k, v) return idToName(k), v end)
         end
 
-        -- util.prettyPrint(util.objectMap(steps, function (k, v) return idToName(k), v.inputs end))
-
-        util.prettyPrint(steps, missing, consumed)
-
-        print(itemArg, amount)
-        os.sleep(5)
-
         if missing then
             return false, converIdsToName(missing)
         end

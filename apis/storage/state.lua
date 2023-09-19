@@ -332,8 +332,6 @@ function StorageState:initialStateSetup(settings)
             return amounts[slotB] < amounts[slotA]
         end)
     end
-
-    util.prettyPrint(self.itemIDToAmounts)
 end
 
 function StorageState:getItemInfo(detail, addIt, maxCount)
