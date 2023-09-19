@@ -126,6 +126,8 @@ local function crafterTask(self, storageState, method, crafter)
                             end
                         end
 
+                        util.prettyPrint("Children done", childrenDone, step.crafts)
+
                         if childrenDone and #step.crafts > 1 then
                             -- pop a craft and do it
 
@@ -273,7 +275,6 @@ function craft.craftLookup(state, itemArg, count, consumed)
             }
         end
 
-        util.prettyPrint("Amounts", totalAvailable, amounts)
         return missing, totalAvailable, amounts
     end
 
