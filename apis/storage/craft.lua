@@ -82,10 +82,11 @@ function craft.craftingTurtleProcessor(turtleid, chestName)
         print("Send to ", turtleid)
         control.sendRoundtrip(turtleid, "storage:craft", craft)
         print("Crafter has finished")
-        transfers.transfer(storageState, {
+        local success, error, n, results = transfers.transfer(storageState, {
             type = "storeItems",
             source = chestName,
         })
+        util.prettyPrint(success, error, n, results)
     end
 
     return processor
