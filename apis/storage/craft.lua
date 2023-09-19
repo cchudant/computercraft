@@ -209,7 +209,9 @@ function CraftingCraftProcessor:craft(storageState, craft)
             }, { acceptIDs = true })
         end
     end
+    print("Send request to crafter and waiting")
     control.sendRoundtrip(self.turtleid, "storage:craft", craft)
+    print("Received rep!")
     transfers.transfer(storageState, {
         type = "storeItems",
         source = self.chestName,
