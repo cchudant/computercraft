@@ -158,7 +158,9 @@ local function crafterTask(self, storageState, method, crafter)
                     os.queueEvent("storage:craft:finished:" .. (self.storageID or "") .. ":" .. foundTask.id)
                 end
             else
+                print("pull new task")
                 os.pullEvent("storage:craft:newTask:" .. (self.storageID or ""))
+                print("pulled new task")
             end
         end
     end
