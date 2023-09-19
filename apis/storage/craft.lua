@@ -60,14 +60,6 @@ function craft.craftingTurtleProcessor(turtleid, chestName)
     function processor.craft(storageState, craft)
         for shapeI, slot in ipairs(craft.inputs) do
             if slot ~= 0 then
-                util.prettyPrint({
-                    type = "retrieveItems",
-                    name = slot,
-                    destination = chestName,
-                    amount = craft.inputAmount,
-                    slots = { shapeI },
-                    amountMustBeExact = true,
-                })
                 print(shapeI, slot, transfers.transfer(storageState, {
                     type = "retrieveItems",
                     name = slot,
