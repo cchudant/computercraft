@@ -94,7 +94,7 @@ function CraftManager:runCraft(steps)
     }
     self.taskIDCounter = self.taskIDCounter + 1
 
-    if nSteps ~= nil then
+    if task.nSteps ~= 0 then
         table.insert(self.tasks, task)
         os.queueEvent("storage:craft:newTask:" .. (self.storageID or ""))
         os.pullEvent("storage:craft:finished:" .. (self.storageID or "") .. ":" .. id)
