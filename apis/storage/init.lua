@@ -165,7 +165,7 @@ function storage.newStorageDriver(settings, serverID)
             end)
         end
 
-        -- util.prettyPrint(steps, missing, consumed)
+        util.prettyPrint(steps) --, missing, consumed)
 
         print(itemArg, amount)
         os.sleep(5)
