@@ -497,7 +497,7 @@ function StoragePointer:storeItems(amount, sourceName, sourceSlot)
     local slots = self.state.itemIDToSlots[self.itemID]
     if slots == nil then
         slots = {}
-        self.state.itemIDToSlots[self.itemID] = {}
+        self.state.itemIDToSlots[self.itemID] = slots
     end
     self:initFirstNonStackI(slots)
 
@@ -580,7 +580,7 @@ function StoragePointer:retrieveItems(amount, destName, destSlot)
     local slots = self.state.itemIDToSlots[self.itemID]
     if slots == nil then
         slots = {}
-        self.state.itemIDToSlots[self.itemID] = {}
+        self.state.itemIDToSlots[self.itemID] = slots
     end
 
     local totalTransfered = 0

@@ -206,11 +206,18 @@ it('craft turtle advanced', function()
         { name = "minecraft:iron_ingot", count = 60, maxCount = 64 },
         { name = "minecraft:oak_log", count = 48, maxCount = 64 },
     })
+    peripheralMock.addChestPeripheral("minecraft:chest_2", {
+        { name = "computercraft:computer_normal", count = 1, maxCount = 64 },
+    })
     local storageServer = storage.newStorageDriver(
       { crafters = {}, storageChests = { "minecraft:chest_1" }, craft = true },
       util.newNonce()
     )
-    local steps, missing, consumed = storageServer.craftLookup("computercraft:turtle_normal", 1)
+    local steps, missing, consumed = storageServer.transfer({
+      source = "minecraft:chest_2",
+      type = "storeItems",
+      amount = "all",
+    })
 
     print("final", inspect(steps), inspect(missing), inspect(consumed))
 end)

@@ -127,8 +127,9 @@ function storage.newStorageDriver(settings, serverID)
     ---@return number? totalItemsTransfered
     ---@return TransferResult[]? results
     function storageDriver.batchTransfer(requests, options)
+        options = options or {}
         options.acceptIDs = false
-        storageTransfers.batchTransfer(state, requests, options)
+        return storageTransfers.batchTransfer(state, requests, options)
     end
 
     ---@param req StoreItemsRequest|RetrieveItemsRequest
@@ -138,8 +139,9 @@ function storage.newStorageDriver(settings, serverID)
     ---@return number? totalItemsTransfered
     ---@return TransferResult[]? results
     function storageDriver.transfer(req, options)
+        options = options or {}
         options.acceptIDs = false
-        storageTransfers.transfer(state, req, options)
+        return storageTransfers.transfer(state, req, options)
     end
 
     ---comment
