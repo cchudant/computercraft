@@ -224,12 +224,18 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
 
     local destSlot = 1
     local iDestSlot = 1
+    if req.slots ~= nil then
+        destSlot = req.slots[iDestSlot] or (destPeriphSize + 1)
+    end
+
     local iItemID = 0 -- first round will set to one
     while destSlot <= destPeriphSize
         and (req.slots == nil or iDestSlot <= #req.slots)
         and (type(amountLeft) ~= "number" or amountLeft > 0)
     do -- for each retrieve chest slot
         local destItem = destinationPeriph.getItemDetail(destSlot)
+
+        print("Put to " .. destSlot)
 
         if slots == nil or slotI < 1 then
         if destItem == nil then
@@ -328,7 +334,7 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
         end
         if req.slots ~= nil then
             iDestSlot = iDestSlot + 1
-            destSlot = req.slots[iDestSlot] or destPeriphSize + 1
+            destSlot = req.slots[iDestSlot] or (destPeriphSize + 1)
         else
             destSlot = destSlot + 1
         end
