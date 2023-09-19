@@ -315,12 +315,16 @@ function craft.craftLookup(state, itemArg, count, consumed)
                         end
                     end
                     totalCraftsDone = math.min(available, totalCraftsDone)
+                    if totalCraftsDone == 0 then break end
 
                     table.insert(itemsPerSlot, amounts)
                 end
             end
 
-            if doCraftNTimes > 0 then
+            doCraftNTimes = math.ceil(count / craftObj[2])
+
+            if totalCraftsDone > 0 then
+                directChildren[itemID] = true
                 if steps[itemID] == nil then
                     steps[itemID] = {
                         method = craftObj[1],
