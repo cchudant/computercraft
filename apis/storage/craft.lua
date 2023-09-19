@@ -22,14 +22,16 @@ function craft.craftingTurtleTask()
         ---@cast craft { inputAmount: number, inputs: number[] }
 
         for inputI, i in ipairs(craftSlots) do
-            if craft.inputs[inputI] ~= 0 then
+            local itemID = craft.inputs[inputI]
+            if itemID ~= 0 and itemID ~= nil then
                 turtle.select(i)
-                repeat
-                    local amount = turtle.getItemCount(i)
-                    if not turtle.suck(craft.inputAmount - amount) then
-                        os.sleep(0.01)
-                    end
-                until amount == craft.inputAmount
+                -- repeat
+                --     local amount = turtle.getItemCount(i)
+                --     if not turtle.suck(craft.inputAmount - amount) then
+                --         os.sleep(0.01)
+                --     end
+                -- until amount == craft.inputAmount
+                turtle.suck(craft.inputAmount)
             end
         end
 
