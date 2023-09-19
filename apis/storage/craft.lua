@@ -22,8 +22,6 @@ function craft.craftingTurtleTask()
         util.prettyPrint(craft)
         ---@cast craft { inputAmount: number, inputs: number[] }
 
-        os.sleep(0.1)
-
         for inputI, i in ipairs(craftSlots) do
             if craft.inputs[inputI] ~= 0 then
                 print('succ', inputI)
@@ -37,7 +35,7 @@ function craft.craftingTurtleTask()
             turtle.drop(64)
         end
 
-        for i = 1, 15 do
+        for i = 1, 16 do
             if turtle.getItemCount(i) > 0 then
                 turtle.select(i)
                 turtle.drop()

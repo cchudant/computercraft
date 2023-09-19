@@ -12,6 +12,7 @@ local transfers = {}
 ---@return TransferError? error
 function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acceptIDs)
     local sourcePeriph, error = state.openNonStorage(req.source)
+    print("opened")
     if sourcePeriph == nil then
         return 0, {
             request = ireq,
@@ -35,7 +36,10 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
     end
     ---@cast reqItemIDs number[]
 
+    print("loop")
+
     for sourceSlot, detail in pairs(sourceItems) do
+        print("sourceitem", sourceSlot)
         if amountLeft == 0 then
             break
         end
