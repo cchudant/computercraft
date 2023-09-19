@@ -128,7 +128,7 @@ local function crafterTask(self, storageState, method, crafter)
 
                         util.prettyPrint("Children done", childrenDone, step.crafts)
 
-                        if childrenDone and #step.crafts > 1 then
+                        if childrenDone and #step.crafts > 0 then
                             -- pop a craft and do it
                             print("HEYY")
 
@@ -143,7 +143,6 @@ local function crafterTask(self, storageState, method, crafter)
                     break
                 end
             end
-
 
             if foundCraft then
                 print("do craft")
