@@ -19,16 +19,20 @@ function craft.craftingTurtleTask()
     while true do
         local craft, _, sender, nonce = control.protocolReceive("storage:craft", nil, nil, nil)
         print("Got a job")
+        util.prettyPrint(craft)
         ---@cast craft { inputAmount: number, inputs: number[] }
+
+        os.sleep(10)
 
         for inputI, i in ipairs(craftSlots) do
             if craft.inputs[inputI] ~= 0 then
+                print('succ', inputI)
                 turtle.select(i)
                 turtle.suck(craft.inputAmount)
             end
         end
 
-        turtle.select(15)
+        turtle.select(16)
         while turtle.craft() do
             turtle.drop(64)
         end
