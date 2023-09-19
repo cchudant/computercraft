@@ -57,7 +57,7 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
             local storagePointer = storagePointers[itemID]
             if storagePointer == nil then
                 if nono then
-                    storagePointer = state:nonoStoragePointer()
+                    storagePointer = state:nonoStoragePointer(itemID)
                 else
                     storagePointer = state:storagePointer(itemID)
                 end
@@ -175,9 +175,10 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
                     iItemID = iItemID + 1
                     if iItemID > #itemIDs then break end
 
+                    itemID = itemIDs[iItemID]
                     -- choose item to retrieve
                     if nono then
-                        storagePointer = state:nonoStoragePointer()
+                        storagePointer = state:nonoStoragePointer(itemID)
                     else
                         storagePointer = state:storagePointer(itemID)
                     end
@@ -197,7 +198,7 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
                 -- dest is not air, continue filling it
                 itemID = item.id
                 if nono then
-                    storagePointer = state:nonoStoragePointer()
+                    storagePointer = state:nonoStoragePointer(itemID)
                 else
                     storagePointer = state:storagePointer(itemID)
                 end
