@@ -151,21 +151,24 @@ function storage.newStorageDriver(settings, serverID)
     function storageDriver.craftItem(itemArg, amount)
         local steps, missing, consumed = storageCraft.craftLookup(state, itemArg, amount)
 
+        local function idToName(itemID)
+            if itemID < 0 then
+                return "#" .. util.arrayFind(state.tags, function(t)
+                    return t.id == -itemID
+                end).name
+            else
+                return util.arrayFind(state.items, function(i)
+                    return i.id == itemID
+                end).name
+            end
+        end
         local function converIdsToName(arr)
-            return util.objectMap(arr, function(k, v)
-                if k < 0 then
-                    return "#" .. util.arrayFind(state.tags, function(t)
-                        return t.id == -k
-                    end).name, v
-                else
-                    return util.arrayFind(state.items, function(i)
-                        return i.id == k
-                    end).name, v
-                end
-            end)
+            return util.objectMap(arr, function(k, v) return idToName(k), v end)
         end
 
-        util.prettyPrint(steps) --, missing, consumed)
+        util.prettyPrint(util.objectMap(steps, function (k, v) return idToName(k), v.crafts end))
+
+        -- util.prettyPrint(steps) --, missing, consumed)
 
         print(itemArg, amount)
         os.sleep(5)
