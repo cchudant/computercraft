@@ -376,8 +376,6 @@ function craft.craftLookup(state, itemArg, count, consumed)
         return nil, missing
     end
 
-    util.prettyPrint(steps)
-
     for itemID, itemsPerSlot in pairs(steps) do
         -- pack the crafts
         while true do
