@@ -46,7 +46,7 @@ function craft.craftingTurtleTask()
             end
         end
 
-        print("Done one request. ", sender, "storage:craftRep", nil, nonce)
+        print("Done one request.")
         control.protocolSend(sender, "storage:craftRep", nil, nonce)
     end
 end
@@ -113,6 +113,8 @@ local function crafterTask(self, storageState, method, crafter)
             for i = 1, #self.tasks do
                 local roundBobbinI = ((doingTaskI + i) % #self.tasks) + 1
                 local task = self.tasks[roundBobbinI]
+
+                print("BOBBIN", roundBobbinI)
 
                 for itemID, craft in pairs(task.steps) do
                     if not util.arrayContains(task.done, itemID) and craft.method == method then
