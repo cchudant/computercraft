@@ -8,7 +8,9 @@ local newTermObj = setmetatable({}, { __index = realTerm })
 local newLine = true
 function newTermObj.write(text)
     f.write(text)
-    newLine = true
+    if string.len(text) ~= 0 then
+        newLine = true
+    end
     return realTerm.write(text)
 end
 function newTermObj.setCursorPos(x, y)

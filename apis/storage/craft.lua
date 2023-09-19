@@ -273,6 +273,7 @@ function craft.craftLookup(state, itemArg, count, consumed)
             }
         end
 
+        util.prettyPrint("Amounts", totalAvailable, amounts)
         return missing, totalAvailable, amounts
     end
 
