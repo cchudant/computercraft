@@ -141,7 +141,7 @@ local function crafterTask(self, storageState, method, crafter)
 
             if foundTask then
                 doingTaskI = ((doingTaskI + 1) % #self.tasks) + 1
-                crafter.craft(storageState, foundCraft)
+                crafter:craft(storageState, foundCraft)
 
                 if #foundTask.steps[taskItemID].crafts == 0 then
                     table.insert(foundTask.done, taskItemID)
