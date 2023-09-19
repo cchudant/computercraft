@@ -21,8 +21,8 @@ parallel.waitForAny(
     -- function() storageUI.runUI(monitor, makeStorageConnection()) end,
     function()
         local connection = makeStorageConnection()
-        local success, missing, consumed = connection.craftItem(item, tonumber(amount))
-        -- util.prettyPrint({success, missing, consumed})
+        local success, missing, consumed = connection.craftItem(item or 'minecraft:oak_door', tonumber(amount) or 1)
+        util.prettyPrint({success, missing, consumed})
         print('finished')
     end
 )
