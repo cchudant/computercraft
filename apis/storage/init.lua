@@ -166,7 +166,7 @@ function storage.newStorageDriver(settings, serverID)
             return util.objectMap(arr, function(k, v) return idToName(k), v end)
         end
 
-        util.prettyPrint(util.objectMap(steps, function (k, v) return idToName(k), v.crafts end))
+        -- util.prettyPrint(util.objectMap(steps, function (k, v) return idToName(k), v.inputs end))
 
         -- util.prettyPrint(steps) --, missing, consumed)
 
