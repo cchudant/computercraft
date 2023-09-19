@@ -293,20 +293,19 @@ function craft.craftLookup(state, itemArg, count, consumed)
             local doCraftNTimes = math.ceil(count / craftObj[2])
             local totalCraftsDone = doCraftNTimes
 
-            directChildren[itemID] = true
             table.insert(parents, itemID)
 
             ---@type ({ [number]: number }|0)[]
             local itemsPerSlot = {}
 
             -- craft!
-            local directChildren = {}
+            local directChildren2 = {}
             for i = 3, #craftObj do
                 local ingredient = craftObj[i]
                 if ingredient == 0 then
                     table.insert(itemsPerSlot, 0)
                 else
-                    local missing_, available, amounts = handleTags(ingredient, doCraftNTimes, consumed, directChildren)
+                    local missing_, available, amounts = handleTags(ingredient, doCraftNTimes, consumed, directChildren2)
 
                     if missing_ then
                         missing = missing or {}
@@ -331,7 +330,7 @@ function craft.craftLookup(state, itemArg, count, consumed)
                         inputAmount = doCraftNTimes,
                         produced = craftObj[2] * doCraftNTimes,
                         inputs = itemsPerSlot,
-                        children = directChildren,
+                        children = directChildren2,
                         crafts = {},
                     }
                 else
