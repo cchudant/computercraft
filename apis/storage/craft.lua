@@ -127,6 +127,8 @@ local function crafterTask(self, storageState, method, crafter)
                                 break
                             end
                         end
+                        util.prettyPrint(craft, childrenDone)
+
 
                         if childrenDone then
                             -- pop a craft and do it
