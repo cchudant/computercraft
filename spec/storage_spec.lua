@@ -186,10 +186,10 @@ describe('Storage', function()
           { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
       })
       local storageServer = storage.newStorageDriver(
-          { "minecraft:chest_1", "minecraft:chest_2" },
-          util.newNonce()
+        { crafters = {}, storageChests = { "minecraft:chest_1", "minecraft:chest_2" }, craft = true },
+        util.newNonce()
       )
-      local steps, missing, consumed = storageServer.craftLookup("computercraft:ender_mining_turtle_advanced", 1)
+      local steps, missing, consumed = storageServer.craftLookup("computercraft:turtle_advanced", 1)
 
       print("final", inspect(steps), inspect(missing), inspect(consumed))
 
