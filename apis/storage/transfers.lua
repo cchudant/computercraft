@@ -30,17 +30,17 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
     local reqItemIDs
     if req.items ~= nil then
         reqItemIDs = state.resolveItemArgs(req.items, acceptIDs, false, true, nil)
-    else
+    elseif req.name ~= nil then
         reqItemIDs = state.resolveItemArg({ name = req.name, nbt = req.nbt, tag = req.tag }, nil, acceptIDs, false, true,
             nil)
     end
-    ---@cast reqItemIDs number[]
 
     print("loop")
 
     for sourceSlot, detail in pairs(sourceItems) do
         print("sourceitem", sourceSlot)
         if amountLeft == 0 then
+            print("no amount left")
             break
         end
 
@@ -51,7 +51,7 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
         local item = state.getItemInfo(detail, true, sourcePeriph.getItemLimit(sourceSlot))
         local itemID = item.id
 
-        if util.arrayContains(reqItemIDs, itemID)
+        if (not reqItemIDs or util.arrayContains(reqItemIDs, itemID))
             and (req.slots == nil or util.arrayContains(req.slots, sourceSlot))
         then
             local slots = state.itemIDToSlots[itemID] or {}
