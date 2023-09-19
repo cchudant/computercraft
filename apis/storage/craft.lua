@@ -126,7 +126,7 @@ local function crafterTask(self, storageState, method, crafter)
                             end
                         end
 
-                        print("crafting " .. itemID .. " done " .. childrenDone)
+                        print("crafting " .. itemID .. " done", childrenDone)
 
                         if childrenDone and #step.crafts > 0 then
                             -- pop a craft and do it
