@@ -153,6 +153,7 @@ function storage.newStorageDriver(settings, serverID)
 
         util.prettyPrint(steps, missing) --, consumed)
 
+        print(itemArg, amount)
         os.sleep(5)
 
         local function converIdsToName(arr)
