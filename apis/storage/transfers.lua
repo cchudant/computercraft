@@ -84,7 +84,12 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
                 local chestObj = peripheral.wrap(chest.name)
                 local amount = chestObj.getItemDetail(chestSlot).count
 
-                local toTransfer = math.min(item.maxCount - amount, canPush, amountLeft)
+                local amountLeft_ = amountLeft
+                if type(amountLeft_) == "string" then
+                    amountLeft_ = 1 / 0
+                end
+
+                local toTransfer = math.min(item.maxCount - amount, canPush, amountLeft_)
                 transfered = transfered + toTransfer
                 canPush = canPush - toTransfer
                 transferedFromSlot = transferedFromSlot + toTransfer
