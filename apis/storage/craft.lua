@@ -46,7 +46,7 @@ function craft.craftingTurtleTask()
             end
         end
 
-        print("Done one request.")
+        print("Done one request. ", sender, "storage:craftRep", nil, nonce)
         control.protocolSend(sender, "storage:craftRep", nil, nonce)
     end
 end
