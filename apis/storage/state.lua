@@ -460,7 +460,7 @@ function StorageState:storagePointer(item)
     if type(item) == "number" then
         return StoragePointer.construct {
             itemID = item,
-            maxCount = self:itemIDToItemInfo(item),
+            maxCount = self:itemIDToItemInfo(item).maxCount,
             state = self,
         } --[[@as StoragePointer]]
     end
