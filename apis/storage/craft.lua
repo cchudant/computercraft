@@ -229,20 +229,7 @@ function craft.craftLookup(state, itemArg, count, consumed)
     local parents = {}
     local handleItem
     local function handleTags(itemArg, count, consumed, directChildren)
-        -- local function itemArgName()
-        --     local name
-        --     if type(itemArg) == "string" then
-        --         name = itemArg
-        --     elseif type(itemArg) == "number" and itemArg < 0 then
-        --         name = '#' .. util.arrayFind(state.tags, function(tag)
-        --             return tag.id == -itemArg
-        --         end).name
-        --     elseif type(itemArg) == "number" and itemArg > 0 then
-        --         name = state.itemIDToItemInfo(itemArg).name
-        --     end
-        --     return name
-        -- end
-        local itemIDs = state.resolveItemArg(itemArg, nil, true, true, true)
+        local itemIDs = state:resolveItemArg(itemArg, nil, true, true, true)
         if itemIDs == nil then
             return {
                 [itemArg] = count
@@ -400,7 +387,7 @@ function craft.craftLookup(state, itemArg, count, consumed)
             end
 
             -- output stacked crafts
-            local maxCount = state.itemIDToItemInfo(itemID).maxCount
+            local maxCount = state:itemIDToItemInfo(itemID).maxCount
             local lastStack = math.ceil(biggestCraftAmount / maxCount)
             for i = 1, lastStack do
                 local count = maxCount
