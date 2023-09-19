@@ -19,7 +19,7 @@ parallel.waitForAny(
     -- function() storageUI.runUI(monitor, makeStorageConnection()) end,
     function()
         local connection = makeStorageConnection()
-        local success, missing, consumed = connection.craftItem("minecraft:dried_kelp_block", 1)
+        local success, missing, consumed = connection.craftItem("minecraft:dried_kelp_block", 30)
         -- util.prettyPrint({success, missing, consumed})
         print('finished')
     end
