@@ -25,11 +25,12 @@ function craft.craftingTurtleTask()
         for inputI, i in ipairs(craftSlots) do
             if craft.inputs[inputI] ~= 0 then
                 turtle.select(i)
-                while turtle.getItemCount(i) ~= craft.inputAmount do
-                    if not turtle.suck(craft.inputAmount) then
+                repeat
+                    local amount = turtle.getItemCount(i)
+                    if not turtle.suck(craft.inputAmount - amount) then
                         os.sleep(0.01)
                     end
-                end
+                until amount == craft.inputAmount
             end
         end
 
@@ -61,7 +62,7 @@ function craft.craftingTurtleProcessor(turtleid, chestName)
     function processor.craft(storageState, craft)
         for shapeI, slot in ipairs(craft.inputs) do
             if slot ~= 0 then
-                print(shapeI, slot, transfers.transfer(storageState, {
+                util.prettyPrint(transfers.transfer(storageState, {
                     type = "retrieveItems",
                     name = slot,
                     destination = chestName,
