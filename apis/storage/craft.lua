@@ -126,12 +126,10 @@ local function crafterTask(self, storageState, method, crafter)
                             end
                         end
 
-                        util.prettyPrint("Children done", childrenDone, step.crafts)
+                        print("crafting " .. itemID .. " done " .. childrenDone)
 
                         if childrenDone and #step.crafts > 0 then
                             -- pop a craft and do it
-                            print("HEYY")
-
                             local craft = table.remove(step.crafts, #step.crafts)
                             foundTask, foundCraft, taskItemID = task, craft, itemID
                             break
