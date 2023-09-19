@@ -75,6 +75,7 @@ function craft.craftingTurtleProcessor(turtleid, chestName)
         local success, error, n, results = transfers.transfer(storageState, {
             type = "storeItems",
             source = chestName,
+            amount = "all"
         })
         util.prettyPrint(success, error, n, results)
     end
