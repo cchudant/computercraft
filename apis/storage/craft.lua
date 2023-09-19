@@ -142,8 +142,9 @@ local function crafterTask(self, storageState, method, crafter)
             end
 
 
-            if foundTask then
+            if foundCraft then
                 doingTaskI = ((doingTaskI + 1) % #self.tasks) + 1
+                util.prettyPrint(foundCraft)
                 crafter:craft(storageState, foundCraft)
 
                 if #foundTask.steps[taskItemID].crafts == 0 then
