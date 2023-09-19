@@ -293,6 +293,7 @@ function craft.craftLookup(state, itemArg, count, consumed)
             local totalCraftsDone = doCraftNTimes
 
             directChildren[itemID] = true
+            table.insert(parents, itemID)
 
             ---@type ({ [number]: number }|0)[]
             local itemsPerSlot = {}
@@ -318,33 +319,35 @@ function craft.craftLookup(state, itemArg, count, consumed)
                 end
             end
 
-            if steps[itemID] == nil then
-                steps[itemID] = {
-                    method = craftObj[1],
-                    inputAmount = doCraftNTimes,
-                    produced = craftObj[2] * doCraftNTimes,
-                    inputs = itemsPerSlot,
-                    children = directChildren,
-                    crafts = {},
-                }
-            else
-                -- merge
-                steps[itemID].inputAmount = steps[itemID].inputAmount + doCraftNTimes
-                steps[itemID].produced = steps[itemID].produced + craftObj[2] * doCraftNTimes
-                for slot, items in ipairs(itemsPerSlot) do
-                    if items ~= 0 then
-                        ---@cast items { [number]: number }
-                        local slot = steps[itemID].inputs[slot]
-                        for itemID, amount in pairs(items) do
-                            slot[itemID]
-                            = (slot[itemID] or 0) + amount
+            if doCraftNTimes > 0 then
+                if steps[itemID] == nil then
+                    steps[itemID] = {
+                        method = craftObj[1],
+                        inputAmount = doCraftNTimes,
+                        produced = craftObj[2] * doCraftNTimes,
+                        inputs = itemsPerSlot,
+                        children = directChildren,
+                        crafts = {},
+                    }
+                else
+                    -- merge
+                    steps[itemID].inputAmount = steps[itemID].inputAmount + doCraftNTimes
+                    steps[itemID].produced = steps[itemID].produced + craftObj[2] * doCraftNTimes
+                    for slot, items in ipairs(itemsPerSlot) do
+                        if items ~= 0 then
+                            ---@cast items { [number]: number }
+                            local slot = steps[itemID].inputs[slot]
+                            for itemID, amount in pairs(items) do
+                                slot[itemID]
+                                = (slot[itemID] or 0) + amount
+                            end
                         end
                     end
                 end
-            end
 
-            if missing == nil then
-                fullfiled = fullfiled + craftObj[2] * doCraftNTimes
+                if missing == nil then
+                    fullfiled = fullfiled + craftObj[2] * doCraftNTimes
+                end
             end
 
             table.remove(parents, #parents)
