@@ -74,7 +74,7 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
 
             -- fill existing slots
             for i = beginSlot, #slots do
-                if amountLeft <= 0 then
+                if amountLeft == 0 then
                     break
                 end
 
@@ -104,7 +104,7 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
             -- occupy empty slots!
             for emptySlotI = #state.emptySlots, 1, -1 do
                 if canPush <= 0 then break end
-                if amountLeft <= 0 then
+                if amountLeft == 0 then
                     break
                 end
 
@@ -129,7 +129,7 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
             end
 
             -- not enough space in storage
-            if amountLeft > 0 and req.amountMustBeExact then
+            if type(amountLeft) == "number" and amountLeft > 0 and req.amountMustBeExact then
                 return transfered, {
                     request = ireq,
                     reason = "not enough space in storage"
