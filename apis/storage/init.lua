@@ -151,7 +151,7 @@ function storage.newStorageDriver(settings, serverID)
     function storageDriver.craftItem(itemArg, amount)
         local steps, missing, consumed = storageCraft.craftLookup(state, itemArg, amount)
 
-        util.prettyPrint(steps, missing, consumed)
+        util.prettyPrint(steps, missing) --, consumed)
 
         os.sleep(5)
 

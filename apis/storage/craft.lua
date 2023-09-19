@@ -114,8 +114,6 @@ local function crafterTask(self, storageState, method, crafter)
                 local roundBobbinI = ((doingTaskI + i) % #self.tasks) + 1
                 local task = self.tasks[roundBobbinI]
 
-                print("BOBBIN", roundBobbinI)
-
                 for itemID, step in pairs(task.steps) do
                     if not util.arrayContains(task.done, itemID) and step.method == method then
                         local children = step.children
@@ -130,8 +128,6 @@ local function crafterTask(self, storageState, method, crafter)
 
                         if childrenDone and #step.crafts > 1 then
                             -- pop a craft and do it
-
-                            print("popped one")
 
                             local craft = table.remove(step.crafts, #step.crafts)
                             foundTask, foundCraft, taskItemID = task, craft, itemID

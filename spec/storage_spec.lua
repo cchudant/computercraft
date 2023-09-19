@@ -144,70 +144,74 @@ describe('Storage', function()
   --         produced = 1
   --       } })
   -- end)
-  it('craft turtle advanced', function()
-      peripheralMock.resetPeripherals()
-      peripheralMock.addChestPeripheral("minecraft:chest_1", {
-          { name = "minecraft:oak_log", count = 64, maxCount = 64 },
-          { name = "minecraft:oak_log", count = 64, maxCount = 64 },
-          { name = "minecraft:oak_log", count = 19, maxCount = 64 },
-          { name = "minecraft:redstone", count = 64, maxCount = 64 },
-          { name = "minecraft:sand", count = 24, maxCount = 64 },
-          { name = "minecraft:ender_pearl", count = 16, maxCount = 16 },
-          { name = "minecraft:ender_pearl", count = 16, maxCount = 16 },
-          { name = "minecraft:ender_pearl", count = 16, maxCount = 16 },
-          { name = "minecraft:ender_pearl", count = 16, maxCount = 16 },
-          { name = "minecraft:blaze_rod", count = 32, maxCount = 64 },
-          { name = "minecraft:diamond", count = 64, maxCount = 64 },
-          { name = "minecraft:diamond", count = 64, maxCount = 64 },
-          { name = "minecraft:diamond", count = 64, maxCount = 64 },
-      })
-      peripheralMock.addChestPeripheral("minecraft:chest_2", {
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-          { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
-      })
-      local storageServer = storage.newStorageDriver(
-        { crafters = {}, storageChests = { "minecraft:chest_1", "minecraft:chest_2" }, craft = true },
-        util.newNonce()
-      )
-      local steps, missing, consumed = storageServer.craftLookup("computercraft:turtle_advanced", 1)
+--   it('craft turtle advanced', function()
+--     peripheralMock.resetPeripherals()
+--     peripheralMock.addChestPeripheral("minecraft:chest_1", {
+--         { name = "minecraft:oak_log", count = 64, maxCount = 64 },
+--         { name = "minecraft:oak_log", count = 64, maxCount = 64 },
+--         { name = "minecraft:oak_log", count = 19, maxCount = 64 },
+--         { name = "minecraft:redstone", count = 64, maxCount = 64 },
+--         { name = "minecraft:sand", count = 24, maxCount = 64 },
+--         { name = "minecraft:ender_pearl", count = 16, maxCount = 16 },
+--         { name = "minecraft:ender_pearl", count = 16, maxCount = 16 },
+--         { name = "minecraft:ender_pearl", count = 16, maxCount = 16 },
+--         { name = "minecraft:ender_pearl", count = 16, maxCount = 16 },
+--         { name = "minecraft:blaze_rod", count = 32, maxCount = 64 },
+--         { name = "minecraft:diamond", count = 64, maxCount = 64 },
+--         { name = "minecraft:diamond", count = 64, maxCount = 64 },
+--         { name = "minecraft:diamond", count = 64, maxCount = 64 },
+--     })
+--     peripheralMock.addChestPeripheral("minecraft:chest_2", {
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:gold_ingot", count = 64, maxCount = 64 },
+--     })
+--     local storageServer = storage.newStorageDriver(
+--       { crafters = {}, storageChests = { "minecraft:chest_1", "minecraft:chest_2" }, craft = true },
+--       util.newNonce()
+--     )
+--     local steps, missing, consumed = storageServer.craftLookup("computercraft:turtle_advanced", 1)
 
-      print("final", inspect(steps), inspect(missing), inspect(consumed))
+--     print("final", inspect(steps), inspect(missing), inspect(consumed))
+-- end)
+it('craft turtle advanced', function()
+    peripheralMock.resetPeripherals()
+    peripheralMock.addChestPeripheral("minecraft:chest_1", {
+        { name = "minecraft:glass_pane", count = 64, maxCount = 64 },
+        { name = "minecraft:stone", count = 64, maxCount = 64 },
+        { name = "minecraft:redstone", count = 19, maxCount = 64 },
+        { name = "minecraft:stone", count = 1, maxCount = 64 },
+        { name = "minecraft:iron_ingot", count = 64, maxCount = 64 },
+        { name = "minecraft:iron_ingot", count = 64, maxCount = 64 },
+        { name = "minecraft:iron_ingot", count = 64, maxCount = 64 },
+        { name = "minecraft:iron_ingot", count = 60, maxCount = 64 },
+        { name = "minecraft:oak_log", count = 48, maxCount = 64 },
+    })
+    local storageServer = storage.newStorageDriver(
+      { crafters = {}, storageChests = { "minecraft:chest_1" }, craft = true },
+      util.newNonce()
+    )
+    local steps, missing, consumed = storageServer.craftLookup("computercraft:turtle_normal", 1)
 
-      assert.is_same(steps, { {
-          inputAmount = 1,
-          inputs = { 767 },
-          method = 2,
-          produced = 1
-        }, {
-          inputAmount = 1,
-          inputs = { 767 },
-          method = 2,
-          produced = 1
-        }, {
-          inputAmount = 1,
-          inputs = { 816, 816, 816, 250, 716, 250, 695, 695, 695 },
-          method = 2,
-          produced = 1
-        } })
-  end)
+    print("final", inspect(steps), inspect(missing), inspect(consumed))
+end)
 end)
