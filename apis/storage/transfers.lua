@@ -341,6 +341,8 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
         }
     end
 
+    print(destSlot, destPeriphSize, iDestSlot, #req.slots)
+
     if req.amountMustBeExact and
         (destSlot > destPeriphSize or (req.slots ~= nil and iDestSlot > #req.slots)) then
         return totalTransfered, {
