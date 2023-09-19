@@ -23,6 +23,10 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
     local reqAmount = req.amount
 
     local amountLeft = reqAmount
+    local amountLeft_ = amountLeft
+    if type(amountLeft_) == "string" then
+        amountLeft_ = 1 / 0
+    end
     local transfered = 0
 
     local sourceItems = sourcePeriph.list()
@@ -84,11 +88,6 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
                 local chestObj = peripheral.wrap(chest.name)
                 local amount = chestObj.getItemDetail(chestSlot).count
 
-                local amountLeft_ = amountLeft
-                if type(amountLeft_) == "string" then
-                    amountLeft_ = 1 / 0
-                end
-
                 local toTransfer = math.min(item.maxCount - amount, canPush, amountLeft_)
                 transfered = transfered + toTransfer
                 canPush = canPush - toTransfer
@@ -117,7 +116,7 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
 
                 local chest, chestSlot = state.getStorageChestFromSlotID(slotID)
 
-                local toTransfer = math.min(item.maxCount, canPush, amountLeft)
+                local toTransfer = math.min(item.maxCount, canPush, amountLeft_)
                 transfered = transfered + toTransfer
                 canPush = canPush - toTransfer
                 transferedFromSlot = transferedFromSlot + toTransfer
