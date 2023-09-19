@@ -22,7 +22,7 @@ function craft.craftingTurtleTask()
         util.prettyPrint(craft)
         ---@cast craft { inputAmount: number, inputs: number[] }
 
-        os.sleep(10)
+        os.sleep(0.1)
 
         for inputI, i in ipairs(craftSlots) do
             if craft.inputs[inputI] ~= 0 then
@@ -81,6 +81,7 @@ function craft.craftingTurtleProcessor(turtleid, chestName)
         util.prettyPrint(storageState.itemIDToAmounts)
         print("Send to ", turtleid)
         control.sendRoundtrip(turtleid, "storage:craft", craft)
+        print("Crafter has finished")
         transfers.transfer(storageState, {
             type = "storeItems",
             source = chestName,
