@@ -214,7 +214,7 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
         if destItem ~= nil then
             inDestinationSlot = destItem.count
         end
-        local canReceive = item.maxCount - inDestinationSlot
+        local canReceive = item and item.maxCount - inDestinationSlot
 
         local amountInStorage = storagePointer and storagePointer:getAmount()
         if storagePointer ~= nil and amountInStorage > 0 and canReceive > 0 then
