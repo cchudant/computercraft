@@ -7,7 +7,7 @@ local storageUI = {}
 ---@return fun() startUI
 function storageUI.runUI(term, storageConnection)
     ui.drawLoop(ui.Block:new {
-        -- alignContentX = 'center',
+        alignContentX = 'center',
         width = '100%',
         height = '100%',
         -- alignContentX = 'begin',
