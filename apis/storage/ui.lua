@@ -8,8 +8,8 @@ local storageUI = {}
 function storageUI.runUI(term, storageConnection)
     local interface = ui.Block:new {
         alignContentX = 'center',
-        width = '100%',
-        height = '100%',
+        -- width = '100%',
+        -- height = '100%',
         -- alignContentX = 'begin',
         -- ui.Block:new {
             ui.Block:new {
