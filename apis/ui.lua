@@ -340,6 +340,7 @@ local function computeFullTiling(self, blockWidth, blockHeight, contentW, conten
 
             posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
             if iInLine == 1 then
+                print("I in line is one")
                 posY = posY + align(self.alignContentY, slackH, iLine, nLines)
             end
 
