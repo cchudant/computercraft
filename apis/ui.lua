@@ -26,13 +26,13 @@ function ui.UIObject:__newindex(index, value)
     if index == 'margin' then
         self.marginLeft = value
         self.marginRight = value
-        self.marginTom = value
+        self.marginTop = value
         self.marginBottom = value
     elseif index == 'marginX' then
         self.marginLeft = value
         self.marginRight = value
     elseif index == 'marginY' then
-        self.marginTom = value
+        self.marginTop = value
         self.marginBottom = value
     end
     rawset(self, index, value)
@@ -127,13 +127,13 @@ function ui.Block:__newindex(index, value)
     if index == 'padding' then
         self.paddingLeft = value
         self.paddingRight = value
-        self.paddingTom = value
+        self.paddingTop = value
         self.paddingBottom = value
     elseif index == 'paddingX' then
         self.paddingLeft = value
         self.paddingRight = value
     elseif index == 'paddingY' then
-        self.paddingTom = value
+        self.paddingTop = value
         self.paddingBottom = value
     end
     ui.UIObject.__newindex(self, index, value)
