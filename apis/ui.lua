@@ -197,6 +197,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         if self.childrenDirection == 'right' then
             availableW = availableW - realW
 
+            print("? ", self, i, availableW)
             if availableW < 0 and i ~= 1 then
                 -- wrap
 
