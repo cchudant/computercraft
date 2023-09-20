@@ -7,46 +7,44 @@ local storageUI = {}
 ---@return fun() startUI
 function storageUI.runUI(term, storageConnection)
     ui.drawLoop(ui.Block:new {
-        alignContentX = 'center',
+        -- alignContentX = 'center',
         width = '100%',
         height = '100%',
+        -- alignContentX = 'begin',
         ui.Block:new {
-            alignContentX = 'begin',
-            ui.Block:new {
-                backgroundColor = colors.yellow,
-                minWidth = 20,
-                height = 1,
-                marginX = 2,
-                marginY = 1,
-            },
-            ui.Block:new {
-                backgroundColor = colors.yellow,
-                minWidth = 20,
-                height = 1,
-                marginX = 2,
-                marginY = 1,
-            },
-            ui.Block:new {
-                backgroundColor = colors.yellow,
-                minWidth = 20,
-                height = 1,
-                marginX = 2,
-                marginY = 1,
-            },
-            ui.Block:new {
-                backgroundColor = colors.yellow,
-                minWidth = 20,
-                height = 1,
-                marginX = 2,
-                marginY = 1,
-            },
-            ui.Block:new {
-                backgroundColor = colors.yellow,
-                minWidth = 20,
-                height = 1,
-                marginX = 2,
-                marginY = 1,
-            }
+            backgroundColor = colors.yellow,
+            minWidth = 20,
+            height = 1,
+            marginX = 2,
+            marginY = 1,
+        },
+        ui.Block:new {
+            backgroundColor = colors.yellow,
+            minWidth = 20,
+            height = 1,
+            marginX = 2,
+            marginY = 1,
+        },
+        ui.Block:new {
+            backgroundColor = colors.yellow,
+            minWidth = 20,
+            height = 1,
+            marginX = 2,
+            marginY = 1,
+        },
+        ui.Block:new {
+            backgroundColor = colors.yellow,
+            minWidth = 20,
+            height = 1,
+            marginX = 2,
+            marginY = 1,
+        },
+        ui.Block:new {
+            backgroundColor = colors.yellow,
+            minWidth = 20,
+            height = 1,
+            marginX = 2,
+            marginY = 1,
         }
     }, term)
 
