@@ -171,7 +171,6 @@ end
 
 ---@param self ui.Block
 local function computeContent(self, blockWidth, blockHeight, start, func)
-    print("? ", self, blockWidth, blockHeight)
     if blockWidth == nil then blockWidth = 0 end
     if blockHeight == nil then blockHeight = 0 end
     local availableW = blockWidth
@@ -188,7 +187,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         local childAvailableW = availableW - child.marginRight - child.marginLeft
         local childAvailableH = blockHeight - totalH - child.marginTop - child.marginBottom
         local w, h = child:getSize(childAvailableW, childAvailableH)
-        print("getsize", w, h, childAvailableW, childAvailableH)
+        print(self, "getsize", w, h, childAvailableW, childAvailableH)
         if w == '100%' then w = blockWidth - child.marginRight - child.marginLeft end
         if h == '100%' then h = blockHeight - child.marginTop - child.marginBottom end
 
@@ -216,7 +215,6 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
                 totalH = totalH + maxHeightThisLine
 
                 maxHeightThisLine = realH
-
 
                 availableW = availableW - realW
 
