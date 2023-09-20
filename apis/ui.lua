@@ -183,7 +183,6 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
 
     local iInLine = 0
 
-    print("newloop")
 
     for i = start or 1, #self do
         local child = self[i]
