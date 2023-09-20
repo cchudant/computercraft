@@ -200,7 +200,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
             if availableW < 0 and i ~= 1 then
                 -- wrap
 
-                print("wrap for ", self)
+                print("wrap for ", self, i)
 
                 availableW = blockWidth
 
