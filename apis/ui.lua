@@ -201,6 +201,9 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
 
                 availableW = blockWidth
 
+                totalW = math.max(widthThisLine, totalW)
+                totalH = totalH + maxHeightThisLine
+
                 childAvailableW = availableW - child.marginRight - child.marginLeft
                 childAvailableH = blockHeight - totalH - child.marginTop - child.marginBottom
                 w, h = child:getSize(childAvailableW, childAvailableH)
@@ -210,9 +213,6 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
 
                 realW = w + child.marginRight + child.marginLeft
                 realH = h + child.marginTop + child.marginBottom
-
-                totalW = math.max(widthThisLine, totalW)
-                totalH = totalH + maxHeightThisLine
 
                 maxHeightThisLine = realH
 
