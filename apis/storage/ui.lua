@@ -26,6 +26,21 @@ function storageUI.runUI(term, storageConnection)
                 end,
                 ui.Text:new { text = "Push" },
             },
+            ui.Block:new {
+                marginTop = 1,
+                marginLeft = 2,
+                paddingX = 1,
+                backgroundColor = colors.gray,
+                textColor = colors.white,
+                onClick = function()
+                    storageConnection.transfer({
+                        type = 'storeItems',
+                        source = 'minecraft:chest_20',
+                        amount = 'all',
+                    })
+                end,
+                ui.Text:new { text = "Push" },
+            },
             ui.Block:new {     -- search bar
                 ui.Text:new {
                     text = "Search:",
