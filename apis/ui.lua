@@ -188,6 +188,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         local childAvailableW = availableW - child.marginRight - child.marginLeft
         local childAvailableH = blockHeight - totalH - child.marginTop - child.marginBottom
         local w, h = child:getSize(childAvailableW, childAvailableH)
+        print("getsize", w, h, childAvailableW, childAvailableH)
         if w == '100%' then w = blockWidth - child.marginRight - child.marginLeft end
         if h == '100%' then h = blockHeight - child.marginTop - child.marginBottom end
 
@@ -204,6 +205,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
                 childAvailableW = availableW - child.marginRight - child.marginLeft
                 childAvailableH = blockHeight - totalH - child.marginTop - child.marginBottom
                 w, h = child:getSize(childAvailableW, childAvailableH)
+                print("wrap getsize", w, h, childAvailableW, childAvailableH)
                 if w == '100%' then w = blockWidth - child.marginRight - child.marginLeft end
                 if h == '100%' then h = blockHeight - child.marginTop - child.marginBottom end
 
@@ -215,7 +217,6 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
 
                 maxHeightThisLine = realH
 
-                print(realW)
 
                 availableW = availableW - realW
 
