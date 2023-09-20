@@ -15,6 +15,7 @@ function storageUI.runUI(term, storageConnection)
             height = 1,
             marginX = 2,
             marginY = 1,
+            ui.Text { text = tostring(n) }
         }, blocks(n-1)
     end
 
