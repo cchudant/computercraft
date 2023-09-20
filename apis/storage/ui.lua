@@ -6,6 +6,19 @@ local storageUI = {}
 ---@param storageConnection any
 ---@return fun() startUI
 function storageUI.runUI(term, storageConnection)
+
+    local function blocks(n)
+        if n == 0 then return end
+        return ui.Block:new {
+            backgroundColor = colors.yellow,
+            minWidth = 20,
+            height = 1,
+            marginX = 2,
+            marginY = 1,
+        }, blocks(n-1)
+    end
+
+
     ui.drawLoop(ui.Block:new {
         width = 10,
         height = 10,
@@ -46,41 +59,7 @@ function storageUI.runUI(term, storageConnection)
             alignContentX = 'center',
             ui.Block:new {
                 alignContentX = 'begin',
-                ui.Block:new {
-                    backgroundColor = colors.yellow,
-                    minWidth = 20,
-                    height = 1,
-                    marginX = 2,
-                    marginY = 1,
-                },
-                ui.Block:new {
-                    backgroundColor = colors.yellow,
-                    minWidth = 20,
-                    height = 1,
-                    marginX = 2,
-                    marginY = 1,
-                },
-                ui.Block:new {
-                    backgroundColor = colors.yellow,
-                    minWidth = 20,
-                    height = 1,
-                    marginX = 2,
-                    marginY = 1,
-                },
-                ui.Block:new {
-                    backgroundColor = colors.yellow,
-                    minWidth = 20,
-                    height = 1,
-                    marginX = 2,
-                    marginY = 1,
-                },
-                ui.Block:new {
-                    backgroundColor = colors.yellow,
-                    minWidth = 20,
-                    height = 1,
-                    marginX = 2,
-                    marginY = 1,
-                }
+                blocks(100)
             }
         }
     }, term)
