@@ -6,12 +6,12 @@ local storageUI = {}
 ---@param storageConnection any
 ---@return fun() startUI
 function storageUI.runUI(term, storageConnection)
-    ui.drawLoop(ui.Block:new {
+    local interface = ui.Block:new {
         alignContentX = 'center',
         width = '100%',
         height = '100%',
         -- alignContentX = 'begin',
-        ui.Block:new {
+        -- ui.Block:new {
             ui.Block:new {
                 backgroundColor = colors.yellow,
                 minWidth = 20,
@@ -47,8 +47,11 @@ function storageUI.runUI(term, storageConnection)
                 marginX = 2,
                 marginY = 1,
             }
-        }
-    }, term)
+        -- }
+    }
+    -- ui.drawLoop(interface, term)
+    print(interface.getSize(term.getSize()))
+    os.sleep(1000)
 
 
     ui.drawLoop(ui.Block:new {
