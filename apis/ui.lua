@@ -200,6 +200,8 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
             if availableW < 0 and i ~= 1 then
                 -- wrap
 
+                print("wrap for ", self)
+
                 availableW = blockWidth
 
                 childAvailableW = availableW - child.marginRight - child.marginLeft
@@ -340,7 +342,6 @@ local function computeFullTiling(self, blockWidth, blockHeight, contentW, conten
 
             posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
             if iInLine == 1 then
-                print("I in line is one ", align(self.alignContentY, slackH, iLine, nLines))
                 posY = posY + align(self.alignContentY, slackH, iLine, nLines)
             end
 
