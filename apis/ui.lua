@@ -171,6 +171,7 @@ end
 
 ---@param self ui.Block
 local function computeContent(self, blockWidth, blockHeight, start, func)
+    print("? ", self, blockWidth, blockHeight)
     if blockWidth == nil then blockWidth = 0 end
     if blockHeight == nil then blockHeight = 0 end
     local availableW = blockWidth
@@ -195,7 +196,6 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
 
         if self.childrenDirection == 'right' then
 
-            print("? ", self, i, availableW - realW)
             if availableW - realW < 0 and i ~= 1 then
                 -- wrap
 
