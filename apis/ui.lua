@@ -225,7 +225,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
                 availableW = availableW - realW
                 maxHeightThisLine = math.max(maxHeightThisLine, realH)
                 widthThisLine = widthThisLine + realW
-                totalW = totalW + realW
+                totalW = math.max(widthThisLine, totalW)
                 iInLine = iInLine + 1
             end
         end
