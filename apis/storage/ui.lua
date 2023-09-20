@@ -51,30 +51,35 @@ function storageUI.runUI(term, storageConnection)
                     minWidth = 20,
                     height = 1,
                     marginX = 2,
+                    marginY = 1,
                 },
                 ui.Block:new {
                     backgroundColor = colors.yellow,
                     minWidth = 20,
                     height = 1,
                     marginX = 2,
+                    marginY = 1,
                 },
                 ui.Block:new {
                     backgroundColor = colors.yellow,
                     minWidth = 20,
                     height = 1,
                     marginX = 2,
+                    marginY = 1,
                 },
                 ui.Block:new {
                     backgroundColor = colors.yellow,
                     minWidth = 20,
                     height = 1,
                     marginX = 2,
+                    marginY = 1,
                 },
                 ui.Block:new {
                     backgroundColor = colors.yellow,
                     minWidth = 20,
                     height = 1,
                     marginX = 2,
+                    marginY = 1,
                 }
             }
         }
