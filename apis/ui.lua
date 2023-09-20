@@ -220,7 +220,7 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
 
                 maxHeightThisLine = realH
 
-                availableW = 0
+                availableW = blockWidth
                 availableH = availableH - realH
 
                 widthThisLine = 0
