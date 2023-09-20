@@ -49,9 +49,9 @@ function storageUI.runUI(term, storageConnection)
             }
         -- }
     }
-    -- ui.drawLoop(interface, term)
-    print(interface:getSize(term.getSize()))
-    os.sleep(1000)
+    ui.drawLoop(interface, term)
+    -- print(interface:getSize(term.getSize()))
+    -- os.sleep(1000)
 
 
     ui.drawLoop(ui.Block:new {
