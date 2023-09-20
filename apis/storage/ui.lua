@@ -39,6 +39,16 @@ function storageUI.runUI(term, storageConnection)
                     textColor = colors.white
                 }
             }
+        },
+        ui.Block:new {
+            width = '100%',
+            height = '100%',
+            alignContentX = 'center',
+            ui.Block:new {
+                backgroundColor = colors.yellow,
+                minWidth = 20,
+                height = 1,
+            }
         }
     }, term)
 end
