@@ -1,4 +1,4 @@
-local control = require("..apis.control")
+local control = require(".apis.control")
 
 print("Finding updates...")
 local success, peers = control.autoUpdate()

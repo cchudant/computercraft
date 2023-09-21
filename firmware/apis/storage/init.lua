@@ -1,8 +1,8 @@
-local control = require("...apis.control")
-local util = require("...apis.util")
-local storageState = require("...apis.storage.state")
-local storageTransfers = require("...apis.storage.transfers")
-local storageCraft = require("...apis.storage.craft")
+local control = require("..apis.control")
+local util = require("..apis.util")
+local storageState = require("..apis.storage.state")
+local storageTransfers = require("..apis.storage.transfers")
+local storageCraft = require("..apis.storage.craft")
 
 local storage = {}
 

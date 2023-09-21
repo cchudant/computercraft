@@ -1,4 +1,4 @@
-local control = require("..apis.control")
+local control = require(".apis.control")
 
 local computerID = ...
 if computerID == nil then

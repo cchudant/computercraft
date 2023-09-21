@@ -1,5 +1,5 @@
-local util = require("...apis.util")
-local craft = require("...apis.storage.craft")
+local util = require("..apis.util")
+local craft = require("..apis.storage.craft")
 
 local storageState = {}
 

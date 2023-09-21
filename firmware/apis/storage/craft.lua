@@ -1,6 +1,6 @@
-local util = require("...apis.util")
-local control = require("...apis.control")
-local transfers = require("...apis.storage.transfers")
+local util = require("..apis.util")
+local control = require("..apis.control")
+local transfers = require("..apis.storage.transfers")
 
 local craft = {}
 

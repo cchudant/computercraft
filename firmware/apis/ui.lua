@@ -1,4 +1,4 @@
-local util = require("...apis.util")
+local util = require("..apis.util")
 
 local ui = {}
 

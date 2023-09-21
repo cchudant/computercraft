@@ -1,5 +1,5 @@
-local control = require("..apis.control")
-local mine2 = require("..apis.mine2")
+local control = require(".apis.control")
+local mine2 = require(".apis.mine2")
 
 local offsetDepth, offsetRight, offsetHeight, depth, right, height, targetFuelLevel = ...
 if offsetDepth == nil or offsetRight == nil or offsetHeight == nil or depth == nil or right == nil or height == nil or targetFuelLevel == nil then

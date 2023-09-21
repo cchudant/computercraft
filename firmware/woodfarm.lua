@@ -1,4 +1,4 @@
-local mine2 = require("..apis.mine2")
+local mine2 = require(".apis.mine2")
 
 depth = 15
 right = 10
