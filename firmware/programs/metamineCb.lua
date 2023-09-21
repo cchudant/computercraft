@@ -27,6 +27,8 @@ while turtle.getFuelLevel() < targetFuelLevel do
 	end
 end
 control.protocolBroadcast('metamine:refuelDone', nil, nonce)
+
+print("waiting for start")
 local targetFuelLevel, _, snd, nonce = control.protocolReceive('metamine:start')
 
 print(offsetDepth, offsetRight, offsetHeight, depth, right, height)
