@@ -18,6 +18,19 @@ function applyRules(turtle)
     end
 end
 
+function refuel(turtle)
+    if turtle.getFuelLevel() < 100 then
+        print("refueling ...")
+        while not mine2.selectItem(turtle, "minecraft:dried_kelp_block") do end
+        item = turtle.getItemDetail()
+        for i=1,item.count do
+            turtle.refuel()
+        end
+        print("refueling done")
+    end
+end
+
 while true do
+    refuel(turtle)
     applyRules(turtle)
 end
