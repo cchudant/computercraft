@@ -243,7 +243,7 @@ local function remoteControlTask(shell)
 				end
 			end
 			makeCodeTable('/firmware')
-			codeTable['/startup.lua'] = codeTable['/firmware/computerStartup.lua']
+			codeTable['startup.lua'] = codeTable['firmware/computerStartup.lua']
 
 			util.prettyPrint(util.objectKeys(codeTable))
 
