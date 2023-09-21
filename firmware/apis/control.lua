@@ -58,6 +58,7 @@ function control.protocolReceive(command, sender, timeout, nonce)
 
 		---@diagnostic disable-next-line: param-type-mismatch
 		local snd, message = rednet.receive(toWait)
+		util.prettyPrint(snd, message)
 
 		if type(message) == 'table' and message.protocol == control.PROTOCOL_STRING and
 				(sender == nil or sender == snd) and
@@ -343,10 +344,8 @@ end
 ---@return any? ret the return value
 function control.sendRoundtrip(sourceid, command, arg)
 	local nonce = control.newNonce()
-	util.prettyPrint("send " .. command, arg)
 	control.protocolSend(sourceid --[[@as number]], command, arg, nonce)
 	local ret = control.protocolReceive(command .. 'Rep', sourceid, nil, nonce)
-	print('answer recieved')
 	return ret
 end
 
