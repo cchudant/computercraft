@@ -253,27 +253,28 @@ local function remoteControlTask(shell)
 		end
 	}
 
-	print("control task on")
-
-	while true do
-		local args, command, sender, nonce = control.protocolReceive()
-		print("recv", command)
-		local cmd = control_commands[command]
-		-- for shutdown and reboot, send rep before running command
-		if cmd == 'shutdown' then
-			control.protocolSend(sender --[[@as number]], 'shutdownRep', nil, nonce)
-			os.shutdown()
-		elseif cmd == 'reboot' then
-			control.protocolSend(sender --[[@as number]], 'rebootRep', nil, nonce)
-			os.reboot()
-		elseif cmd == 'updateCode' then
-			control.protocolSend(sender --[[@as number]], 'updateCodeRep', nil, nonce)
-			control.autoUpdate()
-		elseif cmd ~= nil then
-			local ret = cmd(args)
-			control.protocolSend(sender --[[@as number]], command .. "Rep", ret, nonce)
+	util.parallelGroup(function (addTask)
+		while true do
+			local args, command, sender, nonce = control.protocolReceive()
+			local cmd = control_commands[command]
+			-- for shutdown and reboot, send rep before running command
+			if cmd == 'shutdown' then
+				control.protocolSend(sender --[[@as number]], 'shutdownRep', nil, nonce)
+				os.shutdown()
+			elseif cmd == 'reboot' then
+				control.protocolSend(sender --[[@as number]], 'rebootRep', nil, nonce)
+				os.reboot()
+			elseif cmd == 'updateCode' then
+				control.protocolSend(sender --[[@as number]], 'updateCodeRep', nil, nonce)
+				control.autoUpdate()
+			elseif cmd ~= nil then
+				addTask(function()
+					local ret = cmd(args)
+					control.protocolSend(sender --[[@as number]], command .. "Rep", ret, nonce)
+				end)
+			end
 		end
-	end
+	end)
 end
 
 function control.sourceTask(shell)
