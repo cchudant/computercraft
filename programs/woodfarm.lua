@@ -1,7 +1,7 @@
 local mine2 = require("apis.mine2")
 
 depth = 15
-right = 5
+right = 10
 
 while true do
 	while mine2.selectItem(turtle, 'minecraft:oak_log') do
