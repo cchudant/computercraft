@@ -185,15 +185,15 @@ local function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right,
 		west = 3,
 	}
 
-	local control = control.connectControl(id)
-	local remoteTurtle = control.turtle
+	local control_ = control.connectControl(id)
+	local remoteTurtle = control_.turtle
 	repeat
 		print("waiting for " .. id)
 	until control.waitForReady(id, 15)
 
 	local fuelRequired = mine2.digCuboidFuelRequired(depth, right, height) + (depth + math.abs(right) + math.abs(height))*2 + 100
 
-	control.protocolSend(id, 'shellRun', "/firmware/programs/metamineCb "..offsetDepth.." "..offsetRight.." "..offsetHeight.." "..depth.." "..right.." "..height.." "..fuelRequired)
+	control_.protocolSend(id, 'shellRun', "/firmware/programs/metamineCb "..offsetDepth.." "..offsetRight.." "..offsetHeight.." "..depth.." "..right.." "..height.." "..fuelRequired)
 	local function receiveGive()
 		while true do
 			control.protocolReceive('metamine:refuelGive', id)
