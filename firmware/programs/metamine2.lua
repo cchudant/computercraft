@@ -57,7 +57,7 @@ local function turtleFinishTask(id)
 		turtle.turnLeft()
 
 		local succ, detail = turtle.inspect()
-		if succ and detail.name == 'minecraft:shulker_box' then
+		if succ and (detail.name == 'minecraft:shulker_box' or detail.name == 'minecraft:chest') then
 			for i = 1,16 do 
 				local item = turtle.getItemDetail(i)
 				if item ~= nil and item.name ~= FUEL and item.name ~= TURTLE1 and item.name ~= TURTLE2 and item.name ~= SHULKER_BOX then
