@@ -9,7 +9,9 @@ local mine2 = require(".firmware.apis.mine2")
 -- depth = tonumber(depth)
 -- right = tonumber(right)
 -- height = tonumber(height)
-
+function forwardDig(turtle)
+    while not turtle.forward() do turtle.dig() end
+end
 
 function kelpHarvest(depth, right, height)
 
@@ -49,15 +51,13 @@ end
 function kelpSetup(depth, right, chunkY, chunkX)
     for i=2,chunkY do
         for j=1,depth do
-            turtle.dig()
-            turtle.forward()
+            forwardDig(turtle)
         end
     end
     turtle.turnRight()
     for i=2,chunkX do
         for j=1,right do
-            turtle.dig()
-            turtle.forward()
+            forwardDig(turtle)
         end
     end
     turtle.turnLeft()
@@ -67,15 +67,13 @@ function kelpUnSetup(depth, right, chunkY, chunkX)
     turtle.turnLeft()
     for i=2,chunkX do
         for j=1,depth do
-            turtle.dig()
-            turtle.forward()
+            forwardDig(turtle)
         end
     end
     turtle.turnLeft()
     for i=2,chunkY do
         for j=1,right do
-            turtle.dig()
-            turtle.forward()
+            forwardDig(turtle)
         end
     end
     turtle.turnLeft()
@@ -110,8 +108,7 @@ while true do
     for y=chunckDepth,1,-1 do
         for x=chunckRight,1,-1 do
             refuel()
-            turtle.dig()
-            turtle.forward()
+            forwardDig(turtle)
 
             kelpSetup(depth, right, x, y)
             kelpHarvest(depth, right, height)
