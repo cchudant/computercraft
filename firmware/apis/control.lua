@@ -341,8 +341,10 @@ end
 ---@return any? ret the return value
 function control.sendRoundtrip(sourceid, command, arg)
 	local nonce = control.newNonce()
+	util.prettyPrint("send " .. command, arg)
 	control.protocolSend(sourceid --[[@as number]], command, arg, nonce)
 	local ret = control.protocolReceive(command .. 'Rep', sourceid, nil, nonce)
+	print('answer recieved')
 	return ret
 end
 
@@ -458,7 +460,6 @@ function control.connectControl(sourceid)
 				method = method,
 				args = {...},
 			})
-			os.sleep(1)
 			return table.unpack(ret)
 		end
 	end
