@@ -111,7 +111,6 @@ local function turtleFinishTask(id)
 end
 
 local function turtleTask(id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height)
-	local control = control.connectControl(id)
 	local remoteTurtle = control.turtle
 
 	for i = 1,nLeft do
