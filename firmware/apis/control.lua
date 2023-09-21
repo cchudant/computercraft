@@ -1,3 +1,5 @@
+local util = require(".firmware.apis.util")
+
 local control = {}
 
 control.VERSION_MAJOR = 2
