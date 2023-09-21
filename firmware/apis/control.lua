@@ -245,8 +245,6 @@ local function remoteControlTask(shell)
 			makeCodeTable('/firmware')
 			codeTable['startup.lua'] = codeTable['firmware/computerStartup.lua']
 
-			util.prettyPrint(util.objectKeys(codeTable))
-
 			return {
 				files = codeTable,
 				versionMajor = control.VERSION_MAJOR,
@@ -257,7 +255,6 @@ local function remoteControlTask(shell)
 
 	while true do
 		local args, command, sender, nonce = control.protocolReceive()
-		print(command)
 		local cmd = control_commands[command]
 		-- for shutdown and reboot, send rep before running command
 		if cmd == 'shutdown' then
