@@ -58,7 +58,6 @@ function control.protocolReceive(command, sender, timeout, nonce)
 
 		---@diagnostic disable-next-line: param-type-mismatch
 		local snd, message = rednet.receive(toWait)
-		util.prettyPrint(snd, message)
 
 		if type(message) == 'table' and message.protocol == control.PROTOCOL_STRING and
 				(sender == nil or sender == snd) and
@@ -245,6 +244,8 @@ local function remoteControlTask(shell)
 			end
 			makeCodeTable('/firmware')
 			codeTable['/startup.lua'] = codeTable['/firmware/computerStartup.lua']
+
+			util.prettyPrint(util.objectKeys(codeTable))
 
 			return {
 				files = codeTable,
