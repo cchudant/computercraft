@@ -1,5 +1,5 @@
-local control = require(".apis.control")
-local mine2 = require(".apis.mine2")
+local control = require(".firmware.apis.control")
+local mine2 = require(".firmware.apis.mine2")
 
 local FUEL = 'minecraft:dried_kelp_block'
 

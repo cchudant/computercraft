@@ -1,4 +1,4 @@
-local mine2 = require(".apis.mine2")
+local mine2 = require(".firmware.apis.mine2")
 
 local depth, right, height = ...
 if depth == nil or right == nil or height == nil then
