@@ -111,22 +111,9 @@ local function turtleFinishTask(id)
 	end
 end
 
-local function turtleTask(id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height)
-	local control_ = control.connectControl(id)
-	local remoteTurtle = control_.turtle
-
-	for i = 1,nLeft do
-		remoteTurtle.turnLeft()
-	end
-	control.protocolSend(id, 'metamine:start')
-
-	print(id .. ' started')
-end
-
-
 local usedShulkers = {}
 
-local function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, height)
+local function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, height, addTask)
 
 	-- find a turtle in shulker boxes
 
@@ -217,6 +204,20 @@ local function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right,
 	while turtle.suck() do end
 
 	local nLeft = (facings[facing] - facings[detail.state.facing]) % 4
+
+	addTask(function ()
+		local control_ = control.connectControl(id)
+		local remoteTurtle = control_.turtle
+	
+		for i = 1,nLeft do
+			remoteTurtle.turnLeft()
+		end
+
+		control.sendRoundtrip(id, 'metamine:start')
+	end)
+
+	print(id .. ' started')
+
 	return { id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height }
 end
 
@@ -290,11 +291,8 @@ util.parallelGroup(function(addTask)
 				local nForChunkRight = gnForChunkRight(i)
 				offsetRight = offsetRight + nForChunkRight
 			end
-			local turtleObj = placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, gnForChunkRight(cr), gnForChunkHeight(ch))
+			local turtleObj = placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, gnForChunkRight(cr), gnForChunkHeight(ch), addTask)
 			table.insert(allTurtles, turtleObj)
-			addTask(function()
-				turtleTask(table.unpack(turtleObj))
-			end)
 		end
 	end
 end)
