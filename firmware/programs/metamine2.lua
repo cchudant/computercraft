@@ -271,7 +271,9 @@ local function gnForChunkRight(cr)
 end
 
 local allTurtles = {}
-local function startTask()
+
+local util = require('firmware.apis.util')
+util.parallelGroup(function(addTask)
 	while turtle.dig() do end
 	mine2.removeUselessItems(turtle, true)
 
@@ -290,57 +292,14 @@ local function startTask()
 			end
 			local turtleObj = placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, gnForChunkRight(cr), gnForChunkHeight(ch))
 			table.insert(allTurtles, turtleObj)
+			addTask(function()
+				turtleTask(table.unpack(turtleObj))
+			end)
 			os.queueEvent("metamine:newTurtle", turtleObj)
 		end
 	end
-end
-
-local function launchTurtlesTask(functions, finishLimit)
-	local coroutines = {}
-	local filters = {}
-
-	local finished = 0
-
-	for _, func in ipairs(functions) do
-		table.insert(coroutines, coroutine.create(func))
-	end
-
-	while finishLimit > finished do
-		local bag = {os.pullEvent()}
-		if bag[1] == "metamine:newTurtle" then
-			table.insert(coroutines, coroutine.create(function()
-				turtleTask(table.unpack(bag[2]))
-			end))
-		end
-
-		local i = 1
-		while i <= #coroutines do
-			local co = coroutines[i]
-			local filter = filters[i]
-
-			if filter == nil or filter == bag[1] or bag[1] == 'terminate' then
-				local ok, filter = coroutine.resume(co, table.unpack(bag))
-				if not ok then
-					error(filter, 0)
-				end
-				filters[i] = filter
-				if coroutine.status(co) == 'dead' then
-					table.remove(coroutines, i)
-					table.remove(filters, i)
-
-					finished = finished + 1
-				else
-					i = i + 1
-				end
-			else
-				i = i + 1
-			end
-		end
-
-	end
-end
-
-launchTurtlesTask({startTask}, nChunksHeight * nChunksRight + 1)
+end)
+-- launchTurtlesTask({startTask}, nChunksHeight * nChunksRight + 1)
 
 local tasks = {}
 for _, turtle in ipairs(allTurtles) do
