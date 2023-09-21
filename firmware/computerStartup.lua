@@ -11,7 +11,7 @@ else
 	firmwareDir = "/firmware"
 end
 
-shell.setPath(shell.path() .. ":" .. firmwareDir .. "/programs")
+shell.setPath(shell.path() .. ":" .. firmwareDir)
 
 -- fix require importing with the shell program
 -- this is a hack
