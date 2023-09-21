@@ -56,7 +56,7 @@ if offsetRight > 0 then
 	turtle.turnLeft()
 elseif offsetRight < 0 then
 	turtle.turnLeft()
-	for d = 1,offsetRight do
+	for d = 1,-offsetRight do
 		while mine2.protectedDig('front') do end
 		while not turtle.forward() do end
 	end
@@ -93,7 +93,7 @@ if offsetRight > 0 then
 	turtle.turnRight()
 elseif offsetRight < 0 then
 	turtle.turnRight()
-	for d = 1,offsetRight do
+	for d = 1,-offsetRight do
 		while mine2.protectedDig('front') do end
 		while not turtle.forward() do end
 	end
