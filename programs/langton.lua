@@ -4,17 +4,17 @@ function applyRules(turtle)
     local success, block = turtle.inspectUp()
     if block.name == nil or block.name == "minecraft:white_wool" then
         while not mine2.selectItem(turtle, "minecraft:black_wool") do end
-        turtle.turnRight()
-        turtle.digUp()
-        turtle.placeUp()
-        turtle.forward()
+        while not turtle.turnRight() do end
+        while not turtle.digUp() do end
+        while not turtle.placeUp() do end
+        while not turtle.forward() do end
     end
     if block.name == "minecraft:black_wool" then
         while not mine2.selectItem(turtle, "minecraft:white_wool") do end
-        turtle.turnLeft()
-        turtle.digUp()
-        turtle.placeUp()
-        turtle.forward()
+        while not turtle.turnLeft() do end
+        while not turtle.digUp() do end
+        while not turtle.placeUp() do end
+        while not turtle.forward() do end
     end
 end
 
