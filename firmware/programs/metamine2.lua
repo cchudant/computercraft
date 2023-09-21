@@ -1,4 +1,5 @@
 local control = require(".firmware.apis.control")
+local util = require('.firmware.apis.util')
 local mine2 = require(".firmware.apis.mine2")
 
 local FUEL = 'minecraft:dried_kelp_block'
@@ -272,7 +273,6 @@ end
 
 local allTurtles = {}
 
-local util = require('firmware.apis.util')
 util.parallelGroup(function(addTask)
 	while turtle.dig() do end
 	mine2.removeUselessItems(turtle, true)
