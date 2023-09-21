@@ -63,8 +63,6 @@ elseif offsetRight < 0 then
 	turtle.turnRight()
 end
 
-go(offsetDepth, offsetRight, offsetHeight)
-
 print("starting")
 
 mine2.digCuboid(turtle, {

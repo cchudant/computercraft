@@ -257,6 +257,7 @@ local function gnForChunkHeight(ch)
 	if ch <= math.abs(height) % nChunksHeight then
 		nForChunkHeight = nForChunkHeight + 1
 	end
+	if height < 0 then nForChunkHeight = -nForChunkHeight end
 	return nForChunkHeight
 end
 local function gnForChunkRight(cr)
@@ -264,6 +265,7 @@ local function gnForChunkRight(cr)
 	if cr <= math.abs(right) % nChunksRight then
 		nForChunkRight = nForChunkRight + 1
 	end
+	if right < 0 then nForChunkRight = -nForChunkRight end
 	return nForChunkRight
 end
 
