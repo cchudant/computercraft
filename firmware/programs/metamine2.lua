@@ -37,6 +37,8 @@ if nTurtles == 0 then
 	return
 end
 
+local usedShulkers = {}
+
 local function turtleFinishTask(id)
 	control.waitForReady(id, -1, 'metamine:back')
 
@@ -110,8 +112,6 @@ local function turtleFinishTask(id)
 		end
 	end
 end
-
-local usedShulkers = {}
 
 local function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, height, addTask)
 
