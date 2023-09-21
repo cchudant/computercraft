@@ -115,6 +115,7 @@ local function turtleTask(id, nLeft, offsetDepth, offsetRight, offsetHeight, dep
 	local control_ = control.connectControl(id)
 	local remoteTurtle = control_.turtle
 
+	print('left', nLeft)
 	for i = 1,nLeft do
 		remoteTurtle.turnLeft()
 	end
@@ -295,7 +296,6 @@ util.parallelGroup(function(addTask)
 			addTask(function()
 				turtleTask(table.unpack(turtleObj))
 			end)
-			os.queueEvent("metamine:newTurtle", turtleObj)
 		end
 	end
 end)
