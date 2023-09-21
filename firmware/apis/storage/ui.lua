@@ -1,5 +1,5 @@
-local ui = require("..apis.ui")
-local storage = require("..apis.storage")
+local ui = require(".firmware.apis.ui")
+local storage = require(".firmware.apis.storage")
 
 ---@class Button: ui.Block
 local Button = {
