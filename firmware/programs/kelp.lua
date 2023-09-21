@@ -108,7 +108,9 @@ while true do
     for y=chunckDepth,1,-1 do
         for x=chunckRight,1,-1 do
             refuel()
+            print("before")
             forwardDig(turtle)
+            print("after")
 
             kelpSetup(depth, right, x, y)
             kelpHarvest(depth, right, height)
