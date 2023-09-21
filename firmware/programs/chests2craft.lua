@@ -1,3 +1,3 @@
-local craft = require("firmware.apis.storage.craft")
+local craft = require("..apis.storage.craft")
 
 craft.craftingTurtleTask()

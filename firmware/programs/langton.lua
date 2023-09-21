@@ -1,4 +1,4 @@
-local mine2 = require("firmware.apis.mine2")
+local mine2 = require("..apis.mine2")
 
 function applyRules(turtle)
     local success, block = turtle.inspectUp()

@@ -1,7 +1,7 @@
-local ui = require("firmware.apis.ui")
-local storage = require("firmware.apis.storage")
-local storageUI = require("firmware.apis.storage.ui")
-local util = require("firmware.apis.util")
+local ui = require("..apis.ui")
+local storage = require("..apis.storage")
+local storageUI = require("..apis.storage.ui")
+local util = require("..apis.util")
 
 local item, amount = ...
 

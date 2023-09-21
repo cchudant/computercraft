@@ -47,6 +47,7 @@ shell.setPath(shell.path() .. ":" .. firmwareDir .. "/programs")
 
 -- end hack
 
+---@diagnostic disable-next-line: different-requires
 local control = require("firmware.apis.control")
 if JUST_FLASHED == nil then
 	control.autoUpdate()
