@@ -309,7 +309,7 @@ function mine2.travelCuboid(turtle, options)
 end
 
 function mine2.digCuboidFuelRequired(depth, right, height)
-	return math.ceil(depth / 3) * right * height + 200
+	return math.ceil(depth / 3) * math.abs(right) * math.abs(height) + 200
 end
 
 function mine2.protectedDig(side)

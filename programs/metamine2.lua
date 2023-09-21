@@ -3,16 +3,22 @@ local mine2 = require("apis.mine2")
 
 local FUEL = 'minecraft:dried_kelp_block'
 
-local depth, right, height, turtles, facing = ...
-if depth == nil or right == nil or height == nil or turtles == nil then
-	print("usage: metamine <depth> <right> <height> <turtles> <facing>")
-	return
-end
+local depth, right, height, nTurtles, facing = ...
 
 depth = tonumber(depth)
 right = tonumber(right)
 height = tonumber(height)
-nTurtles = tonumber(turtles)
+nTurtles = tonumber(nTurtles)
+
+if depth < 0 then
+	print("depth cannot be negative")
+	return
+end
+
+if depth == nil or right == nil or height == nil or nTurtles == nil then
+	print("usage: metamine <depth> <right> <height> <turtles> <facing>")
+	return
+end
 
 if facing ~= 'south' and facing ~= 'north' and facing ~= 'west' and facing ~= 'east' then
 	print("invalid facing")
@@ -30,7 +36,7 @@ if nTurtles == 0 then
 	return
 end
 
-function turtleFinishTask(id)
+local function turtleFinishTask(id)
 	control.waitForReady(id, -1, 'metamine:back')
 
 	print(id .. ' break')
@@ -104,7 +110,7 @@ function turtleFinishTask(id)
 	end
 end
 
-function turtleTask(id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height)
+local function turtleTask(id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height)
 	local control = control.connectControl(id)
 	local remoteTurtle = control.turtle
 
@@ -119,7 +125,7 @@ end
 
 local usedShulkers = {}
 
-function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, height)
+local function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, height)
 
 	-- find a turtle in shulker boxes
 
@@ -163,7 +169,7 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 
 	local t
 	repeat
-		sleep(0.1)
+		os.sleep(0.1)
 		t = peripheral.wrap('front')
 	until t ~= nil 
 	t.turnOn()
@@ -185,10 +191,10 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 		print("waiting for " .. id)
 	until control.waitForReady(id, 15)
 
-	local fuelRequired = mine2.digCuboidFuelRequired(depth, right, height) + (depth + right + height)*2 + 100
+	local fuelRequired = mine2.digCuboidFuelRequired(depth, right, height) + (depth + math.abs(right) + math.abs(height))*2 + 100
 
 	control.protocolSend(id, 'shellRun', "/firmware/programs/metamineCb "..offsetDepth.." "..offsetRight.." "..offsetHeight.." "..depth.." "..right.." "..height.." "..fuelRequired)
-	function receiveGive()
+	local function receiveGive()
 		while true do
 			control.protocolReceive('metamine:refuelGive', id)
 
@@ -204,7 +210,7 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 			turtle.drop()
 		end
 	end
-	function receiveDone()
+	local function receiveDone()
 		control.protocolReceive('metamine:refuelDone', id)
 	end
 
@@ -215,14 +221,14 @@ function placeTurtle(offsetDepth, offsetRight, offsetHeight, depth, right, heigh
 	return { id, nLeft, offsetDepth, offsetRight, offsetHeight, depth, right, height }
 end
 
-function findBest(nChunksRight, nChunksHeight)
+local function findBest(nChunksRight, nChunksHeight)
 	local usedTurtles = nChunksHeight * nChunksRight
 
 	local wouldUseIfChunkedRight = usedTurtles + nChunksHeight
 	local wouldUseIfChunkedHeight = usedTurtles + nChunksRight
 
-	local canChunkRight = math.ceil(right / nChunksRight) > 1 and wouldUseIfChunkedRight <= nTurtles
-	local canChunkHeight = math.ceil(height / nChunksHeight) > 1 and wouldUseIfChunkedHeight <= nTurtles
+	local canChunkRight = math.ceil(math.abs(right) / nChunksRight) > 1 and wouldUseIfChunkedRight <= nTurtles
+	local canChunkHeight = math.ceil(math.abs(height) / nChunksHeight) > 1 and wouldUseIfChunkedHeight <= nTurtles
 
 	if canChunkRight and canChunkHeight then
 		local nChunksRight1, nChunksHeight1 = findBest(nChunksRight + 1, nChunksHeight)
@@ -249,23 +255,23 @@ local nGoBackHeight = 0
 
 local turtles = {}
 
-function gnForChunkHeight(ch)
-	local nForChunkHeight = math.floor(height / nChunksHeight)
-	if ch <= height % nChunksHeight then
+local function gnForChunkHeight(ch)
+	local nForChunkHeight = math.floor(math.abs(height) / nChunksHeight)
+	if ch <= math.abs(height) % nChunksHeight then
 		nForChunkHeight = nForChunkHeight + 1
 	end
 	return nForChunkHeight
 end
-function gnForChunkRight(cr)
-	local nForChunkRight = math.floor(right / nChunksRight)
-	if cr <= right % nChunksRight then
+local function gnForChunkRight(cr)
+	local nForChunkRight = math.floor(math.abs(right) / nChunksRight)
+	if cr <= math.abs(right) % nChunksRight then
 		nForChunkRight = nForChunkRight + 1
 	end
 	return nForChunkRight
 end
 
 local allTurtles = {}
-function startTask()
+local function startTask()
 	while turtle.dig() do end
 	mine2.removeUselessItems(turtle, true)
 
@@ -289,7 +295,7 @@ function startTask()
 	end
 end
 
-function launchTurtlesTask(functions, finishLimit)
+local function launchTurtlesTask(functions, finishLimit)
 	local coroutines = {}
 	local filters = {}
 
@@ -303,7 +309,7 @@ function launchTurtlesTask(functions, finishLimit)
 		local bag = {os.pullEvent()}
 		if bag[1] == "metamine:newTurtle" then
 			table.insert(coroutines, coroutine.create(function()
-				turtleTask(unpack(bag[2]))
+				turtleTask(table.unpack(bag[2]))
 			end))
 		end
 
@@ -313,7 +319,7 @@ function launchTurtlesTask(functions, finishLimit)
 			local filter = filters[i]
 
 			if filter == nil or filter == bag[1] or bag[1] == 'terminate' then
-				local ok, filter = coroutine.resume(co, unpack(bag))
+				local ok, filter = coroutine.resume(co, table.unpack(bag))
 				if not ok then
 					error(filter, 0)
 				end
@@ -336,12 +342,12 @@ end
 
 launchTurtlesTask({startTask}, nChunksHeight * nChunksRight + 1)
 
-tasks = {}
+local tasks = {}
 for _, turtle in ipairs(allTurtles) do
-	table.insert(tasks, function() turtleFinishTask(unpack(turtle)) end)
+	table.insert(tasks, function() turtleFinishTask(table.unpack(turtle)) end)
 end
 
-parallel.waitForAll(unpack(tasks))
+parallel.waitForAll(table.unpack(tasks))
 
 print("all done")
 

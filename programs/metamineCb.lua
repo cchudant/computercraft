@@ -35,9 +35,17 @@ for d = 1,offsetDepth do
 	while mine2.protectedDig('front') do end
 	while not turtle.forward() do end
 end
-for d = 1,offsetHeight do
-	while mine2.protectedDig('up') do end
-	while not turtle.up() do end
+
+if offsetHeight >= 0 then
+	for d = 1,offsetHeight do
+		while mine2.protectedDig('up') do end
+		while not turtle.up() do end
+	end
+else
+	for d = 1,-offsetHeight do
+		while mine2.protectedDig('down') do end
+		while not turtle.down() do end
+	end
 end
 if offsetRight > 0 then
 	turtle.turnRight()
@@ -46,7 +54,16 @@ if offsetRight > 0 then
 		while not turtle.forward() do end
 	end
 	turtle.turnLeft()
+elseif offsetRight < 0 then
+	turtle.turnLeft()
+	for d = 1,offsetRight do
+		while mine2.protectedDig('front') do end
+		while not turtle.forward() do end
+	end
+	turtle.turnRight()
 end
+
+go(offsetDepth, offsetRight, offsetHeight)
 
 print("starting")
 
@@ -76,10 +93,24 @@ if offsetRight > 0 then
 		while not turtle.forward() do end
 	end
 	turtle.turnRight()
+elseif offsetRight < 0 then
+	turtle.turnRight()
+	for d = 1,offsetRight do
+		while mine2.protectedDig('front') do end
+		while not turtle.forward() do end
+	end
+	turtle.turnLeft()
 end
-for d = 1,offsetHeight do
-	while mine2.protectedDig('up') do end
-	while not turtle.up() do end
+if offsetHeight >= 0 then
+	for d = 1,offsetHeight do
+		while mine2.protectedDig('down') do end
+		while not turtle.down() do end
+	end
+else
+	for d = 1,-offsetHeight do
+		while mine2.protectedDig('up') do end
+		while not turtle.up() do end
+	end
 end
 for d = 1,offsetDepth do
 	while mine2.protectedDig('front') do end
