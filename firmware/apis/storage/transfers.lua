@@ -47,7 +47,8 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
         end
 
         -- find the item id
-        local item = state:getItemInfo(detail, true, sourcePeriph.getItemLimit(sourceSlot))
+        -- we need to getItemDetail because list() does not return maxCount
+        local item = state:getItemInfo(sourcePeriph.getItemDetail(sourceSlot), true)
         local itemID = item.id
 
         if (not reqItemIDs or util.arrayContains(reqItemIDs, itemID))
