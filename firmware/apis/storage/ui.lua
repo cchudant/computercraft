@@ -102,16 +102,13 @@ function storageUI.runUI(term, getStorageConnection)
         mount = function(self, term)
             term.addTask(function ()
                 storageConnection = getStorageConnection()
-                print("connected 2")
                 term.close()
             end)
         end
     }, term)
 
-    print(2)
-
     local itemsBlock, onTextChange = itemView(storageConnection, function (item)
-        return ui.Block:new {
+        return Button:new {
             width = 25,
             height = 1,
             alignContentX = "spaceBetween",
