@@ -447,7 +447,7 @@ end
 
 function ui.Block:onClick(term, x, y, button, requestedW, requestedH)
     local child, relX, relY = findChildAt(self, x, y, requestedW, requestedH)
-    print("click", x, y, child)
+    print(child, x, y, relX, relY)
     if child then
         child:onClick(term, relX, relY, button, requestedW, requestedH)
     end
