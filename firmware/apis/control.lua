@@ -749,7 +749,7 @@ function control.makeServer(methods, protocol, serverID)
 							end
 						end)
 					else
-						answer(false, "No such method")
+						-- answer(false, "No such method")
 					end
 				end
 
