@@ -722,7 +722,7 @@ function control.makeServer(methods, protocol, serverID)
 							currentlyAnswering[connectionID] = (currentlyAnswering[connectionID] or 0) + 1
 
 							if protected then
-								local ret = xpcall(func, debug.traceback, connectionID, table.unpack(args, 1, args.n))
+								local ret = table.pack(xpcall(func, debug.traceback, connectionID, table.unpack(args, 1, args.n)))
 								if ret[1] then
 									answer(true, table.unpack(ret, 2, ret.n))
 								else
