@@ -215,10 +215,10 @@ function storage.newStorageServer(settings, serverID)
         local i = 1
         while (not limit or #ret < limit) and i < #state.itemIDAmountsSorted do
             local tuple = state.itemIDAmountsSorted[i]
-            local name = state:itemIDToItemInfo(tuple[1])
-            local strippedItem = stripped(name)
+            local item = state:itemIDToItemInfo(tuple[1])
+            local strippedItem = stripped(item.name)
             if util.stringStartsWith(strippedItem, stripped(fuzzySearch)) then
-                table.insert(ret, { displayName = strippedItem, name = name, amount = tuple[2] })
+                table.insert(ret, { displayName = strippedItem, name = item.name, amount = tuple[2] })
             end
         end
         print(ret)
