@@ -698,14 +698,14 @@ function control.makeServer(methods, protocol, serverID)
 						lastKeepAlives[connectionID] = os.clock()
 					elseif method == "subscribeEvent" then
 						connectionIDs[connectionID] = sender
-						if args.args[1] == nil then
+						if args[1] == nil then
 							answer(false, "no event provided")
 						else
 							server.subscribeEvent(connectionID, args[1])
 							answer(true)
 						end
 					elseif method == "unsubscribeEvent" then
-						if args.args[1] == nil then
+						if args[1] == nil then
 							answer(false, "no event provided")
 						else
 							server.unsubscribeEvent(connectionID, args[1])
