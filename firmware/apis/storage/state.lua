@@ -612,7 +612,7 @@ function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount
             local chestObj = peripheral.wrap(chest.name)
 
             chestObj.pushItems(destName, chestSlot, maxCount, destSlot)
-            self:updateAmount(itemID, (self.itemIDToAmounts[itemID] or 0) + maxCount)
+            self:updateAmount(itemID, (self.itemIDToAmounts[itemID] or 0) - maxCount)
 
             table.insert(slots, firstNonStackI, slotID)
             self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI + 1
