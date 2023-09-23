@@ -29,6 +29,7 @@ function Button:onClick(termObj)
         self.active = false
         self.backgroundColor = self.unactiveBackgroundColor
         self.textColor = self.unactiveTextColor
+        print('remove', self.unactiveBackgroundColor)
         termObj.setNeedsRedraw()
     end, self.activeDuration)
     self:onPress(termObj)
