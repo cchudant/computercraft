@@ -2,6 +2,8 @@ local ui = require(".firmware.apis.ui")
 local util = require(".firmware.apis.util")
 local storage = require(".firmware.apis.storage")
 
+local retrieveChest = 'minecraft:chest_26'
+
 ---@class Button: ui.Block
 local Button = {
     backgroundColor = colors.gray,
@@ -20,7 +22,6 @@ function Button:new(o)
 end
 function Button:onPress(termObj) end
 function Button:onClick(termObj)
-    print("click")
     self.active = true
     self.backgroundColor = self.activeBackgroundColor
     self.textColor = self.activeTextColor
@@ -96,6 +97,7 @@ local storageUI = {}
 ---@param getStorageConnection fun(): StorageConnection
 ---@return fun() startUI
 function storageUI.runUI(term, getStorageConnection)
+    ---@type StorageConnection
     local storageConnection
     ui.drawLoop(ui.Text:new {
         text = 'loading...',
@@ -116,6 +118,16 @@ function storageUI.runUI(term, getStorageConnection)
             height = 1,
             alignContentX = "spaceBetween",
             marginX = 0.5,
+            onPress = function(self, term)
+                term.addTask(function()
+                    storageConnection.transfer({
+                        type = "retrieveItems",
+                        name = item.name,
+                        amount = 'stack',
+                        destination = retrieveChest,
+                    })
+                end)
+            end,
             ui.Text:new { text = item.displayName },
             ui.Text:new { text = tostring(item.count) },
         }
@@ -131,7 +143,14 @@ function storageUI.runUI(term, getStorageConnection)
             Button:new {
                 marginLeft = 2,
                 paddingX = 1,
-                onPress = function()
+                onPress = function(self, term)
+                    term.addTask(function()
+                        storageConnection.transfer({
+                            type = "storeItems",
+                            amount = 'all',
+                            source = retrieveChest
+                        })
+                    end)
                 end,
                 ui.Text:new { text = "Push" },
             },
