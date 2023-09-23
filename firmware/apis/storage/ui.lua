@@ -91,6 +91,8 @@ function storageUI.runUI(term, getStorageConnection)
         end
     }, term)
 
+    print(2)
+
     local itemsBlock, onTextChange = itemView(storageConnection, function (item)
         return ui.Block:new {
             width = 25,
