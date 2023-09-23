@@ -621,6 +621,8 @@ function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount
             table.insert(slots, firstNonStackI, slotID)
             self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI + 1
 
+            print("end", self.itemIDToSlotsFirstNonStackI[itemID])
+
             return true, nil, maxCount
         end
     end
