@@ -14,9 +14,9 @@ local Button = {
 Button = ui.Block:new(Button)
 function Button:new(o)
     ui.Block.new(self, o)
-    self.unactiveBackgroundColor = self.backgroundColor
-    self.unactiveTextColor = self.textColor
-    print(self.backgroundColor)
+    self.unactiveBackgroundColor = o.backgroundColor
+    self.unactiveTextColor = o.textColor
+    print(o.backgroundColor)
     return o
 end
 function Button:onPress(termObj) end
