@@ -95,6 +95,7 @@ function storageUI.runUI(term, storageConnection)
     local interface = ui.Block:new {
         width = 10,
         height = 10,
+        backgroundColor = colors.black,
         ui.Block:new {
             width = '100%',
             alignContentX = 'spaceBetween',
