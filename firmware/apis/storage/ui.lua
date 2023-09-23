@@ -12,12 +12,23 @@ local Button = {
     activeTextColor = colors,
 }
 Button = ui.Block:new(Button)
+function Button:new(o)
+    ui.UIObject.new(self, o)
+    self.unactiveBackgroundColor = self.backgroundColor
+    self.unactiveTextColor = self.textColor
+    return o
+end
 function Button:onPress(termObj) end
 function Button:onClick(termObj)
+    print("click")
     self.active = true
+    self.backgroundColor = self.activeBackgroundColor
+    self.textColor = self.activeTextColor
     termObj.setNeedsRedraw()
     termObj.scheduleDelayed(function ()
         self.active = false
+        self.backgroundColor = self.unactiveBackgroundColor
+        self.textColor = self.unactiveTextColor
         termObj.setNeedsRedraw()
     end, self.activeDuration)
     self:onPress(termObj)
