@@ -85,9 +85,11 @@ function storageUI.runUI(term, getStorageConnection)
     ui.drawLoop(ui.Text:new {
         text = 'loading...',
         mount = function(self, term)
-            storageConnection = getStorageConnection()
-            print("connected")
-            term.close()
+            term.addTask(function ()
+                storageConnection = getStorageConnection()
+                print("connected")
+                term.close()
+            end)
         end
     }, term)
 
