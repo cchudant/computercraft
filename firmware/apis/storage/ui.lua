@@ -87,8 +87,13 @@ function storageUI.runUI(term, storageConnection)
     local itemsBlock, onTextChange = itemView(storageConnection, function (item)
         return ui.Block:new {
             width = 20,
+            height = 1,
             alignContentX = "spaceBetween",
             marginX = 1,
+            draw = function(...)
+                util.prettyPrint(...)
+                ui.Block.draw(...)
+            end,
             ui.Text:new { text = item.displayName },
             ui.Text:new { text = tostring(item.count) },
         }
