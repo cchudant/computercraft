@@ -221,7 +221,6 @@ function storage.newStorageServer(settings, serverID)
                 table.insert(ret, { displayName = strippedItem, name = item.name, amount = tuple[2] })
             end
         end
-        print(ret)
         return ret
     end
 
