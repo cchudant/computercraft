@@ -614,6 +614,7 @@ function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount
             local chest, chestSlot = self:getStorageChestFromSlotID(slotID)
             local chestObj = peripheral.wrap(chest.name)
 
+            print("d", destName, chestSlot, maxCount, destSlot)
             chestObj.pushItems(destName, chestSlot, maxCount, destSlot)
             self:updateAmount(itemID, (self.itemIDToAmounts[itemID] or 0) - maxCount)
 
