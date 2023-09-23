@@ -38,6 +38,7 @@ function itemView(storageConnection, makeChild)
         return table.unpack(children)
     end
 
+    local block
     local function task(term)
         storageConnection.listTopItems(
             '',
@@ -45,12 +46,12 @@ function itemView(storageConnection, makeChild)
             function(items)
                 itemsInStorage = items
                 term.setNeedsRedraw()
-                self.replaceChildren(term, createChildren())
+                block.replaceChildren(term, createChildren())
             end
         )
     end
 
-    local block = ui.Block:new {
+    block = ui.Block:new {
         mount = function(self, term)
             self.task = term.addTask(function() task(term) end)
             ui.Block.mount(self, term)
