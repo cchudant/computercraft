@@ -16,7 +16,6 @@ function Button:new(o)
     ui.Block.new(self, o)
     o.unactiveBackgroundColor = o.backgroundColor
     o.unactiveTextColor = o.textColor
-    print(o.backgroundColor)
     return o
 end
 function Button:onPress(termObj) end
@@ -29,7 +28,6 @@ function Button:onClick(termObj)
     termObj.scheduleDelayed(function ()
         self.active = false
         self.backgroundColor = self.unactiveBackgroundColor
-        print(self.unactiveBackgroundColor)
         self.textColor = self.unactiveTextColor
         termObj.setNeedsRedraw()
     end, self.activeDuration)
