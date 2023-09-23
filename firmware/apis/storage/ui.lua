@@ -24,6 +24,8 @@ end
 function itemView(storageConnection, makeChild)
     local itemsInStorage = nil
 
+    local search = ''
+
     local function createChildren()
         if itemsInStorage == nil then
             return ui.Text { text = "loading..." }
@@ -36,25 +38,39 @@ function itemView(storageConnection, makeChild)
         return table.unpack(children)
     end
 
+    local function task(term)
+        storageConnection.listTopItems(
+            '',
+            20,
+            function(items)
+                itemsInStorage = items
+                term.setNeedsRedraw()
+                self.replaceChildren(term, createChildren())
+            end
+        )
+    end
+
     local block = ui.Block:new {
         mount = function(self, term)
-            self.task = term.addTask(storageConnection.listTopItems(
-                20,
-                function(items)
-                    itemsInStorage = items
-                    term.setNeedsRedraw()
-                    self.replaceChildren(term, createChildren())
-                end
-            ))
+            self.task = term.addTask(function() task(term) end)
             ui.Block.mount(self, term)
         end,
-        unmount = function(self, term)
+        unMount = function(self, term)
             term.removeTask(self.task)
+            ui.Block.unMount(self, term)
         end,
         createChildren()
     }
 
-    return block
+    local function onTextChange(term, newText)
+        search = newText
+        if block.task then
+            term.removeTask(block.task)
+            block.task = term.addTask(function() task(term) end)
+        end
+    end
+
+    return block, onTextChange
 end
 
 local storageUI = {}
@@ -62,8 +78,18 @@ local storageUI = {}
 ---@param storageConnection StorageConnection
 ---@return fun() startUI
 function storageUI.runUI(term, storageConnection)
-    
-    ui.drawLoop(ui.Block:new {
+
+    local itemsBlock, onTextChange = itemView(storageConnection, function (item)
+        return ui.Block:new {
+            width = 20,
+            alignContentX = "spaceBetween",
+            marginX = 1,
+            ui.Text { text = item.name },
+            ui.Text { text = tostring(item.count) },
+        }
+    end)
+
+    local interface = ui.Block:new {
         width = 10,
         height = 10,
         ui.Block:new {
@@ -86,24 +112,21 @@ function storageUI.runUI(term, storageConnection)
                     width = 20,
                     height = 1,
                     backgroundColor = colors.lightGray,
-                    textColor = colors.white
+                    textColor = colors.white,
+                    onChange = function(self, newText)
+                        onTextChange(term, newText)
+                    end
                 }
             }
         },
         ui.Block:new {
             width = '100%',
             height = '100%',
-            itemView(storageConnection, function (item)
-                return ui.Block:new {
-                    width = 20,
-                    alignContentX = "spaceBetween",
-                    marginX = 1,
-                    ui.Text { text = item.name },
-                    ui.Text { text = tostring(item.count) },
-                }
-            end)
+            itemsBlock
         }
-    }, term)
+    }
+    
+    ui.drawLoop(interface, term)
 end
 
 return storageUI

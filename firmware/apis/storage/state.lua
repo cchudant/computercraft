@@ -19,24 +19,27 @@ local function findChests()
 end
 
 ---@class ObserverManager: Object
-local ObserverManager = {
+local AmountsObserverManager = {
     ---@type StorageState
     state = nil,
     ---@type { [number]: ObserverFunc[]? }
-    observers = {}
+    observers = {},
+    ---@type GlobalObserverFunc[]
+    globalObservers = {},
 }
-storageState.ObserverManager = util.makeClass(ObserverManager)
-function ObserverManager.new(state)
-    return ObserverManager.construct {
+storageState.ObserverManager = util.makeClass(AmountsObserverManager)
+function AmountsObserverManager.new(state)
+    return AmountsObserverManager.construct {
         state = state,
     } --[[@as ObserverManager]]
 end
 
 ---@alias ObserverFunc fun(state: StorageState, amountChange: number): boolean
+---@alias GlobalObserverFunc fun(state: StorageState, balance: { [number]: number }): boolean
 
 ---Func needs to return true to be kept alive
 ---@param func ObserverFunc
-function ObserverManager:observe(itemIDs, func)
+function AmountsObserverManager:observe(itemIDs, func)
     for _, itemID in ipairs(itemIDs) do
         local observers = self.observers[itemID]
         if observers == nil then
@@ -47,15 +50,28 @@ function ObserverManager:observe(itemIDs, func)
     end
 end
 
-function ObserverManager:triggerObservers(itemID, amountChange)
-    if amountChange == 0 then return end
-    local observers = self.observers[itemID]
-    if observers then
-        util.arrayRemoveIf(observers, function (func)
-            local continue = func(self.state, amountChange)
-            return not continue
-        end)
-        if #observers == 0 then self.observers[itemID] = nil end
+---Func needs to return true to be kept alive
+---@param func GlobalObserverFunc
+function AmountsObserverManager:observeGlobal(func)
+    table.insert(self.globalObservers, func)
+end
+
+function AmountsObserverManager:triggerTransaction(balance)
+    util.arrayRemoveIf(self.globalObservers, function(func)
+        local continue = func(self.state, balance)
+        return not continue
+    end)
+    for itemID, amountChange in pairs(balance) do
+        if amountChange ~= 0 then
+            local observers = self.observers[itemID]
+            if observers then
+                util.arrayRemoveIf(observers, function(func)
+                    local continue = func(self.state, amountChange)
+                    return not continue
+                end)
+                if #observers == 0 then self.observers[itemID] = nil end
+            end
+        end
     end
 end
 
@@ -116,6 +132,8 @@ local StorageState = {
         -- [itemID] = number of items
     },
 
+    itemIDAmountsSorted = {},
+
     -- slotID[]
     -- should be poped/pushed from the back
     ---@type number[]
@@ -124,10 +142,8 @@ local StorageState = {
     ---@type CraftManager?
     craftManager = nil,
 
-    isUp = false,
-
     ---@type ObserverManager
-    observers = nil,
+    amountObservers = nil,
 
     -- end storage state
 }
@@ -151,9 +167,8 @@ function StorageState.new(storageID)
         itemIDToAmounts = {},
         emptySlots = {},
         craftManager = nil,
-        isUp = false,
     } --[[@as StorageState]]
-    state.observers = ObserverManager:new()
+    state.amountObservers = AmountsObserverManager:new()
     return state
 end
 
@@ -367,6 +382,11 @@ function StorageState:initialStateSetup(settings)
         end
     end
 
+    self.itemIDAmountsSorted = util.objectEntries(self.itemIDToAmounts)
+    table.sort(self.itemIDAmountsSorted, function(a, b)
+        return b < a
+    end)
+
     -- sort items slots
     for _, slots in pairs(self.itemIDToSlots) do
         local amounts = {} -- [slotid]: number of items
@@ -449,6 +469,14 @@ function StorageState:openNonStorage(periph)
         return nil, "destination is not an inventory"
     end
     return destinationPeriph
+end
+
+function StorageState:updateAmount(itemID, newAmount)
+    local function compare(a, b) return b < a end
+    local function equal(a, b) return a[1] == b[1] end
+    util.sortedRemove(self.itemIDAmountsSorted, { itemID, self.itemIDToAmounts[itemID] }, compare, equal)
+    self.itemIDToAmounts[itemID] = newAmount
+    util.sortedInsert(self.itemIDAmountsSorted, { itemID, newAmount }, compare)
 end
 
 ---@class Paging
@@ -560,7 +588,7 @@ function StoragePointer:storeItems(amount, sourceName, sourceSlot)
         local chestObj = peripheral.wrap(chest.name)
 
         chestObj.pullItems(sourceName, sourceSlot, self.maxCount, chestSlot)
-        self.state.itemIDToAmounts[self.itemID] = (self.state.itemIDToAmounts[self.itemID] or 0) + self.maxCount
+        self.state:updateAmount(self.itemID, (self.state.itemIDToAmounts[self.itemID] or 0) + self.maxCount)
 
         table.insert(slots, self.firstNonStackI, slotID)
         self.firstNonStackI = self.firstNonStackI + 1
@@ -588,7 +616,7 @@ function StoragePointer:storeItems(amount, sourceName, sourceSlot)
             self.firstNonStackI = i + 1
         end
         chestObj.pullItems(sourceName, sourceSlot, toTransfer, chestSlot)
-        self.state.itemIDToAmounts[self.itemID] = (self.state.itemIDToAmounts[self.itemID] or 0) + toTransfer
+        self.state:updateAmount(self.itemID, (self.state.itemIDToAmounts[self.itemID] or 0) + toTransfer)
     end
 
     -- occupy empty slots!
@@ -607,7 +635,7 @@ function StoragePointer:storeItems(amount, sourceName, sourceSlot)
             totalTransfered = totalTransfered + toTransfer
 
             chestObj.pullItems(sourceName, sourceSlot, toTransfer, chestSlot)
-            self.state.itemIDToAmounts[self.itemID] = (self.state.itemIDToAmounts[self.itemID] or 0) + toTransfer
+            self.state:updateAmount(self.itemID, (self.state.itemIDToAmounts[self.itemID] or 0) + toTransfer)
 
             table.insert(slots, slotID)
             if toTransfer == self.maxCount then
@@ -642,7 +670,7 @@ function StoragePointer:retrieveItems(amount, destName, destSlot)
             local chestObj = peripheral.wrap(chest.name)
 
             chestObj.pushItems(destName, chestSlot, self.maxCount, destSlot)
-            self.state.itemIDToAmounts[self.itemID] = (self.state.itemIDToAmounts[self.itemID] or 0) + self.maxCount
+            self.state:updateAmount(self.itemID, (self.state.itemIDToAmounts[self.itemID] or 0) + self.maxCount)
 
             table.insert(slots, self.firstNonStackI, slotID)
             self.firstNonStackI = self.firstNonStackI + 1
@@ -666,7 +694,7 @@ function StoragePointer:retrieveItems(amount, destName, destSlot)
         local toTransfer = math.min(inSlotAmount, amount - totalTransfered)
         totalTransfered = totalTransfered + toTransfer
         chestObj.pushItems(destName, chestSlot, toTransfer, destSlot)
-        self.state.itemIDToAmounts[self.itemID] = (self.state.itemIDToAmounts[self.itemID] or 0) - toTransfer
+        self.state:updateAmount(self.itemID, (self.state.itemIDToAmounts[self.itemID] or 0) - toTransfer)
         if inSlotAmount == self.maxCount and self.firstNonStackI ~= nil then
             self.firstNonStackI = self.firstNonStackI - 1
         end

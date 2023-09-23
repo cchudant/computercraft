@@ -5,13 +5,11 @@ local control = {}
 control.VERSION_MAJOR = 2
 
 if fs ~= nil then
-
 	local file = fs.open("/firmware/commits", "r") --[[@as ReadHandle]]
 	local commits = file.readAll()
 	commits = string.gsub(commits --[[@as string]], "%s+", "")
-	
+
 	control.VERSION_MINOR = tonumber(commits)
-	
 else
 	control.VERSION_MINOR = 2 -- this is for unit tests
 end
@@ -21,7 +19,7 @@ control.PROTOCOL_STRING = 'CONTROL'
 
 local function isVersionGreater(versionMajorA, versionMinorA, versionMajorB, versionMinorB)
 	return versionMajorA > versionMajorB or
-			(versionMajorA == versionMajorB and versionMinorA > versionMinorB)
+		(versionMajorA == versionMajorB and versionMinorA > versionMinorB)
 end
 
 local _isSetup = false
@@ -29,7 +27,7 @@ local function setupModem()
 	if _isSetup then return end
 	_isSetup = true
 
-	for _,per in ipairs(peripheral.getNames()) do
+	for _, per in ipairs(peripheral.getNames()) do
 		local a, b = peripheral.getType(per)
 		if a == "modem" and b == nil then -- no wired modems :)
 			rednet.open(per)
@@ -60,9 +58,9 @@ function control.protocolReceive(command, sender, timeout, nonce)
 		local snd, message = rednet.receive(toWait)
 
 		if type(message) == 'table' and message.protocol == control.PROTOCOL_STRING and
-				(sender == nil or sender == snd) and
-				(command == nil or message.command == command) and
-				(nonce == nil or message.nonce == nonce) then
+			(sender == nil or sender == snd) and
+			(command == nil or message.command == command) and
+			(nonce == nil or message.nonce == nonce) then
 			return message.args, message.command, snd, message.nonce
 		end
 
@@ -126,11 +124,11 @@ local function remoteTermSourceTask(shell)
 			local termObj = {}
 			local native = term.native()
 
-			for _,method in ipairs(methods) do
+			for _, method in ipairs(methods) do
 				termObj[method] = function(...)
 					control.protocolSend(clientid --[[@as number]], 'term', {
 						method = method,
-						args = {...},
+						args = { ... },
 					}, nonce)
 					return native[method](...)
 				end
@@ -173,11 +171,11 @@ function control.remoteTermClient(sourceid)
 	end
 	local function taskSend()
 		while true do
-			local bag = {os.pullEvent()}
+			local bag = { os.pullEvent() }
 			local event = bag[1]
 			local args = {}
-			for i = 2,#bag do
-				args[i-1] = bag[i]
+			for i = 2, #bag do
+				args[i - 1] = bag[i]
 			end
 
 			local all_events = {
@@ -186,7 +184,7 @@ function control.remoteTermClient(sourceid)
 				"term_resize"
 			}
 
-			for _,ev in pairs(all_events) do
+			for _, ev in pairs(all_events) do
 				if ev == event and sourceid ~= nil then
 					control.protocolSend(sourceid, 'termEvent', {
 						event = ev,
@@ -220,7 +218,7 @@ local function remoteControlTask(shell)
 		end,
 		shellRun = function(arg) return shell.run(arg) end,
 		turtle = function(arg)
-			if not turtle then return end 
+			if not turtle then return end
 			if type(arg.method) == 'string' and type(arg.args) == 'table' then
 				return table.pack(turtle[arg.method](table.unpack(arg.args)))
 			end
@@ -231,7 +229,7 @@ local function remoteControlTask(shell)
 		getUpdate = function(arg)
 			local codeTable = {}
 			local function makeCodeTable(path)
-				for i,el in ipairs(fs.list(path)) do
+				for i, el in ipairs(fs.list(path)) do
 					local fullpath = fs.combine(path, el)
 					if fs.isDir(fullpath) then
 						makeCodeTable(fullpath)
@@ -253,7 +251,7 @@ local function remoteControlTask(shell)
 		end
 	}
 
-	util.parallelGroup(function (addTask)
+	util.parallelGroup(function(addTask)
 		while true do
 			local args, command, sender, nonce = control.protocolReceive()
 			local cmd = control_commands[command]
@@ -358,7 +356,7 @@ function control.listAvailable(timeout)
 	local reps = control.broadcastCommandRoundtrip('identify', nil, timeout)
 
 	local available = {}
-	for _,rep in ipairs(reps) do
+	for _, rep in ipairs(reps) do
 		if rep.args ~= nil then
 			rep.args.id = rep.id
 			table.insert(available, handleIdentify(rep.args))
@@ -375,10 +373,10 @@ end
 function control.autoUpdate(timeout)
 	local reps = control.broadcastCommandRoundtrip('currentUpdate', nil, timeout)
 
-	local maxVer = {versionMajor = control.VERSION_MAJOR, versionMinor = control.VERSION_MINOR}
-	for _,rep in ipairs(reps) do
+	local maxVer = { versionMajor = control.VERSION_MAJOR, versionMinor = control.VERSION_MINOR }
+	for _, rep in ipairs(reps) do
 		if rep.args ~= nil and
-				isVersionGreater(rep.args.versionMajor, rep.args.versionMinor, maxVer.versionMajor, maxVer.versionMinor) then
+			isVersionGreater(rep.args.versionMajor, rep.args.versionMinor, maxVer.versionMajor, maxVer.versionMinor) then
 			maxVer = rep.args
 			maxVer.id = rep.id
 		end
@@ -389,7 +387,7 @@ function control.autoUpdate(timeout)
 		local rep = control.sendRoundtrip(maxVer.id, 'getUpdate')
 
 		-- apply update
-		for k,v in pairs(rep.files) do
+		for k, v in pairs(rep.files) do
 			local function mkdirs(path)
 				if path == '' then return end
 				mkdirs(fs.getDir(path))
@@ -438,7 +436,6 @@ function control.waitForReady(sourceid, timeout, command, args)
 	return rep
 end
 
-
 ---Remote control a computer
 ---@param sourceid number the computer id
 ---@return ConnectControl
@@ -456,12 +453,12 @@ function control.connectControl(sourceid)
 	---@class TurtleControl
 	---@field id number
 	local turtle = { id = sourceid }
-	for _,method in ipairs(turtleFunctions) do
+	for _, method in ipairs(turtleFunctions) do
 		---@diagnostic disable-next-line: assign-type-mismatch
 		turtle[method] = function(...)
 			local ret = control.sendRoundtrip(sourceid, 'turtle', {
 				method = method,
-				args = {...},
+				args = { ... },
 			})
 			return table.unpack(ret)
 		end
@@ -472,7 +469,7 @@ function control.connectControl(sourceid)
 	---@field turtle TurtleControl
 	local control = {
 		id = sourceid,
-		identify = function() 
+		identify = function()
 			local args = control.sendRoundtrip(sourceid, 'identify')
 			return handleIdentify(args)
 		end,
@@ -482,6 +479,351 @@ function control.connectControl(sourceid)
 		turtle = turtle
 	}
 	return control
+end
+
+---@generic T
+---@return control.Connection<T>
+local function makeConnection(protocol, serverID, pullEvent, sendEvent)
+	local connectionID = util.newNonce()
+	local fullProtocolString = protocol
+	if serverID then fullProtocolString = fullProtocolString .. ":" .. serverID end
+
+	local function roundtripRpc(method, ...)
+		local nonce = util.newNonce()
+		sendEvent(fullProtocolString, method, nonce, connectionID, table.pack(...))
+		while true do
+			local fullProtocolString2, method2, nonce2, connectionID2, args = pullEvent(fullProtocolString)
+			if fullProtocolString == fullProtocolString2
+				and method == method2
+				and nonce == nonce2
+				and connectionID == connectionID2
+				and type(args) == 'table'
+			then
+				local success, err = table.unpack(args, 1, 2)
+				if not success then
+					error("Server returned error: " .. err)
+				end
+				return table.unpack(args, 2, args.n)
+			end
+		end
+	end
+
+	---@class control.Connection<T>: {}|T
+	local connection = {}
+	setmetatable(connection, {
+		__index = function(_, method)
+			return function(...)
+				return roundtripRpc(method, ...)
+			end
+		end
+	})
+
+	function connection.subscribeEvent(event)
+		roundtripRpc("subscribeEvent", event)
+	end
+
+	function connection.unsubscribeEvent(event)
+		roundtripRpc("unsubscribeEvent", event)
+	end
+
+	function connection.close(event)
+		roundtripRpc("close", event)
+	end
+
+	---@param filter string?
+	---@return string event
+	---@return any ...
+	function connection.pullEvent(filter)
+		while true do
+			local fullProtocolString2, method2, _, connectionID2, args = pullEvent(fullProtocolString)
+			if fullProtocolString == fullProtocolString2
+				and "event" == method2
+				and connectionID == connectionID2
+				and type(args) == 'table'
+				and type(args[1]) == 'string'
+				and (filter == nil or filter == args[1])
+			then
+				return table.unpack(args, 1, args.n)
+			end
+		end
+	end
+
+	return connection
+end
+
+---@return control.Connection
+function control.localConnect(protocol, serverID)
+	local function pullEvent(fullProtocolString)
+		local fullProtocolString, method, nonce, connectionID, args = os.pullEvent(fullProtocolString)
+		return fullProtocolString, method, nonce, connectionID, args
+	end
+	local function sendEvent(fullProtocolString, method, nonce, connectionID, args)
+		os.queueEvent(fullProtocolString, method, nonce, connectionID, args)
+	end
+
+	return makeConnection(protocol, serverID, pullEvent, sendEvent)
+end
+
+---@return control.Connection
+function control.remoteConnect(protocol, computerID, serverID)
+	local function pullEvent(fullProtocolString)
+		while true do
+			local sender, message = rednet.receive(nil, fullProtocolString)
+			if type(message) == 'table' and sender == computerID then
+				return fullProtocolString, message.method, message.nonce, message.connectionID, message.args
+			end
+		end
+	end
+	local function sendEvent(fullProtocolString, method, nonce, connectionID, args)
+		rednet.send(computerID, {
+			protocol = fullProtocolString,
+			method = method,
+			nonce = nonce,
+			connectionID = connectionID,
+			args = args,
+		}, fullProtocolString)
+	end
+
+	return makeConnection(protocol, serverID, pullEvent, sendEvent)
+end
+
+---@param methods { [string]: fun(connectionID: string, ...) }
+---@param protocol string
+---@param serverID string?
+---@return fun(...: fun(addTask: fun(...: fun()))) startServer
+---@return control.Server server
+---@return fun(): control.Connection getLocalConnection
+function control.makeServer(methods, protocol, serverID)
+	---@class control.Server
+	local server = {
+		---@type boolean
+		isUp = false,
+	}
+
+	local protected = true
+
+	---@type { [string]: string[] } event => connectionID[]
+	local eventsSubscribed = {}
+	---@type { [string]: number } { [connectionID]: number of requests }
+	local currentlyAnswering = {}
+	---@type { [string]: number|'local' } connectionID => sender id / 'local'
+	local connectionIDs = {}
+
+	---@type { [string]: number } connectionID => os.clock() time
+	local lastKeepAlives = {}
+
+	local fullProtocolString = protocol
+	if serverID then fullProtocolString = fullProtocolString .. ":" .. serverID end
+
+	local function sendTo(connectionID, nonce, method, ...)
+		local sender = connectionIDs[connectionID]
+		if sender == nil then error("connectionID is not connected", 2) end
+		if sender == 'local' then
+			os.queueEvent(fullProtocolString, method, nonce, connectionID, table.pack(...))
+		else
+			rednet.send(sender, {
+				protocol = fullProtocolString,
+				method = method,
+				nonce = nonce,
+				connectionID = connectionID,
+				args = table.pack(...),
+			}, fullProtocolString)
+		end
+	end
+
+	function server.triggerEvent(event, ...)
+		local subs = eventsSubscribed[event]
+		if subs ~= nil then
+			for _, connectionID in ipairs(subs) do
+				sendTo(connectionID, nil, "event", event, ...)
+			end
+		end
+	end
+
+	function server.subscribeEvent(connectionID, event)
+		local subs = eventsSubscribed[event]
+		if subs == nil then
+			subs = {}
+			eventsSubscribed[event] = subs
+		end
+		table.insert(subs, connectionID)
+	end
+
+	function server.unsubscribeEvent(connectionID, event)
+		local subs = eventsSubscribed[event]
+		if subs ~= nil then
+			local index = util.arrayIndexOf(subs, connectionID)
+			if index > 0 then table.remove(subs, index) end
+		end
+		if #subs == 0 then
+			eventsSubscribed[event] = nil
+		end
+	end
+
+	function server.closeConnection(connectionID)
+		lastKeepAlives[connectionID] = nil
+		for event, subs in pairs(eventsSubscribed) do
+			if subs ~= nil then
+				local index = util.arrayIndexOf(subs, connectionID)
+				if index > 0 then table.remove(subs, index) end
+			end
+			if #subs == 0 then
+				eventsSubscribed[event] = nil
+			end
+		end
+
+		if (currentlyAnswering[connectionID] or 0) == 0 then
+			connectionIDs[connectionID] = nil
+		end
+	end
+
+	function server.close()
+		os.queueEvent(fullProtocolString .. ":end")
+	end
+
+	---@param ... fun(addTask: fun(...: fun()))
+	local function startServer(...)
+		util.parallelGroup(
+			function(addTask)
+				---@param sender number|'local'
+				---@param connectionID string
+				---@param method string
+				---@param args table
+				---@param answer fun(...)
+				local function handleRpc(sender, connectionID, method, args, answer)
+					if method == "keepAliveRep" then
+						lastKeepAlives[connectionID] = os.clock()
+					elseif method == "subscribeEvent" then
+						connectionIDs[connectionID] = sender
+						if args.args[1] == nil then
+							answer(false, "no event provided")
+						else
+							server.subscribeEvent(connectionID, args[1])
+							answer(true)
+						end
+					elseif method == "unsubscribeEvent" then
+						if args.args[1] == nil then
+							answer(false, "no event provided")
+						else
+							server.unsubscribeEvent(connectionID, args[1])
+							answer(true)
+						end
+					elseif method == "close" then
+						server.closeConnection(connectionID)
+						answer(true)
+					elseif methods[method] ~= nil then
+						addTask(function()
+							local func = methods[method]
+
+							connectionIDs[connectionID] = sender
+							currentlyAnswering[connectionID] = (currentlyAnswering[connectionID] or 0) + 1
+
+							if protected then
+								local ret = xpcall(func, debug.traceback, connectionID, table.unpack(args, 1, args.n))
+								if ret[1] then
+									answer(true, table.unpack(ret, 2, ret.n))
+								else
+									print("Server Error: " .. ret[2])
+									answer(false, ret[2])
+								end
+							else
+								local ret = table.pack(func(connectionID, table.unpack(args, 1, args.n)))
+								answer(true, table.unpack(ret, 1, ret.n))
+							end
+
+							currentlyAnswering[connectionID] = (currentlyAnswering[connectionID] or 0) - 1
+							if (currentlyAnswering[connectionID] or 0) == 0 then
+								connectionIDs[connectionID] = nil
+								currentlyAnswering[connectionID] = nil
+							end
+						end)
+					else
+						answer(false, "No such method")
+					end
+				end
+
+				local function networkTask() -- network requests
+					setupModem()
+					while true do
+						local sender, message = rednet.receive(nil, fullProtocolString)
+						if type(message) == 'table' and sender ~= nil
+							and message.protocol == fullProtocolString
+							and type(message.nonce) == 'string'
+							and type(message.method) == 'string'
+							and type(message.args) == 'table'
+							and type(message.connectionID) == 'string'
+						then
+							handleRpc(sender, message.connectionID, message.method, message.args, function(...)
+								rednet.send(sender, {
+									protocol = fullProtocolString,
+									method = message.method,
+									nonce = message.nonce,
+									connectionID = message.connectionID,
+									args = table.pack(...),
+								}, fullProtocolString)
+							end)
+						end
+					end
+				end
+				local function localTask() -- local requests
+					while true do
+						local protocol, nonce, connectionID, method, args = os.pullEvent(fullProtocolString)
+						if protocol == fullProtocolString
+							and type(nonce) == 'string'
+							and type(connectionID) == 'string'
+							and type(method) == 'string'
+							and type(args) == 'table'
+							and type(connectionID) == 'string'
+						then
+							handleRpc('local', connectionID, method, args, function(...)
+								os.queueEvent(fullProtocolString, method, nonce, connectionID, table.pack(...))
+							end)
+						end
+					end
+				end
+				local function keepAliveTask() -- keep alives
+					local keepAliveTime = 5
+					os.sleep(keepAliveTime)
+					while true do
+						for connectionID, _ in pairs(connectionIDs) do
+							sendTo(connectionID, nil, "keepAlive")
+						end
+						os.sleep(keepAliveTime)
+						-- clear any connection that has not responded
+						local clock = os.clock()
+						for connectionID, _ in pairs(connectionIDs) do
+							local keepAlive = lastKeepAlives[connectionID]
+							if keepAlive ~= nil and clock - keepAlive > keepAliveTime then
+								server.closeConnection(connectionID)
+							end
+						end
+					end
+				end
+				local function endCondition() -- server end condition
+					server.isUp = true
+					os.queueEvent(fullProtocolString .. ":start")
+					os.pullEvent(fullProtocolString .. ":end")
+					server.isUp = false
+				end
+
+				parallel.waitForAny(networkTask, localTask, keepAliveTask, endCondition)
+
+				for connectionID, _ in pairs(connectionIDs) do
+					sendTo(connectionID, nil, "end")
+				end
+			end,
+			...
+		)
+	end
+
+    local function getLocalConnection()
+        if not server.isUp then
+            os.pullEvent(fullProtocolString .. ":start")
+        end
+        return control.localConnect(protocol, serverID)
+    end
+
+	return startServer, server, getLocalConnection
 end
 
 return control

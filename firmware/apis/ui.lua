@@ -525,6 +525,7 @@ function ui.Text:getSize()
     return self.width, self.height
 end
 
+---@class ui.TextInput: ui.UIObject
 ui.TextInput = {
     text = "",
     backgroundColor = nil,
@@ -565,10 +566,12 @@ end
 function ui.TextInput:mount(term)
     self._globalOnChar = function(_, c)
         self.text = self.text .. c
+        self:onChange(self.text)
     end
     self._globalOnKey = function(_, key)
         if key == 259 then -- backspace
             self.text = string.sub(self.text, 1, string.len(self.text) - 1)
+            self:onChange(self.text)
         end
     end
     term.addGlobalListener('char', self._globalOnChar)
@@ -583,6 +586,8 @@ end
 function ui.TextInput:getSize()
     return self.width, self.height
 end
+
+function ui.TextInput:onChange(newText) end
 
 local function wrapTerm(term)
     ---@class UIContext: Redirect

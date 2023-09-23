@@ -217,6 +217,22 @@ end
 
 ---@generic T
 ---@param arr T[]
+---@param func fun(t: T): boolean
+---@param n number
+---@return U[]
+function util.arrayNFirsts(arr, func, n)
+    local newTable = {}
+    for _, el in ipairs(arr) do
+        if func(el) then
+            table.insert(newTable, newEl)
+        end
+        if #newTable >= n then break end
+    end
+    return newTable
+end
+
+---@generic T
+---@param arr T[]
 ---@return T?
 function util.arrayPop(arr)
     return table.remove(arr, #arr)
@@ -290,10 +306,7 @@ end
 ---@return T[]
 function util.arraySlice(arr, start, end_)
     local newTable = {}
-    for i = start, end_ do
-        local v = arr[i]
-        table.insert(newTable, v)
-    end
+    table.move(arr, start, end_, 1, newTable)
     return newTable
 end
 
@@ -311,11 +324,9 @@ end
 ---@param ... T elements
 ---@return T[]
 function util.arrayUnshift(arr, ...)
-    local index = 1
-    for _, v in ipairs({ ... }) do
-        table.insert(arr, v, index)
-        index = index + 1
-    end
+    local items = table.pack(...)
+    table.move(arr, items.n + 1, #arr, 1)
+    table.move(items, 1, items.n, 1, arr)
     return arr
 end
 
@@ -536,7 +547,7 @@ function util.defaultArgs(options, defaults)
 end
 
 ---@generic T
----@param arr T[] 
+---@param arr T[]
 ---@param func fun(t: T): boolean
 ---@return T[] arr
 function util.arrayRemoveIf(arr, func)
@@ -560,7 +571,7 @@ end
 ---@generic U
 ---@param class T
 ---@param parent U?
----@return T 
+---@return T
 function util.makeClass(class, parent)
     local metatable = { __index = class }
     if parent then
@@ -570,6 +581,7 @@ function util.makeClass(class, parent)
         setmetatable(o, metatable)
         return o
     end
+
     return class
 end
 
@@ -577,7 +589,7 @@ end
 ---@generic U
 ---@param class T
 ---@param parent U?
----@return T 
+---@return T
 function util.makeAbstractClass(class, parent)
     local metatable = { __index = class }
     if parent then
@@ -586,6 +598,7 @@ function util.makeAbstractClass(class, parent)
     function class.construct(o)
         error("instanciating abstract class", 2)
     end
+
     return class
 end
 
@@ -684,6 +697,67 @@ function util.parallelGroup(...)
                 end
             end
         end
+    end
+end
+
+local function sortedBinarySearch(sorted, val, compare)
+    if #sorted == 0 then return 0 end
+
+    -- binary search
+    local downBound = 0
+    local upBound = #sorted
+    while upBound - downBound > 1 do
+        local halfDiff = math.floor((upBound - downBound) / 2)
+        local half = downBound + halfDiff
+        local ret = compare(val, sorted[half + 1])
+        if ret then
+            -- first half
+            upBound = upBound - halfDiff
+        else
+            downBound = downBound + halfDiff
+        end
+    end
+
+    if downBound == 0 and compare(val, sorted[downBound + 1]) then
+        return downBound
+    end
+
+    return downBound + 1
+end
+
+local defaultCompare = function(a, b) return a < b end
+local defaultEqual = function(a, b) return a == b end
+
+---@generic T
+---@param sorted T[] sorted array
+---@param val T value to insert
+---@param compare (fun(a: T, b: T): boolean)?
+---@param equal (fun(a: T, b: T): boolean)?
+function util.sortedRemove(sorted, val, compare, equal)
+    compare = compare or defaultCompare
+    equal = equal or defaultEqual
+    local index = sortedBinarySearch(sorted, val, compare)
+    -- index is the last index where compare returned true
+
+    while index > 0 do
+        if equal(val, sorted[index]) then
+            return table.remove(sorted, index)
+        end
+        index = index - 1
+    end
+end
+
+---@generic T
+---@param sorted T[] sorted array
+---@param val T value to insert
+---@param compare (fun(a: T, b: T): boolean)?
+function util.sortedInsert(sorted, val, compare)
+    compare = compare or defaultCompare
+    local index = sortedBinarySearch(sorted, val, compare)
+    if index + 1 > #sorted then
+        table.insert(sorted, val)
+    else
+        table.insert(sorted, index + 1, val)
     end
 end
 

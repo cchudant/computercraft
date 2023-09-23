@@ -6,36 +6,52 @@ local storageCraft = require(".firmware.apis.storage.craft")
 
 local storage = {}
 
----@class Settings
----@field craft boolean?
----@field crafters { inventory: string, computerID: number }[]
----@field storageChests string[] network ids
+local protocolString = "Storage"
 
----StorageConnection has higher level methods than driver
----@param storageDriver StorageDriver
+---StorageConnection has higher level methods than driver for clients
+---@param connection control.Connection<StorageServer>
 ---@return StorageConnection
-function storage.makeConnection(storageDriver)
-    ---@class StorageConnection: StorageDriver
-    local storageConnection = setmetatable({}, { __index = storageDriver })
+local function wrapConnection(connection)
+    ---@class StorageConnection: control.Connection<StorageServer>
+    local storageConnection = setmetatable({}, { __index = connection })
 
-    function storageConnection.listTopItems(limit)
-        
+    ---@param func fun(value: any)
+    function storageConnection.listTopItems(fuzzySearch, limit, func)
+        -- get initial value & sub to the topic
+        storageConnection.subscribeEvent("amountsUpdate")
+        while true do
+            local value = storageConnection.getTopItems(fuzzySearch, limit)
+            func(value)
+            storageConnection.pullEvent("amountsUpdate")
+        end
     end
 
     return storageConnection
 end
 
+---@class Settings
+---@field craft boolean?
+---@field crafters { inventory: string, computerID: number }[]
+---@field storageChests string[] network ids
+
 ---Create a storage driver, which is in charge of the actual moving and driving
 ---@param settings Settings
----@return StorageDriver storageServer the sync server
-function storage.newStorageDriver(settings, serverID)
-    ---@class StorageDriver
-    local storageDriver = {}
+---@return fun() startServer
+---@return StorageServer storageServer the sync server
+---@return fun(): StorageConnection getLocalConnection
+function storage.newStorageServer(settings, serverID)
+    ---@class StorageServer
+    ---@field server control.Server
+    local storageServer = {}
 
     local state = storageState.StorageState:new()
 
-    function storageDriver.getID()
+    function storageServer.getID(clientID)
         return serverID
+    end
+
+    function storageServer.getComputerID(clientID)
+        return os.getComputerID()
     end
 
     ---@alias ItemArg string | { name: string?, nbt: string?, tag: string? }
@@ -46,7 +62,7 @@ function storage.newStorageDriver(settings, serverID)
     ---@param name ItemArg
     ---@param nbt string?
     ---@return number
-    function storageDriver.getItemAmount(name, nbt)
+    function storageServer.getItemAmount(clientID, name, nbt)
         local itemIDs = state:resolveItemArg(name, nbt, false, false)
         ---@cast itemIDs number[]
 
@@ -60,7 +76,7 @@ function storage.newStorageDriver(settings, serverID)
     ---Get the total amount of items
     ---@param args ItemArg[]
     ---@return number
-    function storageDriver.getItemsAmount(args)
+    function storageServer.getItemsAmount(clientID, args)
         local itemIDs = state:resolveItemArgs(args, false, false)
         ---@cast itemIDs number[]
 
@@ -71,7 +87,7 @@ function storage.newStorageDriver(settings, serverID)
         return total
     end
 
-    function storageDriver.getItemDetails(name, nbt)
+    function storageServer.getItemDetails(clientID, name, nbt)
         local itemIDs = state:resolveItemArg(name, nbt, false, false)
         ---@cast itemIDs number[]
 
@@ -82,10 +98,12 @@ function storage.newStorageDriver(settings, serverID)
         local total = state.itemIDToAmounts[itemIDs[1]] or 0
         local info = state:itemIDToItemInfo(itemIDs[1])
         return {
-            name = info.name, nbt = info.nbt,
-            count = total, maxCount = info.maxCount,
+            name = info.name,
+            nbt = info.nbt,
+            count = total,
+            maxCount = info.maxCount,
         }
-    end 
+    end
 
     ---@alias TransferError { request: number, reason: string }
 
@@ -128,7 +146,7 @@ function storage.newStorageDriver(settings, serverID)
     ---@return TransferError[]? errors
     ---@return number? totalItemsTransfered
     ---@return TransferResult[]? results
-    function storageDriver.batchTransfer(requests, options)
+    function storageServer.batchTransfer(clientID, requests, options)
         options = options or {}
         options.acceptIDs = false
         return storageTransfers.batchTransfer(state, requests, options)
@@ -140,19 +158,18 @@ function storage.newStorageDriver(settings, serverID)
     ---@return TransferError? error
     ---@return number? totalItemsTransfered
     ---@return TransferResult[]? results
-    function storageDriver.transfer(req, options)
+    function storageServer.transfer(clientID, req, options)
         options = options or {}
         options.acceptIDs = false
         return storageTransfers.transfer(state, req, options)
     end
 
-    ---comment
     ---@param itemArg any
     ---@param amount any
     ---@return boolean success
     ---@return { [string]: number }? missing
     ---@return { [string]: number }? consumed
-    function storageDriver.craftItem(itemArg, amount)
+    function storageServer.craftItem(clientID, itemArg, amount)
         local steps, missing, consumed = storageCraft.craftLookup(state, itemArg, amount)
 
         local function idToName(itemID)
@@ -173,119 +190,71 @@ function storage.newStorageDriver(settings, serverID)
         if missing then
             return false, converIdsToName(missing)
         end
-    
+
         ---@cast steps Steps
         state.craftManager:runCraft(steps)
 
         return true, converIdsToName(consumed)
     end
 
-    function storageDriver.craftLookup(itemArg, count, consumed)
+    function storageServer.craftLookup(clientID, itemArg, count, consumed)
         return storageCraft.craftLookup(state, itemArg, count, consumed)
     end
 
-    state:initialStateSetup(settings)
-    return storageDriver, state
-end
+    local function stripped(s)
+        return string.gsub(
+        string.gsub(string.gsub(string.lower(string.gsub(s, '_', ' ')), 'minecraft:', ''), 'computercraft:', ''),
+            'chunkloaders:', '')
+    end
 
-local storageDriverKeys = {
-    "transfer", "batchTransfer", "getID", "craftItem"
-}
-
----@param storageID number?
----@return StorageConnection
-function storage.localConnect(storageID)
-    local driver = {}
-    for _, k in ipairs(storageDriverKeys) do
-        driver[k] = function(...)
-            local nonce = util.newNonce()
-            os.queueEvent("storage:" .. (storageID or ""), {
-                storageUniqueID = storageID,
-                method = k,
-                args = {...},
-            }, nonce)
-            while true do
-                local _, args, nonce_ = os.pullEvent("storage:"  .. (storageID or "") .. "Rep")
-                if nonce_ == nonce then
-                    return args
-                end
+    function storageServer.getTopItems(clientID, fuzzySearch, limit)
+        local ret = {}
+        local i = 1
+        while (not limit or #ret < limit) and i < #state.itemIDAmountsSorted do
+            local tuple = state.itemIDAmountsSorted[i]
+            local strippedItem = stripped(tuple[1])
+            if util.stringStartsWith(strippedItem, stripped(fuzzySearch)) then
+                table.insert(ret, { displayName = strippedItem, name = tuple[1], amount = tuple[2] })
             end
         end
+        return ret
     end
-    return storage.makeConnection(driver)
-end
 
----@param computerID number
----@param storageID number?
----@return StorageConnection
-function storage.remoteConnect(computerID, storageID)
+    state:initialStateSetup(settings)
 
-    local driver = {}
-    for _, k in ipairs(storageDriverKeys) do
-        driver[k] = function(...)
-            return control.sendRoundtrip(computerID, "storage:" .. (storageID or ""), {
-                storageUniqueID = storageID,
-                method = k,
-                args = {...},
-            })
-        end
-    end
-    return storage.makeConnection(driver)
-end
+    local startNetwork, server, getServerConnection = control.makeServer(storageServer, protocolString, serverID)
+    storageServer.server = server
 
----@param storageID number?
----@param settings Settings
----@return fun() startStorageServer function to start the server
----@return fun(): StorageConnection storageConnection make a local connection
-function storage.storageServer(settings, storageID)
-    local storageDriver, storageState = storage.newStorageDriver(settings, storageID)
+    state.amountObservers:observeGlobal(function()
+        server.triggerEvent("amountsUpdate")
+        return true
+    end)
 
-    local function start()
-        local function handleRpc(addTask, args, answer)
-            addTask(function()
-                if args.storageUniqueID == storageDriver.getID() then
-                    local ret = { storageDriver[args.method](table.unpack(args.args)) }
-                    answer(ret)
-                end
-            end)
-        end
-        util.parallelGroup(
-            function(addTask) -- network requests
-                while true do
-                    local args, _, sender, nonce = control.protocolReceive("storage")
-                    handleRpc(addTask, args, function(ret)
-                        control.protocolSend(sender --[[@as number]], "storageRep", ret, nonce)
-                    end)
-                end
-            end,
-            function(addTask) -- local requests
-                while true do
-                    local _, args, nonce = os.pullEvent("storage:" .. (storageID or ""))
-                    handleRpc(addTask, args, function(ret)
-                        os.queueEvent("storage:" .. (storageID or "") .. "Rep", ret, nonce)
-                    end)
-                end
-            end,
+    local function startServer()
+        startNetwork(
             function(_) -- run craft manager if present
                 if storageState.craftManager then
                     storageState.craftManager:run(storageState)
                 end
-            end,
-            function(_) -- set up
-                storageState.isUp = true
-                os.queueEvent("storage:up:"  .. (storageID or ""))
             end
         )
     end
 
-    local function makeLocalConnection()
-        if not storageState.isUp then
-            os.pullEvent("storage:up:"  .. (storageID or ""))
-        end
-        return storage.localConnect(storageDriver.getID())
+    local function getLocalConnection()
+        return wrapConnection(getServerConnection())
     end
 
-    return start, makeLocalConnection
+    return startServer, storageServer, getLocalConnection, state
+end
+
+---@return StorageConnection
+function storage.localConnect(serverID)
+    return wrapConnection(control.localConnect(protocolString, serverID))
+end
+
+---@return StorageConnection
+function storage.remoteConnect(computerID, serverID)
+    return wrapConnection(control.remoteConnect(protocolString, computerID, serverID))
 end
 
 return storage

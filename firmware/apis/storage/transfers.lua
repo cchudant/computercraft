@@ -325,9 +325,7 @@ function transfers.batchTransfer(state, requests, options)
         end
     end
 
-    for itemID, amount in pairs(balance) do
-        state.observers:triggerObservers(itemID, amount)
-    end
+    state.amountObservers:triggerTransaction(balance)
 
     if #errors == 0 then
         return true, nil, totalTransfered, results
@@ -379,9 +377,7 @@ function transfers.transfer(state, req, options)
             results, options.nono, options.acceptIDs, balance)
     end
 
-    for itemID, amount in pairs(balance) do
-        state.observers:triggerObservers(itemID, amount)
-    end
+    state.amountObservers:triggerTransaction(balance)
 
     if error == nil then
         return true, nil, transfered, results

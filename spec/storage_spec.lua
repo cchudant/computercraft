@@ -1,9 +1,9 @@
 package.path = package.path .. ";./?;./?.lua;./?/init.lua"
 package.path = package.path .. ";./spec/?;./spec/?.lua;./spec/?/init.lua"
-local util = require("apis.util")
+local util = require(".firmware.apis.util")
 local inspect = require('inspect')
 local peripheralMock = require("peripheralMock")
-local storage = require("apis.storage")
+local storage = require(".firmware.apis.storage")
 
 describe('Storage', function()
     -- it('normal transfer', function()
@@ -193,32 +193,65 @@ describe('Storage', function()
 
 --     print("final", inspect(steps), inspect(missing), inspect(consumed))
 -- end)
-it('craft turtle advanced', function()
-    peripheralMock.resetPeripherals()
-    peripheralMock.addChestPeripheral("minecraft:chest_1", {
-        { name = "minecraft:glass_pane", count = 64, maxCount = 64 },
-        { name = "minecraft:stone", count = 64, maxCount = 64 },
-        { name = "minecraft:redstone", count = 19, maxCount = 64 },
-        { name = "minecraft:stone", count = 1, maxCount = 64 },
-        { name = "minecraft:iron_ingot", count = 64, maxCount = 64 },
-        { name = "minecraft:iron_ingot", count = 64, maxCount = 64 },
-        { name = "minecraft:iron_ingot", count = 64, maxCount = 64 },
-        { name = "minecraft:iron_ingot", count = 60, maxCount = 64 },
-        { name = "minecraft:oak_log", count = 48, maxCount = 64 },
-    })
-    peripheralMock.addChestPeripheral("minecraft:chest_2", {
-        { name = "computercraft:computer_normal", count = 1, maxCount = 64 },
-    })
-    local storageServer = storage.newStorageDriver(
-      { crafters = {}, storageChests = { "minecraft:chest_1" }, craft = true },
-      util.newNonce()
-    )
-    local steps, missing, consumed = storageServer.transfer({
-      source = "minecraft:chest_2",
-      type = "storeItems",
-      amount = "all",
-    })
+-- it('craft turtle advanced', function()
+--     peripheralMock.resetPeripherals()
+--     peripheralMock.addChestPeripheral("minecraft:chest_1", {
+--         { name = "minecraft:glass_pane", count = 64, maxCount = 64 },
+--         { name = "minecraft:stone", count = 64, maxCount = 64 },
+--         { name = "minecraft:redstone", count = 19, maxCount = 64 },
+--         { name = "minecraft:stone", count = 1, maxCount = 64 },
+--         { name = "minecraft:iron_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:iron_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:iron_ingot", count = 64, maxCount = 64 },
+--         { name = "minecraft:iron_ingot", count = 60, maxCount = 64 },
+--         { name = "minecraft:oak_log", count = 48, maxCount = 64 },
+--     })
+--     peripheralMock.addChestPeripheral("minecraft:chest_2", {
+--         { name = "computercraft:computer_normal", count = 1, maxCount = 64 },
+--     })
+--     local storageServer = storage.newStorageServer(
+--       { crafters = {}, storageChests = { "minecraft:chest_1" }, craft = true },
+--       util.newNonce()
+--     )
+--     local steps, missing, consumed = storageServer.transfer({
+--       source = "minecraft:chest_2",
+--       type = "storeItems",
+--       amount = "all",
+--     })
 
-    print("final", inspect(steps), inspect(missing), inspect(consumed))
+--     print("final", inspect(steps), inspect(missing), inspect(consumed))
+-- end)
+it('util sorted insert', function ()
+
+  for _ = 1,100 do
+    local sorted = {}
+    for _ = 1, math.floor(math.random() * 20) do
+      table.insert(sorted, math.floor(math.random() * 20))
+    end
+    table.sort(sorted)
+    util.sortedInsert(sorted, math.floor(math.random() * 20))
+
+    for i = 1,#sorted - 1 do
+      local a, b = sorted[i], sorted[i+1]
+      if a > b then error("error") end
+    end
+  end
+end)
+it('util sorted remove', function ()
+
+  for _ = 1,100 do
+    local sorted = {}
+    for _ = 1, math.floor(math.random() * 20) do
+      table.insert(sorted, math.floor(math.random() * 20))
+    end
+    table.sort(sorted)
+    local n = math.floor(math.random() * 20)
+    util.sortedRemove(sorted, n)
+
+    for i = 1,#sorted - 1 do
+      local a, b = sorted[i], sorted[i+1]
+      if a > b then error("error") end
+    end
+  end
 end)
 end)
