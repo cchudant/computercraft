@@ -18,14 +18,11 @@ local function wrapConnection(connection)
     ---@param func fun(value: any)
     function storageConnection.listTopItems(fuzzySearch, limit, func)
         -- get initial value & sub to the topic
-        print("subbed amountsUpdate")
         storageConnection.subscribeEvent("amountsUpdate")
         while true do
             local value = storageConnection.getTopItems(fuzzySearch, limit)
-            print("ret is ", value)
             func(value)
             storageConnection.pullEvent("amountsUpdate")
-            print("pulled amountsUpdate")
         end
     end
 

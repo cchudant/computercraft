@@ -163,16 +163,13 @@ function ui.Block:new(o)
 end
 
 function ui.Block:replaceChildren(term, ...)
-    print('replace packed')
     for i = #self, 1, -1 do
         local child = self[i]
         if child.mounted then child:unMount(term) end
-        print("removing", i, child)
         self[i] = nil
     end
     local packed = table.pack(...)
     for i = 1, packed.n do
-        print('new elem', i, packed[i], packed[i].text)
         self[i] = packed[i]
         if self.mounted then
             packed[i]:mount(term)

@@ -513,7 +513,6 @@ local function makeConnection(protocol, serverID, pullEvent, sendEvent)
 	setmetatable(connection, {
 		__index = function(_, method)
 			return function(...)
-				print(method)
 				return roundtripRpc(method, ...)
 			end
 		end
