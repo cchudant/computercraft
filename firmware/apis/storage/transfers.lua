@@ -47,6 +47,7 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
         end
 
         -- find the item id
+        print(sourcePeriph.getItemLimit(sourceSlot))
         local item = state:getItemInfo(detail, true, sourcePeriph.getItemLimit(sourceSlot))
         local itemID = item.id
 
@@ -227,6 +228,7 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
             if type(amountLeft) == "number" then
                 wantTransfer = math.min(amountLeft, amountInStorage)
             end
+            print(item.maxCount)
             local _, _, totalTransferedToSlot = storagePointer:retrieveItems(
                 math.min(wantTransfer, item.maxCount, canReceive),
                 req.destination, destSlot)
