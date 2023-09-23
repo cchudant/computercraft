@@ -44,6 +44,7 @@ function itemView(storageConnection, makeChild)
             '',
             20,
             function(items)
+                print(items)
                 itemsInStorage = items
                 term.setNeedsRedraw()
                 block.replaceChildren(term, createChildren())
