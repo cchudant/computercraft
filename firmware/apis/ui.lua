@@ -419,6 +419,8 @@ local function findChildAt(self, x, y, requestedW, requestedH)
     local blockWidth = requestedW - self.paddingLeft - self.paddingRight
     local blockHeight = requestedH - self.paddingTop - self.paddingBottom
 
+    x = x + self.paddingLeft
+
     local contentW, contentH, nLines = computeContent(self, blockWidth, blockHeight)
 
     local foundChild, relX, relY
@@ -426,7 +428,7 @@ local function findChildAt(self, x, y, requestedW, requestedH)
         function(child, posX, posY, availableW, availableH)
             posX = posX + self.paddingLeft
             posY = posY + self.paddingTop
-            if x >= posX and x < posX + availableW and y >= posY and y < posY + availableH then
+            if x >= posX and x <= posX + availableW and y >= posY and y <= posY + availableH then
                 relX = x - posX
                 relY = y - posY
                 foundChild = child
