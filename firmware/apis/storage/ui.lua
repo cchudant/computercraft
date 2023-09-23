@@ -50,7 +50,7 @@ function itemView(storageConnection, makeChild)
                 print("set needs redraw")
                 term.setNeedsRedraw()
                 os.queueEvent('dummy')
-                block.replaceChildren(term, createChildren())
+                block:replaceChildren(term, createChildren())
             end
         )
     end
