@@ -171,7 +171,7 @@ function ui.Block:replaceChildren(term, ...)
     end
     local packed = table.pack(...)
     for i = 1, packed.n do
-        print('new elem', packed[i], packed[i].text)
+        print('new elem', i, packed[i], packed[i].text)
         self[i] = packed[i]
         if self.mounted then
             packed[i]:mount(term)
