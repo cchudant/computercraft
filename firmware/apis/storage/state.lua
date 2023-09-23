@@ -163,7 +163,7 @@ function StorageState.new(storageID)
         crafts = {},
         items = {},
         itemIDToSlots = {},
-        itemIDToSlotsILastStack = {},
+        itemIDToSlotsFirstNonStackI = {},
         itemIDToAmounts = {},
         emptySlots = {},
         craftManager = nil,
