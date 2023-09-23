@@ -490,6 +490,7 @@ local function makeConnection(protocol, serverID, pullEvent, sendEvent)
 
 	local function roundtripRpc(method, ...)
 		local nonce = util.newNonce()
+		print("send", fullProtocolString, method, nonce, connectionID, table.pack(...))
 		sendEvent(fullProtocolString, method, nonce, connectionID, table.pack(...))
 		while true do
 			local fullProtocolString2, method2, nonce2, connectionID2, args = pullEvent(fullProtocolString)
