@@ -28,7 +28,7 @@ function itemView(storageConnection, makeChild)
 
     local function createChildren()
         if itemsInStorage == nil then
-            return ui.Text { text = "loading..." }
+            return ui.Text:new { text = "loading..." }
         end
         local children = {}
         for i,v in ipairs(itemsInStorage) do
