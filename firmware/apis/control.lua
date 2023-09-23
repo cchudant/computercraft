@@ -560,6 +560,7 @@ function control.localConnect(protocol, serverID)
 		return fullProtocolString, method, nonce, connectionID, args
 	end
 	local function sendEvent(fullProtocolString, method, nonce, connectionID, args)
+		print("sending", fullProtocolString, method, nonce, connectionID, args)
 		os.queueEvent(fullProtocolString, method, nonce, connectionID, args)
 	end
 
