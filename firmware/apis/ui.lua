@@ -424,8 +424,8 @@ local function findChildAt(self, x, y, requestedW, requestedH)
     local foundChild, relX, relY
     computeFullTiling(self, blockWidth, blockHeight, contentW, contentH, nLines,
         function(child, posX, posY, availableW, availableH)
-            posX = posX + x
-            posY = posY + y
+            posX = posX + self.paddingLeft
+            posY = posY + self.paddingTop
             if x >= posX and x < posX + availableW and y >= posY and y < posY + availableH then
                 relX = x - posX
                 relY = y - posY
