@@ -218,7 +218,7 @@ function storage.newStorageServer(settings, serverID)
             local item = state:itemIDToItemInfo(tuple[1])
             local strippedItem = stripped(item.name)
             if util.stringStartsWith(strippedItem, stripped(fuzzySearch)) then
-                table.insert(ret, { displayName = strippedItem, name = item.name, amount = tuple[2] })
+                table.insert(ret, { displayName = strippedItem, name = item.name, count = tuple[2] })
             end
         end
         return ret

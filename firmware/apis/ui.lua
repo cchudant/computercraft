@@ -645,6 +645,7 @@ local function redraw(obj, termObj)
     termObj.setCursorPos(1, 1)
     termObj.setBackgroundColor(termObj.defaultBackgroundColor)
     termObj.setTextColor(termObj.defaultTextColor)
+    termObj.clear()
     termObj.setCursorBlink(false)
     termObj.setTextScale(0.5)
     obj:draw(termObj, 1, 1, w, h)
@@ -668,7 +669,6 @@ function ui.drawLoop(obj, termObj)
 
         obj:mount(termObj)
     
-        termObj.clear()
         redraw(obj, termObj)
         while not termObj._stopFlag do
             termObj._needsRedraw = false
