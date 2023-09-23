@@ -568,7 +568,7 @@ end
 function control.remoteConnect(protocol, computerID, serverID)
 	local function pullEvent(fullProtocolString)
 		while true do
-			local sender, message = rednet.receive(nil, fullProtocolString)
+			local sender, message = rednet.receive(fullProtocolString)
 			if type(message) == 'table' and sender == computerID then
 				return fullProtocolString, message.method, message.nonce, message.connectionID, message.args
 			end
@@ -745,7 +745,7 @@ function control.makeServer(methods, protocol, serverID)
 				local function networkTask() -- network requests
 					setupModem()
 					while true do
-						local sender, message = rednet.receive(nil, fullProtocolString)
+						local sender, message = rednet.receive(fullProtocolString)
 						if type(message) == 'table' and sender ~= nil
 							and message.protocol == fullProtocolString
 							and type(message.nonce) == 'string'
