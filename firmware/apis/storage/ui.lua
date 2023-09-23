@@ -42,10 +42,12 @@ function itemView(storageConnection, makeChild)
 
     local block
     local function task(term)
+        print("task")
         storageConnection.listTopItems(
             search,
             20,
             function(items)
+                print("items", #items)
                 itemsInStorage = items
                 term.setNeedsRedraw()
                 block:replaceChildren(term, createChildren())
