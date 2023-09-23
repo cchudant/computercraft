@@ -672,6 +672,7 @@ function ui.drawLoop(obj, termObj)
         redraw(obj, termObj)
         while not termObj._stopFlag do
             local bag = { os.pullEvent() }
+            util.prettyPrint(bag)
             local event, a, b, c = table.unpack(bag)
             termObj._needsRedraw = false
     
