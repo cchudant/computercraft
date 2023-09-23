@@ -538,7 +538,7 @@ function StorageState:storeItems(itemID, amount, sourceName, sourceSlot, maxCoun
     local totalTransfered = 0
 
     -- fill existing slots
-    local firstNonStackI = self.itemIDToSlotsFirstNonStackI[itemID]
+    local firstNonStackI = self.itemIDToSlotsFirstNonStackI[itemID] or 1
     for i = firstNonStackI, #slots do
         if amount == totalTransfered then
             break
