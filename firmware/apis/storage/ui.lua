@@ -84,7 +84,7 @@ function storageUI.runUI(term, storageConnection)
 
     local itemsBlock, onTextChange = itemView(storageConnection, function (item)
         return ui.Block:new {
-            width = 20,
+            width = 30,
             height = 1,
             alignContentX = "spaceBetween",
             marginX = 1,
