@@ -47,7 +47,6 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
         end
 
         -- find the item id
-        print(sourcePeriph.getItemLimit(sourceSlot))
         local item = state:getItemInfo(detail, true, sourcePeriph.getItemLimit(sourceSlot))
         local itemID = item.id
 
@@ -189,7 +188,6 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
                     item = state:itemIDToItemInfo(itemID)
 
                     if amountLeft == 'stack' then
-                    print(item.maxCount)
                     amountLeft = item.maxCount or 999 -- there are 0 left in storage
                     end
 

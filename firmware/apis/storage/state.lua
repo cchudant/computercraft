@@ -365,6 +365,7 @@ function StorageState:initialStateSetup(settings)
             if detail ~= nil then
                 -- get/create item id
 
+                print(periph.getItemLimit(slot), slot, 'it')
                 local item = self:getItemInfo(detail, true, periph.getItemLimit(slot))
                 local itemID = item.id
 
