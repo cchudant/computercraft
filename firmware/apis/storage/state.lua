@@ -529,7 +529,7 @@ function StorageState:storeItems(itemID, amount, sourceName, sourceSlot, maxCoun
         chestObj.pullItems(sourceName, sourceSlot, maxCount, chestSlot)
         self:updateAmount(itemID, (self.itemIDToAmounts[itemID] or 0) + maxCount)
 
-        local firstNonStackI = self.itemIDToSlotsFirstNonStackI[itemID]
+        local firstNonStackI = self.itemIDToSlotsFirstNonStackI[itemID] or 1
         table.insert(slots, firstNonStackI, slotID)
         self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI + 1
 
