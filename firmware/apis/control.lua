@@ -494,7 +494,7 @@ local function makeConnection(protocol, serverID, pullEvent, sendEvent)
 		while true do
 			local fullProtocolString2, method2, nonce2, connectionID2, args = pullEvent(fullProtocolString)
 			if fullProtocolString == fullProtocolString2
-				and method == method2
+				and method .. 'Rep' == method2
 				and nonce == nonce2
 				and connectionID == connectionID2
 				and type(args) == 'table'
@@ -759,7 +759,7 @@ function control.makeServer(methods, protocol, serverID)
 							handleRpc(sender, message.connectionID, message.method, message.args, function(...)
 								rednet.send(sender, {
 									protocol = fullProtocolString,
-									method = message.method,
+									method = message.method .. 'Rep',
 									nonce = message.nonce,
 									connectionID = message.connectionID,
 									args = table.pack(...),
@@ -779,7 +779,7 @@ function control.makeServer(methods, protocol, serverID)
 							and type(connectionID) == 'string'
 						then
 							handleRpc('local', connectionID, method, args, function(...)
-								os.queueEvent(fullProtocolString, method, nonce, connectionID, table.pack(...))
+								os.queueEvent(fullProtocolString, method .. 'Rep', nonce, connectionID, table.pack(...))
 							end)
 						end
 					end
