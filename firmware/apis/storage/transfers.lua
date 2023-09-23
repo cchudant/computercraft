@@ -227,7 +227,7 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
             if type(amountLeft) == "number" then
                 wantTransfer = math.min(amountLeft, amountInStorage)
             end
-            print(item.maxCount)
+            print(item.maxCount, canReceive)
             local _, _, totalTransferedToSlot = storagePointer:retrieveItems(
                 math.min(wantTransfer, item.maxCount, canReceive),
                 req.destination, destSlot)
