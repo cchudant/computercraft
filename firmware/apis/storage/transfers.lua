@@ -191,8 +191,6 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
             item = nil
         end
 
-        print(item.maxCount)
-
         local inDestinationSlot = 0
         if destItem ~= nil then
             inDestinationSlot = destItem.count
@@ -200,7 +198,7 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
         local canReceive = item and item.maxCount - inDestinationSlot
 
         local amountInStorage = state:getAmount(itemID)
-        if itemID ~= nil and amountInStorage > 0 and canReceive > 0 then
+        if item ~= nil and itemID ~= nil and amountInStorage > 0 and canReceive > 0 then
             local wantTransfer = amountInStorage --[[@as number]]
             if type(amountLeft) == "number" then
                 wantTransfer = math.min(amountLeft, amountInStorage)
