@@ -163,6 +163,7 @@ function ui.Block:new(o)
 end
 
 function ui.Block:replaceChildren(term, ...)
+    print('replace packed')
     for i = #self, 1, -1 do
         local child = self[i]
         if child.mounted then child:unMount(term) end
