@@ -221,13 +221,14 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
         end
         local canReceive = item and item.maxCount - inDestinationSlot
 
+
         local amountInStorage = storagePointer and storagePointer:getAmount()
         if storagePointer ~= nil and amountInStorage > 0 and canReceive > 0 then
             local wantTransfer = amountInStorage --[[@as number]]
             if type(amountLeft) == "number" then
                 wantTransfer = math.min(amountLeft, amountInStorage)
             end
-            print(item.maxCount, canReceive)
+            print(item.maxCount, canReceive, inDestinationSlot)
             local _, _, totalTransferedToSlot = storagePointer:retrieveItems(
                 math.min(wantTransfer, item.maxCount, canReceive),
                 req.destination, destSlot)
