@@ -50,7 +50,7 @@ function itemView(storageConnection, makeChild)
                 term.setNeedsRedraw()
                 os.queueEvent('dummy')
                 block.replaceChildren(term, createChildren())
-                print(#items, #createChildren())
+                util.prettyPrint(#items, #createChildren())
             end
         )
     end
