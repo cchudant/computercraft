@@ -215,7 +215,6 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
         local realH = h + child.marginTop + child.marginBottom
 
         if self.childrenDirection == 'right' then
-
             if availableW - realW < 0 and i ~= 1 then
                 -- wrap
 
@@ -648,7 +647,6 @@ local function redraw(obj, termObj)
     termObj.setCursorPos(1, 1)
     termObj.setBackgroundColor(termObj.defaultBackgroundColor)
     termObj.setTextColor(termObj.defaultTextColor)
-    termObj.clear()
     termObj.setCursorBlink(false)
     termObj.setTextScale(0.5)
     obj:draw(termObj, 1, 1, w, h)
@@ -665,19 +663,19 @@ end
 function ui.drawLoop(obj, termObj)
     termObj = wrapTerm(termObj or term)
 
-    util.parallelGroup(function (addTask, removeTask)
+    util.parallelGroup(function(addTask, removeTask)
         termObj.addTask = addTask
         termObj.removeTask = removeTask
 
-
         obj:mount(termObj)
-    
+
+        termObj.clear()
         redraw(obj, termObj)
         while not termObj._stopFlag do
             termObj._needsRedraw = false
             local bag = table.pack(os.pullEvent())
             local event, a, b, c = table.unpack(bag, 1, bag.n)
-    
+
             local w, h = termObj.getSize()
             if event == 'monitor_touch' then
                 obj:onMonitorTouch(termObj, b, c, w, h)
@@ -692,7 +690,7 @@ function ui.drawLoop(obj, termObj)
                     termObj._timeouts[a] = nil
                 end
             end
-    
+
             if termObj._globalListeners[event] ~= nil then
                 for _, handler in ipairs(termObj._globalListeners[event]) do
                     handler(table.unpack(bag, 1, bag.n))
@@ -703,9 +701,8 @@ function ui.drawLoop(obj, termObj)
                 redraw(obj, termObj)
             end
         end
-    
+
         obj:unMount(termObj)
-    
     end)
 end
 
