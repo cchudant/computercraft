@@ -199,6 +199,7 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
                 if iItemID > #itemIDs then break end
             elseif util.arrayContains(itemIDs, destInfo.id) then
                 -- dest is not air, continue filling it
+                print(destInfo.name)
                 itemID = destInfo.id
                 item = destInfo
                 if nono then
@@ -207,6 +208,7 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
                     storagePointer = state:storagePointer(itemID)
                 end
                 item = destInfo
+                util.prettyPrint(item)
 
                 if amountLeft == 'stack' then
                     print(item.maxCount)
