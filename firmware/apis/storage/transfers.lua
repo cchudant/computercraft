@@ -186,6 +186,9 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
             if amountLeft == 'stack' then
                 amountLeft = item.maxCount or 999     -- there are 0 left in storage
             end
+        else
+            itemID = nil
+            item = nil
         end
 
         print(item.maxCount)
