@@ -770,7 +770,7 @@ function control.makeServer(methods, protocol, serverID)
 				end
 				local function localTask() -- local requests
 					while true do
-						local protocol, nonce, connectionID, method, args = os.pullEvent(fullProtocolString)
+						local protocol, method, nonce, connectionID, args = os.pullEvent(fullProtocolString)
 						if protocol == fullProtocolString
 							and type(nonce) == 'string'
 							and type(connectionID) == 'string'
