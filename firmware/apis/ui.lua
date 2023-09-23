@@ -168,10 +168,12 @@ function ui.Block:replaceChildren(term, ...)
         if child.mounted then child:unMount(term) end
         self[i] = nil
     end
-    for i, v in ipairs({...}) do
-        self[i] = v
+    local packed = table.pack(...)
+    for i = 1, packed.n do
+        print('new elem', packed[i], packed[i].text)
+        self[i] = packed[i]
         if self.mounted then
-            v:mount(term)
+            packed[i]:mount(term)
         end
     end
 end
@@ -378,7 +380,6 @@ local function computeFullTiling(self, blockWidth, blockHeight, contentW, conten
 end
 
 function ui.Block:draw(term, x, y, requestedW, requestedH)
-    print("Drawing block", self)
     if self.transparent then return end
     local blockWidth = requestedW - self.paddingLeft - self.paddingRight
     local blockHeight = requestedH - self.paddingTop - self.paddingBottom
