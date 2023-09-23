@@ -520,6 +520,7 @@ function StorageState:storeItems(itemID, amount, sourceName, sourceSlot, maxCoun
     -- we push directly the 64 to a new slot, and insert that slot before the 13
     if maxCount == amount and #self.emptySlots > 0 then
         -- get a new slot
+        print("ddd", #self.emptySlots)
         local slotID = table.remove(self.emptySlots, #self.emptySlots)
 
         local chest, chestSlot = self:getStorageChestFromSlotID(slotID)
@@ -567,6 +568,7 @@ function StorageState:storeItems(itemID, amount, sourceName, sourceSlot, maxCoun
             end
 
             local slotID = table.remove(self.emptySlots, emptySlotI)
+            print(2, emptySlotI, #self.emptySlots)
 
             local chest, chestSlot = self:getStorageChestFromSlotID(slotID)
             local chestObj = peripheral.wrap(chest.name)
@@ -641,6 +643,7 @@ function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount
             firstNonStackI = firstNonStackI - 1
         end
         if inSlotAmount - toTransfer == 0 then
+            print("remove", i)
             table.remove(slots, i)
             table.insert(self.emptySlots, slotID)
         end
