@@ -197,7 +197,7 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
         end
         local canReceive = item and item.maxCount - inDestinationSlot
 
-        local amountInStorage = state:getAmount(itemID)
+        local amountInStorage = itemID and state:getAmount(itemID)
         if item ~= nil and itemID ~= nil and amountInStorage > 0 and canReceive > 0 then
             local wantTransfer = amountInStorage --[[@as number]]
             if type(amountLeft) == "number" then
