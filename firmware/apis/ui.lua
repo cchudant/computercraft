@@ -566,6 +566,7 @@ end
 function ui.TextInput:mount(term)
     self._globalOnChar = function(_, c)
         self.text = self.text .. c
+        print('changed')
         self:onChange(term, self.text)
     end
     self._globalOnKey = function(_, key)
