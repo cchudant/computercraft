@@ -162,6 +162,7 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
             -- dest is air, find any item
             -- local destInfo = destItem and state:getItemInfo(destItem, true)
             if itemID ~= nil or state:getAmount(itemID) > 0 then
+                if iItemID > #itemIDs then break end
                 while true do
                     iItemID = iItemID + 1
                     if iItemID > #itemIDs then break end
@@ -179,7 +180,6 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
                     end
                 end
             end
-            if iItemID > #itemIDs then break end
         elseif util.arrayContains(itemIDs, destInfo.id) then
             -- dest is not air, continue filling it
             itemID = destInfo.id
