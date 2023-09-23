@@ -609,6 +609,7 @@ function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount
 
         if firstNonStackI > 1 then
             local slotID = table.remove(slots, firstNonStackI - 1)
+            print(#slots, firstNonStackI)
 
             local chest, chestSlot = self:getStorageChestFromSlotID(slotID)
             local chestObj = peripheral.wrap(chest.name)
@@ -639,7 +640,7 @@ function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount
         totalTransfered = totalTransfered + toTransfer
         chestObj.pushItems(destName, chestSlot, toTransfer, destSlot)
         self:updateAmount(itemID, (self.itemIDToAmounts[itemID] or 0) - toTransfer)
-        if inSlotAmount == maxCount and firstNonStackI ~= nil then
+        if inSlotAmount == maxCount then
             firstNonStackI = firstNonStackI - 1
         end
         if inSlotAmount - toTransfer == 0 then
@@ -649,7 +650,7 @@ function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount
         end
     end
 
-    self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI + 1
+    self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI
 
     if totalTransfered < amount then
         return false, "not enough items in storage", totalTransfered
