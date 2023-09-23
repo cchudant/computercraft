@@ -58,6 +58,7 @@ function itemView(storageConnection, makeChild)
     block = ui.Block:new {
         mount = function(self, term)
             self.task = term.addTask(function() task(term) end)
+            print("task is ", self.task)
             ui.Block.mount(self, term)
         end,
         unMount = function(self, term)
@@ -68,7 +69,7 @@ function itemView(storageConnection, makeChild)
     }
 
     local function onTextChange(term, newText)
-        print("change22")
+        print("change22", block.task)
         search = newText
         if block.task then
             term.removeTask(block.task)

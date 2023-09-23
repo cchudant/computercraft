@@ -629,7 +629,7 @@ end
 ---
 ---The function will ultimately return when every task in the task group has been completed.
 ---
----@param ... fun(addTask: fun(...: fun()), addRemove: fun(...: fun()))
+---@param ... fun(addTask: fun(...: fun()): ..., addRemove: fun(...: fun()))
 function util.parallelGroup(...)
     local coroutineIDCounter = 1
     local coroutines = {}
@@ -648,13 +648,16 @@ function util.parallelGroup(...)
         coroutines[coroutineID] = coroutine.create(function()
             local function addTask(...)
                 local packed = table.pack(...)
+                local ret = {}
                 for i = 1, packed.n do
                     local func = packed[i]
                     local coroutineID = coroutineIDCounter
                     coroutineIDCounter = coroutineIDCounter + 1
                     addedCoroutines[coroutineID] = func
                     os.queueEvent("parallelGroup:add:" .. nonce, coroutineID)
+                    ret[i] = coroutineID
                 end
+                return table.unpack(ret, 1, packed.n)
             end
             local function removeTask(...)
                 local packed = table.pack(...)
