@@ -161,25 +161,23 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
         if destItem == nil then
             -- dest is air, find any item
             -- local destInfo = destItem and state:getItemInfo(destItem, true)
-            if itemID ~= nil or state:getAmount(itemID) > 0 then
+            while itemID ~= nil or state:getAmount(itemID) == 0 do
+                iItemID = iItemID + 1
                 if iItemID > #itemIDs then break end
-                while true do
-                    iItemID = iItemID + 1
-                    if iItemID > #itemIDs then break end
-    
-                    itemID = itemIDs[iItemID]
-                    -- choose item to retrieve
-                    amountInStorage = state:getAmount(itemID)
-                    item = state:itemIDToItemInfo(itemID)
-    
-                    if amountInStorage > 0 then
-                        if amountLeft == 'stack' then
-                            amountLeft = item.maxCount or 999 -- there are 0 left in storage
-                        end
-                        break
+
+                itemID = itemIDs[iItemID]
+                -- choose item to retrieve
+                amountInStorage = state:getAmount(itemID)
+                item = state:itemIDToItemInfo(itemID)
+
+                if amountInStorage > 0 then
+                    if amountLeft == 'stack' then
+                        amountLeft = item.maxCount or 999 -- there are 0 left in storage
                     end
+                    break
                 end
             end
+            if iItemID > #itemIDs then break end
         elseif util.arrayContains(itemIDs, destInfo.id) then
             -- dest is not air, continue filling it
             itemID = destInfo.id
