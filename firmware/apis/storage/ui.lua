@@ -84,8 +84,8 @@ function storageUI.runUI(term, storageConnection)
             width = 20,
             alignContentX = "spaceBetween",
             marginX = 1,
-            ui.Text { text = item.name },
-            ui.Text { text = tostring(item.count) },
+            ui.Text:new { text = item.name },
+            ui.Text:new { text = tostring(item.count) },
         }
     end)
 
