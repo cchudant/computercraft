@@ -38,8 +38,6 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
             nil)
     end
 
-    local storagePointers = {}
-
     for sourceSlot, detail in pairs(sourceItems) do
         local originalAmount = detail.count
         if amountLeft == 0 then
@@ -55,18 +53,11 @@ function transfers.handleStoreItemsRequest(state, ireq, req, results, nono, acce
             and (req.slots == nil or util.arrayContains(req.slots, sourceSlot))
         then
 
-            local storagePointer = storagePointers[itemID]
-            if storagePointer == nil then
-                if nono then
-                    storagePointer = state:nonoStoragePointer(itemID)
-                else
-                    storagePointer = state:storagePointer(itemID)
-                end
-                storagePointers[itemID] = storagePointer
-            end
-
-            local success, _, transferedFromSlot = storagePointer:storeItems(
-                originalAmount, req.source, sourceSlot)
+            local success, _, transferedFromSlot = state:storeItems(
+                itemID,
+                originalAmount, req.source, sourceSlot,
+                item.maxCount
+            )
 
             balance[itemID] = (balance[itemID] or 0) + transferedFromSlot
 
@@ -152,8 +143,6 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
 
     local totalTransfered = 0
 
-    local storagePointer
-
     local destSlot = 1
     local iDestSlot = 1
     if req.slots ~= nil then
@@ -166,51 +155,36 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
         and (type(amountLeft) ~= "number" or amountLeft > 0)
     do -- for each retrieve chest slot
         local destItem = destinationPeriph.getItemDetail(destSlot)
+        local destInfo = destItem and state:getItemInfo(destItem, false)
 
         -- cboose an item
-        if storagePointer == nil or storagePointer:getAmount() == 0 then
-            storagePointer = nil
-            local destInfo = destItem and state:getItemInfo(destItem, true)
-
-            if destItem == nil then
-                -- dest is air, find any item
-                while true do
-                    iItemID = iItemID + 1
-                    if iItemID > #itemIDs then break end
-
-                    itemID = itemIDs[iItemID]
-                    -- choose item to retrieve
-                    if nono then
-                        storagePointer = state:nonoStoragePointer(itemID)
-                    else
-                        storagePointer = state:storagePointer(itemID)
-                    end
-                    amountInStorage = storagePointer:getAmount()
-                    item = state:itemIDToItemInfo(itemID)
-
-                    if amountLeft == 'stack' then
-                    amountLeft = item.maxCount or 999 -- there are 0 left in storage
-                    end
-
-                    if amountInStorage > 0 then
-                        break
-                    end
-                end
+        if destItem == nil then
+            -- dest is air, find any item
+            -- local destInfo = destItem and state:getItemInfo(destItem, true)
+            while true do
+                iItemID = iItemID + 1
                 if iItemID > #itemIDs then break end
-            elseif util.arrayContains(itemIDs, destInfo.id) then
-                -- dest is not air, continue filling it
-                itemID = destInfo.id
-                item = destInfo
-                if nono then
-                    storagePointer = state:nonoStoragePointer(itemID)
-                else
-                    storagePointer = state:storagePointer(itemID)
-                end
-                item = destInfo
 
-                if amountLeft == 'stack' then
-                    amountLeft = item.maxCount or 999 -- there are 0 left in storage
+                itemID = itemIDs[iItemID]
+                -- choose item to retrieve
+                amountInStorage = state:getAmount(itemID)
+                item = state:itemIDToItemInfo(itemID)
+
+                if amountInStorage > 0 then
+                    if amountLeft == 'stack' then
+                        amountLeft = item.maxCount or 999 -- there are 0 left in storage
+                    end
+                    break
                 end
+            end
+            -- if iItemID > #itemIDs then break end
+        elseif util.arrayContains(itemIDs, destInfo.id) then
+            -- dest is not air, continue filling it
+            itemID = destInfo.id
+            item = destInfo
+
+            if amountLeft == 'stack' then
+                amountLeft = item.maxCount or 999     -- there are 0 left in storage
             end
         end
 
@@ -222,17 +196,18 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
         end
         local canReceive = item and item.maxCount - inDestinationSlot
 
-
-        local amountInStorage = storagePointer and storagePointer:getAmount()
-        if storagePointer ~= nil and amountInStorage > 0 and canReceive > 0 then
+        local amountInStorage = state:getAmount(itemID)
+        if amountInStorage > 0 and canReceive > 0 then
             local wantTransfer = amountInStorage --[[@as number]]
             if type(amountLeft) == "number" then
                 wantTransfer = math.min(amountLeft, amountInStorage)
             end
-            print(item.maxCount, canReceive, inDestinationSlot)
-            local _, _, totalTransferedToSlot = storagePointer:retrieveItems(
+            local _, _, totalTransferedToSlot = state:retrieveItems(
+                itemID, 
                 math.min(wantTransfer, item.maxCount, canReceive),
-                req.destination, destSlot)
+                req.destination, destSlot,
+                item.maxCount
+            )
             balance[itemID] = (balance[itemID] or 0) - totalTransferedToSlot
 
             if results ~= nil then

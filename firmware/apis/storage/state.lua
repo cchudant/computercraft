@@ -94,23 +94,23 @@ local StorageState = {
 
     -- a chest takes up firstSlotId..(firstSlotId+size) slots
     ---@type { name: string, id: number, size: number, firstSlotId: number }[]
-    storageChests = {},
+    storageChests = nil,
 
     ---@type { name: string, id: number }[]
-    tags = {},
+    tags = nil,
     ---@type { [number]: number[] }
-    tagIDToItemIDs = {},
+    tagIDToItemIDs = nil,
 
     ---@type { name: string, id: number }[]
-    craftMethods = {},
+    craftMethods = nil,
 
     ---[itemID]: [methodID, amount, inputs itemID/tagID...]
     ---tag ids are represented as negative
     ---@type { [number]: number[] }
-    crafts = {},
+    crafts = nil,
 
     ---@type { name: string, nbt: string, id: number, maxCount: number }[]
-    items = {},
+    items = nil,
 
     -- we optimize for four types of lookups:
     -- - find number of items / number of specific item id
@@ -118,26 +118,25 @@ local StorageState = {
     -- - add items to storage, stacking them efficiently
     -- - find an empty slot
 
+    -- this works as a stack, when we retrieve, we pop from the back
+    -- when we add items we push back
+    --
+    -- this means we have to sort these slots from most amount of items
+    -- to least
+    -- [itemID] = {slotID, slotID, slotID}
     ---@type { [number]: number[] }
-    itemIDToSlots = {
-        -- this works as a stack, when we retrieve, we pop from the back
-        -- when we add items we push back
-        --
-        -- this means we have to sort these slots from most amount of items
-        -- to least
-        -- [itemID] = {slotID, slotID, slotID}
-    },
+    itemIDToSlots = nil,
     ---@type { [number]: number }
-    itemIDToAmounts = {
-        -- [itemID] = number of items
-    },
+    itemIDToSlotsFirstNonStackI = nil,
+    ---@type { [number]: number } [itemID] => number of items
+    itemIDToAmounts = nil,
 
-    itemIDAmountsSorted = {},
+    itemIDAmountsSorted = nil,
 
     -- slotID[]
     -- should be poped/pushed from the back
     ---@type number[]
-    emptySlots = {},
+    emptySlots = nil,
 
     ---@type CraftManager?
     craftManager = nil,
@@ -164,6 +163,7 @@ function StorageState.new(storageID)
         crafts = {},
         items = {},
         itemIDToSlots = {},
+        itemIDToSlotsILastStack = {},
         itemIDToAmounts = {},
         emptySlots = {},
         craftManager = nil,
@@ -388,7 +388,7 @@ function StorageState:initialStateSetup(settings)
     end)
 
     -- sort items slots
-    for _, slots in pairs(self.itemIDToSlots) do
+    for itemID, slots in pairs(self.itemIDToSlots) do
         local amounts = {} -- [slotid]: number of items
 
         for _, slotID in ipairs(slots) do
@@ -399,6 +399,21 @@ function StorageState:initialStateSetup(settings)
         table.sort(slots, function(slotA, slotB)
             return amounts[slotB] < amounts[slotA]
         end)
+
+        local firstNonStackI = 1
+        for index = #slots, 1, -1 do
+            local slotID = slots[index]
+            local chest, chestSlot = self:getStorageChestFromSlotID(slotID)
+            local chestObj = peripheral.wrap(chest.name)
+            local obj = chestObj.getItemDetail(chestSlot)
+
+            if obj ~= nil and obj.count >= self:getItemInfo(obj, false).maxCount then
+                break
+            end
+            firstNonStackI = index
+        end
+
+        self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI
     end
 end
 
@@ -485,170 +500,91 @@ function StorageState:updateAmount(itemID, newAmount)
     end
 end
 
----@class Paging
----@field skip number number of items to skip
----@field limit number number of items to return
-
-function StorageState:pagedItemList()
-
+function StorageState:getAmount(itemID)
+    return self.itemIDToAmounts[itemID] or 0
 end
 
----@class NonoPointer: Object
-NonoPointer = {
-    ---@type number
-    itemID = nil,
-    ---@type number
-    amount = nil,
-}
-craft.NonoPointer = util.makeClass(NonoPointer)
-
----@return NonoPointer
-function StorageState:nonoStoragePointer(itemID, amount)
-    return StoragePointer.construct {
-        itemID = itemID,
-        amount = amount or self.itemIDToAmounts[itemID],
-    } --[[@as NonoPointer]]
-end
-
-function NonoPointer:getAmount()
-    return self.amount
-end
-
-function NonoPointer:storeItems(amount, _, _)
-    self.amount = self.amount + amount
-end
-
-function NonoPointer:retrieveItems(amount, _, _)
-    self.amount = self.amount - amount
-end
-
----@class StoragePointer: Object
-StoragePointer = {
-    ---@type StorageState
-    state = nil,
-    ---@type number
-    itemID = nil,
-    ---@type number
-    maxCount = nil,
-    ---@type number
-    firstNonStackI = nil,
-}
-craft.StoragePointer = util.makeClass(StoragePointer)
-
----@return StoragePointer
-function StorageState:storagePointer(item)
-    if type(item) == "number" then
-        return StoragePointer.construct {
-            itemID = item,
-            maxCount = self:itemIDToItemInfo(item).maxCount,
-            state = self,
-        } --[[@as StoragePointer]]
-    end
-    return StoragePointer.construct {
-        itemID = item.id,
-        maxCount = item.maxCount,
-        state = self,
-    } --[[@as StoragePointer]]
-end
-
-function StoragePointer:getAmount()
-    return self.state.itemIDToAmounts[self.itemID] or 0
-end
-
----@private
-function StoragePointer:initFirstNonStackI(slots)
-    if self.firstNonStackI == nil then
-        self.firstNonStackI = 1
-        for index = #slots, 1, -1 do
-            local slotID = slots[index]
-            local chest, chestSlot = self.state:getStorageChestFromSlotID(slotID)
-            local chestObj = peripheral.wrap(chest.name)
-            local amount = chestObj.getItemDetail(chestSlot).count
-
-            if amount >= self.maxCount then
-                break
-            end
-            self.firstNonStackI = index
-        end
-    end
-end
-
-function StoragePointer:storeItems(amount, sourceName, sourceSlot)
-    local slots = self.state.itemIDToSlots[self.itemID]
+function StorageState:storeItems(itemID, amount, sourceName, sourceSlot, maxCount)
+    local slots = self.itemIDToSlots[itemID]
     if slots == nil then
         slots = {}
-        self.state.itemIDToSlots[self.itemID] = slots
+        self.itemIDToSlots[itemID] = slots
     end
-    self:initFirstNonStackI(slots)
+
+    if maxCount == nil then maxCount = self:itemIDToItemInfo(itemID).maxCount end
 
     -- optim: skip a pushItem when we need to store maxCount items
     -- for example, with slots being [64, 64, 13], (firstNonStackI = 3)
     -- we want to push a new stack of 64 ; instead of pushing it to the one
     -- with 13, and then rolling the rest over to a new slot,
     -- we push directly the 64 to a new slot, and insert that slot before the 13
-    if self.maxCount == amount and #self.state.emptySlots > 0 then
+    if maxCount == amount and #self.emptySlots > 0 then
         -- get a new slot
-        local slotID = table.remove(self.state.emptySlots, #self.state.emptySlots)
+        local slotID = table.remove(self.emptySlots, #self.emptySlots)
 
-        local chest, chestSlot = self.state:getStorageChestFromSlotID(slotID)
+        local chest, chestSlot = self:getStorageChestFromSlotID(slotID)
         local chestObj = peripheral.wrap(chest.name)
 
-        chestObj.pullItems(sourceName, sourceSlot, self.maxCount, chestSlot)
-        self.state:updateAmount(self.itemID, (self.state.itemIDToAmounts[self.itemID] or 0) + self.maxCount)
+        chestObj.pullItems(sourceName, sourceSlot, maxCount, chestSlot)
+        self:updateAmount(itemID, (self.itemIDToAmounts[itemID] or 0) + maxCount)
 
-        table.insert(slots, self.firstNonStackI, slotID)
-        self.firstNonStackI = self.firstNonStackI + 1
+        local firstNonStackI = self.itemIDToSlotsFirstNonStackI[itemID]
+        table.insert(slots, firstNonStackI, slotID)
+        self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI + 1
 
-        return true, nil, self.maxCount
+        return true, nil, maxCount
     end
 
     local totalTransfered = 0
 
     -- fill existing slots
-    for i = self.firstNonStackI, #slots do
+    local firstNonStackI = self.itemIDToSlotsFirstNonStackI[itemID]
+    for i = firstNonStackI, #slots do
         if amount == totalTransfered then
             break
         end
 
         local slotID = slots[i]
 
-        local chest, chestSlot = self.state:getStorageChestFromSlotID(slotID)
+        local chest, chestSlot = self:getStorageChestFromSlotID(slotID)
         local chestObj = peripheral.wrap(chest.name)
         local inSlotAmount = chestObj.getItemDetail(chestSlot).count
 
-        local toTransfer = math.min(self.maxCount - inSlotAmount, amount - totalTransfered)
+        local toTransfer = math.min(maxCount - inSlotAmount, amount - totalTransfered)
         totalTransfered = totalTransfered + toTransfer
-        if inSlotAmount + toTransfer == self.maxCount then
-            self.firstNonStackI = i + 1
+        if inSlotAmount + toTransfer == maxCount then
+            firstNonStackI = i + 1
         end
         chestObj.pullItems(sourceName, sourceSlot, toTransfer, chestSlot)
-        self.state:updateAmount(self.itemID, (self.state.itemIDToAmounts[self.itemID] or 0) + toTransfer)
+        self:updateAmount(itemID, (self.itemIDToAmounts[itemID] or 0) + toTransfer)
     end
 
     -- occupy empty slots!
     if totalTransfered < amount then
-        for emptySlotI = #self.state.emptySlots, 1, -1 do
+        for emptySlotI = #self.emptySlots, 1, -1 do
             if totalTransfered == amount then
                 break
             end
 
-            local slotID = table.remove(self.state.emptySlots, emptySlotI)
+            local slotID = table.remove(self.emptySlots, emptySlotI)
 
-            local chest, chestSlot = self.state:getStorageChestFromSlotID(slotID)
+            local chest, chestSlot = self:getStorageChestFromSlotID(slotID)
             local chestObj = peripheral.wrap(chest.name)
 
-            local toTransfer = math.min(self.maxCount, amount - totalTransfered)
+            local toTransfer = math.min(maxCount, amount - totalTransfered)
             totalTransfered = totalTransfered + toTransfer
 
             chestObj.pullItems(sourceName, sourceSlot, toTransfer, chestSlot)
-            self.state:updateAmount(self.itemID, (self.state.itemIDToAmounts[self.itemID] or 0) + toTransfer)
+            self:updateAmount(itemID, (self.itemIDToAmounts[itemID] or 0) + toTransfer)
 
             table.insert(slots, slotID)
-            if toTransfer == self.maxCount then
-                self.firstNonStackI = #slots + 1
+            if toTransfer == maxCount then
+                firstNonStackI = #slots + 1
             end
         end
     end
+
+    self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI
 
     if totalTransfered < amount then
         return false, "not enough space in storage", totalTransfered
@@ -656,32 +592,32 @@ function StoragePointer:storeItems(amount, sourceName, sourceSlot)
     return true, nil, totalTransfered
 end
 
-function StoragePointer:retrieveItems(amount, destName, destSlot)
-    local slots = self.state.itemIDToSlots[self.itemID]
+function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount)
+    local slots = self.itemIDToSlots[itemID]
     if slots == nil then
         slots = {}
-        self.state.itemIDToSlots[self.itemID] = slots
+        self.itemIDToSlots[itemID] = slots
     end
 
     local totalTransfered = 0
+    local firstNonStackI = self.itemIDToSlotsFirstNonStackI[itemID]
 
     -- as with store items, we implement an optim for maxCount
-    if amount == self.maxCount then
-        self:initFirstNonStackI(slots)
+    if amount == maxCount then
 
-        if self.firstNonStackI > 1 then
-            local slotID = table.remove(slots, self.firstNonStackI - 1)
+        if firstNonStackI > 1 then
+            local slotID = table.remove(slots, firstNonStackI - 1)
 
-            local chest, chestSlot = self.state:getStorageChestFromSlotID(slotID)
+            local chest, chestSlot = self:getStorageChestFromSlotID(slotID)
             local chestObj = peripheral.wrap(chest.name)
 
-            chestObj.pushItems(destName, chestSlot, self.maxCount, destSlot)
-            self.state:updateAmount(self.itemID, (self.state.itemIDToAmounts[self.itemID] or 0) + self.maxCount)
+            chestObj.pushItems(destName, chestSlot, maxCount, destSlot)
+            self:updateAmount(itemID, (self.itemIDToAmounts[itemID] or 0) + maxCount)
 
-            table.insert(slots, self.firstNonStackI, slotID)
-            self.firstNonStackI = self.firstNonStackI + 1
+            table.insert(slots, firstNonStackI, slotID)
+            self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI + 1
 
-            return true, nil, self.maxCount
+            return true, nil, maxCount
         end
     end
 
@@ -693,22 +629,24 @@ function StoragePointer:retrieveItems(amount, destName, destSlot)
 
         local slotID = slots[i]
 
-        local chest, chestSlot = self.state:getStorageChestFromSlotID(slotID)
+        local chest, chestSlot = self:getStorageChestFromSlotID(slotID)
         local chestObj = peripheral.wrap(chest.name)
         local inSlotAmount = chestObj.getItemDetail(chestSlot).count
 
         local toTransfer = math.min(inSlotAmount, amount - totalTransfered)
         totalTransfered = totalTransfered + toTransfer
         chestObj.pushItems(destName, chestSlot, toTransfer, destSlot)
-        self.state:updateAmount(self.itemID, (self.state.itemIDToAmounts[self.itemID] or 0) - toTransfer)
-        if inSlotAmount == self.maxCount and self.firstNonStackI ~= nil then
-            self.firstNonStackI = self.firstNonStackI - 1
+        self:updateAmount(itemID, (self.itemIDToAmounts[itemID] or 0) - toTransfer)
+        if inSlotAmount == maxCount and firstNonStackI ~= nil then
+            firstNonStackI = firstNonStackI - 1
         end
         if inSlotAmount - toTransfer == 0 then
             table.remove(slots, i)
-            table.insert(self.state.emptySlots, slotID)
+            table.insert(self.emptySlots, slotID)
         end
     end
+
+    self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI + 1
 
     if totalTransfered < amount then
         return false, "not enough items in storage", totalTransfered
