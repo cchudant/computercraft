@@ -116,7 +116,7 @@ function storageUI.runUI(term, storageConnection)
                     height = 1,
                     backgroundColor = colors.lightGray,
                     textColor = colors.white,
-                    onChange = function(self, newText)
+                    onChange = function(self, term, newText)
                         onTextChange(term, newText)
                     end
                 }

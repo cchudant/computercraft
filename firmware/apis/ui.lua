@@ -439,24 +439,24 @@ local function findChildAt(self, x, y, requestedW, requestedH)
     return foundChild, relX, relY
 end
 
-function ui.Block:onMonitorTouch(x, y, requestedW, requestedH)
+function ui.Block:onMonitorTouch(term, x, y, requestedW, requestedH)
     local child, relX, relY = findChildAt(self, x, y, requestedW, requestedH)
     if child then
-        child:onMonitorTouch(relX, relY, requestedW, requestedH)
+        child:onMonitorTouch(term, relX, relY, requestedW, requestedH)
     end
 end
 
-function ui.Block:onClick(x, y, button, requestedW, requestedH)
+function ui.Block:onClick(term, x, y, button, requestedW, requestedH)
     local child, relX, relY = findChildAt(self, x, y, requestedW, requestedH)
     if child then
-        child:onMonitorTouch(relX, relY, button, requestedW, requestedH)
+        child:onClick(term, relX, relY, button, requestedW, requestedH)
     end
 end
 
-function ui.Block:onMouseClick(x, y, button, requestedW, requestedH)
+function ui.Block:onMouseClick(term, x, y, button, requestedW, requestedH)
     local child, relX, relY = findChildAt(self, x, y, requestedW, requestedH)
     if child then
-        child:onMonitorTouch(relX, relY, button, requestedW, requestedH)
+        child:onMouseClick(term, relX, relY, button, requestedW, requestedH)
     end
 end
 
@@ -566,12 +566,12 @@ end
 function ui.TextInput:mount(term)
     self._globalOnChar = function(_, c)
         self.text = self.text .. c
-        self:onChange(self.text)
+        self:onChange(term, self.text)
     end
     self._globalOnKey = function(_, key)
         if key == 259 then -- backspace
             self.text = string.sub(self.text, 1, string.len(self.text) - 1)
-            self:onChange(self.text)
+            self:onChange(term, self.text)
         end
     end
     term.addGlobalListener('char', self._globalOnChar)
@@ -587,7 +587,7 @@ function ui.TextInput:getSize()
     return self.width, self.height
 end
 
-function ui.TextInput:onChange(newText) end
+function ui.TextInput:onChange(term, newText) end
 
 local function wrapTerm(term)
     ---@class UIContext: Redirect
