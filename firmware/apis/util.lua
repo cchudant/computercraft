@@ -629,7 +629,7 @@ end
 ---
 ---The function will ultimately return when every task in the task group has been completed.
 ---
----@param ... fun(addTask: fun(...: fun()): ..., addRemove: fun(...: fun()))
+---@param ... fun(addTask: fun(...: fun()): ..., addRemove: fun(...: number))
 function util.parallelGroup(...)
     local coroutineIDCounter = 1
     local coroutines = {}
@@ -662,15 +662,15 @@ function util.parallelGroup(...)
             local function removeTask(...)
                 local packed = table.pack(...)
                 for i = 1, packed.n do
-                    local func1 = packed[i]
-                    for coroutineID, func in ipairs(coroutines) do
-                        if util.arrayContains(func1, func) then
+                    local toRemoveID = packed[i]
+                    for coroutineID, _ in ipairs(coroutines) do
+                        if toRemoveID == coroutineID then
                             coroutines[coroutineID] = nil
                             os.queueEvent("parallelGroup:end:" .. nonce, coroutineID)
                         end
                     end
-                    for coroutineID, func in ipairs(addedCoroutines) do
-                        if util.arrayContains(func1, func) then
+                    for coroutineID, _ in ipairs(addedCoroutines) do
+                        if toRemoveID == coroutineID then
                             coroutines[coroutineID] = nil
                             os.queueEvent("parallelGroup:end:" .. nonce, coroutineID)
                         end
