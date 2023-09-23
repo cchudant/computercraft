@@ -379,8 +379,6 @@ local function computeFullTiling(self, blockWidth, blockHeight, contentW, conten
 end
 
 function ui.Block:draw(term, x, y, requestedW, requestedH)
-    print("drawing", self)
-    if self.transparent then return end
     local blockWidth = requestedW - self.paddingLeft - self.paddingRight
     local blockHeight = requestedH - self.paddingTop - self.paddingBottom
 
@@ -674,9 +672,8 @@ function ui.drawLoop(obj, termObj)
         redraw(obj, termObj)
         while not termObj._stopFlag do
             termObj._needsRedraw = false
-            local bag = { os.pullEvent() }
-            util.prettyPrint(bag[1])
-            local event, a, b, c = table.unpack(bag)
+            local bag = table.pack(os.pullEvent())
+            local event, a, b, c = table.unpack(bag, 1, bag.n)
     
             local w, h = termObj.getSize()
             if event == 'monitor_touch' then
@@ -695,12 +692,10 @@ function ui.drawLoop(obj, termObj)
     
             if termObj._globalListeners[event] ~= nil then
                 for _, handler in ipairs(termObj._globalListeners[event]) do
-                    handler(table.unpack(bag))
+                    handler(table.unpack(bag, 1, bag.n))
                 end
             end
 
-            print('needs redraw?', termObj._needsRedraw)
-    
             if termObj._needsRedraw then
                 redraw(obj, termObj)
             end
