@@ -14,8 +14,8 @@ local Button = {
 Button = ui.Block:new(Button)
 function Button:new(o)
     ui.Block.new(self, o)
-    self.unactiveBackgroundColor = o.backgroundColor
-    self.unactiveTextColor = o.textColor
+    o.unactiveBackgroundColor = o.backgroundColor
+    o.unactiveTextColor = o.textColor
     print(o.backgroundColor)
     return o
 end
