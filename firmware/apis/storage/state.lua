@@ -643,13 +643,11 @@ function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount
         totalTransfered = totalTransfered + toTransfer
         chestObj.pushItems(destName, chestSlot, toTransfer, destSlot)
         self:updateAmount(itemID, (self.itemIDToAmounts[itemID] or 0) - toTransfer)
-        if inSlotAmount == maxCount then
-            firstNonStackI = firstNonStackI - 1
-        end
         if inSlotAmount - toTransfer == 0 then
             print("remove", i)
             table.remove(slots, i)
             table.insert(self.emptySlots, slotID)
+            firstNonStackI = i
         end
     end
 
