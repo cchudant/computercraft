@@ -5,7 +5,7 @@ local util = require(".firmware.apis.util")
 
 local item, amount = ...
 
-local startStorageServer, makeStorageConnection = storage.storageServer({
+local startStorageServer, syncServer, makeStorageConnection = storage.newStorageServer({
     crafters = {{ inventory = "minecraft:chest_30", computerID = 13 }},
     storageChests = { "minecraft:chest_24", "minecraft:chest_23", "minecraft:chest_22" },
     smelters = { "minecraft:furnace_0" },
