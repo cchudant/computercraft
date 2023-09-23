@@ -9,8 +9,7 @@ local Button = {
     active = false,
     activeDuration = 0.2, -- seconds
     activeBackgroundColor = colors.lightGray,
-    activeTextColor = colors,
-    name = 'aaa'
+    activeTextColor = colors.white,
 }
 Button = ui.Block:new(Button)
 function Button:new(o)

@@ -449,7 +449,6 @@ end
 
 function ui.Block:onClick(term, x, y, button, requestedW, requestedH)
     local child, relX, relY = findChildAt(self, x, y, requestedW, requestedH)
-    print('click', child, child.name, x, y, relX, relY)
     if child then
         child:onClick(term, relX, relY, button, requestedW, requestedH)
     end
@@ -568,7 +567,6 @@ end
 function ui.TextInput:mount(term)
     self._globalOnChar = function(_, c)
         self.text = self.text .. c
-        print('changed', self.text)
         term.setNeedsRedraw()
         self:onChange(term, self.text)
     end
