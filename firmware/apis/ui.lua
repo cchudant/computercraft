@@ -566,12 +566,14 @@ end
 function ui.TextInput:mount(term)
     self._globalOnChar = function(_, c)
         self.text = self.text .. c
-        print('changed')
+        print('changed', self.text)
+        term.setNeedsRedraw()
         self:onChange(term, self.text)
     end
     self._globalOnKey = function(_, key)
         if key == 259 then -- backspace
             self.text = string.sub(self.text, 1, string.len(self.text) - 1)
+            term.setNeedsRedraw()
             self:onChange(term, self.text)
         end
     end
