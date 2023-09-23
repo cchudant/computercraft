@@ -479,8 +479,10 @@ function StorageState:updateAmount(itemID, newAmount)
         util.sortedRemove(self.itemIDAmountsSorted, { itemID, self.itemIDToAmounts[itemID] }, compare, equal)
     end
     self.itemIDToAmounts[itemID] = newAmount
-    entry[2] = newAmount
-    util.sortedInsert(self.itemIDAmountsSorted, entry, compare)
+    if newAmount > 0 then
+        entry[2] = newAmount
+        util.sortedInsert(self.itemIDAmountsSorted, entry, compare)
+    end
 end
 
 ---@class Paging
