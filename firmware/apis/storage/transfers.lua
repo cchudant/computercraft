@@ -202,7 +202,7 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
             if type(amountLeft) == "number" then
                 wantTransfer = math.min(amountLeft, amountInStorage)
             end
-            print(state:itemIDToItemInfo(itemID).name, wantTransfer, amountInStorage, canReceive)
+            print(state:itemIDToItemInfo(itemID).name, wantTransfer, amountInStorage, canReceive, inDestinationSlot)
             local _, _, totalTransferedToSlot = state:retrieveItems(
                 itemID, 
                 math.min(wantTransfer, item.maxCount, canReceive),
