@@ -47,9 +47,7 @@ function itemView(storageConnection, makeChild)
             20,
             function(items)
                 itemsInStorage = items
-                print("set needs redraw")
                 term.setNeedsRedraw()
-                os.queueEvent('dummy')
                 block:replaceChildren(term, createChildren())
             end
         )
@@ -90,10 +88,6 @@ function storageUI.runUI(term, storageConnection)
             height = 1,
             alignContentX = "spaceBetween",
             marginX = 1,
-            draw = function(...)
-                util.prettyPrint(...)
-                ui.Block.draw(...)
-            end,
             ui.Text:new { text = item.displayName },
             ui.Text:new { text = tostring(item.count) },
         }
@@ -133,6 +127,7 @@ function storageUI.runUI(term, storageConnection)
         ui.Block:new {
             width = '100%',
             height = '100%',
+            alignContentX = 'center',
             itemsBlock
         }
     }
