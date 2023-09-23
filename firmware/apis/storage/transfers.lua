@@ -166,6 +166,7 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
         and (type(amountLeft) ~= "number" or amountLeft > 0)
     do -- for each retrieve chest slot
         local destItem = destinationPeriph.getItemDetail(destSlot)
+        util.prettyPrint(destItem)
 
         -- cboose an item
         if storagePointer == nil or storagePointer:getAmount() == 0 then
@@ -199,7 +200,6 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
                 if iItemID > #itemIDs then break end
             elseif util.arrayContains(itemIDs, destInfo.id) then
                 -- dest is not air, continue filling it
-                print(destInfo.name)
                 itemID = destInfo.id
                 item = destInfo
                 if nono then
@@ -208,10 +208,8 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
                     storagePointer = state:storagePointer(itemID)
                 end
                 item = destInfo
-                util.prettyPrint(item)
 
                 if amountLeft == 'stack' then
-                    print(item.maxCount)
                     amountLeft = item.maxCount or 999 -- there are 0 left in storage
                 end
             end
