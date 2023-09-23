@@ -78,9 +78,17 @@ end
 
 local storageUI = {}
 ---@param term Redirect
----@param storageConnection StorageConnection
+---@param getStorageConnection fun(): StorageConnection
 ---@return fun() startUI
-function storageUI.runUI(term, storageConnection)
+function storageUI.runUI(term, getStorageConnection)
+    local storageConnection
+    ui.drawLoop(ui.Text:new {
+        text = 'loading...',
+        mount = function(self, term)
+            storageConnection = getStorageConnection()
+            term.close()
+        end
+    }, term)
 
     local itemsBlock, onTextChange = itemView(storageConnection, function (item)
         return ui.Block:new {

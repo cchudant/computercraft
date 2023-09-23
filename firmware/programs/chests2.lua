@@ -27,7 +27,9 @@ monitor.setTextScale(0.5)
 
 parallel.waitForAny(
     startStorageServer,
-    function() storageUI.runUI(monitor, makeStorageConnection()) end
+    function()
+        storageUI.runUI(monitor, makeStorageConnection)
+    end
     -- function()
     --     local connection = makeStorageConnection()
     --     local success, missing, consumed = connection.craftItem(item or 'computercraft:turtle_normal', tonumber(amount) or 1)
