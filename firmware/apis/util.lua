@@ -219,7 +219,7 @@ end
 ---@param arr T[]
 ---@param func fun(t: T): boolean
 ---@param n number
----@return U[]
+---@return T[]
 function util.arrayNFirsts(arr, func, n)
     local newTable = {}
     for _, el in ipairs(arr) do
@@ -640,19 +640,41 @@ function util.parallelGroup(...)
 
     local addedCoroutines = {}
 
-    for _, func in ipairs({ ... }) do
+    local packed = table.pack(...)
+    for i = 1, packed.n do
+        local func = packed[i]
         local coroutineID = coroutineIDCounter
         coroutineIDCounter = coroutineIDCounter + 1
         coroutines[coroutineID] = coroutine.create(function()
             local function addTask(...)
-                for _, func in ipairs({ ... }) do
+                local packed = table.pack(...)
+                for i = 1, packed.n do
+                    local func = packed[i]
                     local coroutineID = coroutineIDCounter
                     coroutineIDCounter = coroutineIDCounter + 1
                     addedCoroutines[coroutineID] = func
                     os.queueEvent("parallelGroup:add:" .. nonce, coroutineID)
                 end
             end
-            func(addTask)
+            local function removeTask(...)
+                local packed = table.pack(...)
+                for i = 1, packed.n do
+                    local func1 = packed[i]
+                    for coroutineID, func in ipairs(coroutines) do
+                        if util.arrayContains(func1, func) then
+                            coroutines[coroutineID] = nil
+                            os.queueEvent("parallelGroup:end:" .. nonce, coroutineID)
+                        end
+                    end
+                    for coroutineID, func in ipairs(addedCoroutines) do
+                        if util.arrayContains(func1, func) then
+                            coroutines[coroutineID] = nil
+                            os.queueEvent("parallelGroup:end:" .. nonce, coroutineID)
+                        end
+                    end
+                end
+            end
+            func(addTask, removeTask)
             os.queueEvent("parallelGroup:end:" .. nonce, coroutineID)
         end)
         local ok, filter = coroutine.resume(coroutines[coroutineID])

@@ -602,6 +602,10 @@ local function wrapTerm(term)
         _timeouts = {},
         _needsRedraw = false,
         _stopFlag = false,
+        ---@type fun(...: fun())
+        addTask = nil,
+        ---@type fun(...: fun())
+        removeTask = nil,
     }
     function newTerm.addGlobalListener(event, handler)
         local obj = newTerm._globalListeners[event] or {}
@@ -613,7 +617,7 @@ local function wrapTerm(term)
         local obj = newTerm._globalListeners[event] or {}
         local index = util.arrayIndexOf(handler)
         if index > 0 then
-            table.remove(obj)
+            table.remove(obj, index)
             newTerm._globalListeners[event] = obj
         end
         return index > 0
@@ -658,41 +662,47 @@ end
 function ui.drawLoop(obj, termObj)
     termObj = wrapTerm(termObj or term)
 
-    obj:mount(termObj)
+    util.parallelGroup(function (addTask, removeTask)
+        termObj.addTask = addTask
+        termObj.removeTask = removeTask
 
-    redraw(obj, termObj)
-    while not termObj._stopFlag do
-        local bag = { os.pullEvent() }
-        local event, a, b, c = table.unpack(bag)
-        termObj._needsRedraw = false
-
-        local w, h = termObj.getSize()
-        if event == 'monitor_touch' then
-            obj:onMonitorTouch(termObj, b, c, w, h)
-            obj:onClick(termObj, b, c, 0, w, h)
-        elseif event == 'mouse_click' then
-            obj:onMouseClick(termObj, b, c, a, w, h)
-            obj:onClick(termObj, b, c, a, w, h)
-        elseif event == 'timer' then
-            local func = termObj._timeouts[a]
-            if func then
-                func(termObj)
-                termObj._timeouts[a] = nil
+        obj:mount(termObj)
+    
+        redraw(obj, termObj)
+        while not termObj._stopFlag do
+            local bag = { os.pullEvent() }
+            local event, a, b, c = table.unpack(bag)
+            termObj._needsRedraw = false
+    
+            local w, h = termObj.getSize()
+            if event == 'monitor_touch' then
+                obj:onMonitorTouch(termObj, b, c, w, h)
+                obj:onClick(termObj, b, c, 0, w, h)
+            elseif event == 'mouse_click' then
+                obj:onMouseClick(termObj, b, c, a, w, h)
+                obj:onClick(termObj, b, c, a, w, h)
+            elseif event == 'timer' then
+                local func = termObj._timeouts[a]
+                if func then
+                    func(termObj)
+                    termObj._timeouts[a] = nil
+                end
+            end
+    
+            if termObj._globalListeners[event] ~= nil then
+                for _, handler in ipairs(termObj._globalListeners[event]) do
+                    handler(table.unpack(bag))
+                end
+            end
+    
+            if termObj._needsRedraw then
+                redraw(obj, termObj)
             end
         end
-
-        if termObj._globalListeners[event] ~= nil then
-            for _, handler in ipairs(termObj._globalListeners[event]) do
-                handler(table.unpack(bag))
-            end
-        end
-
-        if termObj._needsRedraw then
-            redraw(obj, termObj)
-        end
-    end
-
-    obj:unMount(termObj)
+    
+        obj:unMount(termObj)
+    
+    end)
 end
 
 return ui
