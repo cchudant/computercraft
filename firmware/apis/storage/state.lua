@@ -384,7 +384,7 @@ function StorageState:initialStateSetup(settings)
 
     self.itemIDAmountsSorted = util.objectEntries(self.itemIDToAmounts)
     table.sort(self.itemIDAmountsSorted, function(a, b)
-        return b < a
+        return b[2] < a[2]
     end)
 
     -- sort items slots
@@ -472,7 +472,7 @@ function StorageState:openNonStorage(periph)
 end
 
 function StorageState:updateAmount(itemID, newAmount)
-    local function compare(a, b) return b < a end
+    local function compare(a, b) return b[2] < a[2] end
     local function equal(a, b) return a[1] == b[1] end
     util.sortedRemove(self.itemIDAmountsSorted, { itemID, self.itemIDToAmounts[itemID] }, compare, equal)
     self.itemIDToAmounts[itemID] = newAmount
