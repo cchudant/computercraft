@@ -1,4 +1,5 @@
 local ui = require(".firmware.apis.ui")
+local util = require(".firmware.apis.util")
 local storage = require(".firmware.apis.storage")
 
 ---@class Button: ui.Block
@@ -82,6 +83,7 @@ local storageUI = {}
 function storageUI.runUI(term, storageConnection)
 
     local itemsBlock, onTextChange = itemView(storageConnection, function (item)
+        util.prettyPrint(item)
         return ui.Block:new {
             width = 20,
             alignContentX = "spaceBetween",
