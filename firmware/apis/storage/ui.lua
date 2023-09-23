@@ -93,8 +93,8 @@ function storageUI.runUI(term, storageConnection)
     end)
 
     local interface = ui.Block:new {
-        width = 10,
-        height = 10,
+        width = '100%',
+        height = '100%',
         backgroundColor = colors.black,
         ui.Block:new {
             width = '100%',
