@@ -68,6 +68,7 @@ function itemView(storageConnection, makeChild)
     }
 
     local function onTextChange(term, newText)
+        print("change22")
         search = newText
         if block.task then
             term.removeTask(block.task)
