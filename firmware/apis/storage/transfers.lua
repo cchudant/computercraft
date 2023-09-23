@@ -214,7 +214,7 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
             end
         end
 
-        util.prettyPrint(destItem.name, item.name)
+        util.prettyPrint(destItem and destItem.name, item and item.name)
 
         local inDestinationSlot = 0
         if destItem ~= nil then
