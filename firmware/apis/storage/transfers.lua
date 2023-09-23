@@ -166,7 +166,6 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
         and (type(amountLeft) ~= "number" or amountLeft > 0)
     do -- for each retrieve chest slot
         local destItem = destinationPeriph.getItemDetail(destSlot)
-        util.prettyPrint(destItem)
 
         -- cboose an item
         if storagePointer == nil or storagePointer:getAmount() == 0 then
@@ -214,6 +213,8 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
                 end
             end
         end
+
+        util.prettyPrint(destItem.name, item.name)
 
         local inDestinationSlot = 0
         if destItem ~= nil then
