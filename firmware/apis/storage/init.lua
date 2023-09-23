@@ -220,6 +220,7 @@ function storage.newStorageServer(settings, serverID)
             if util.stringStartsWith(strippedItem, stripped(fuzzySearch)) then
                 table.insert(ret, { displayName = strippedItem, name = item.name, count = tuple[2] })
             end
+            i = i + 1
         end
         return ret
     end
