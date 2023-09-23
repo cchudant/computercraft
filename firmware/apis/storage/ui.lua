@@ -43,7 +43,7 @@ function itemView(storageConnection, makeChild)
     local block
     local function task(term)
         storageConnection.listTopItems(
-            '',
+            search,
             20,
             function(items)
                 itemsInStorage = items
