@@ -13,7 +13,7 @@ local Button = {
 }
 Button = ui.Block:new(Button)
 function Button:new(o)
-    ui.UIObject.new(self, o)
+    ui.Block.new(self, o)
     self.unactiveBackgroundColor = self.backgroundColor
     self.unactiveTextColor = self.textColor
     return o
