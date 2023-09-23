@@ -48,6 +48,7 @@ function itemView(storageConnection, makeChild)
                 itemsInStorage = items
                 print("set needs redraw")
                 term.setNeedsRedraw()
+                os.queueEvent('dummy')
                 block.replaceChildren(term, createChildren())
                 print(#items, #createChildren())
             end
