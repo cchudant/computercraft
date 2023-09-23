@@ -618,7 +618,7 @@ function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount
             chestObj.pushItems(destName, chestSlot, maxCount, destSlot)
             self:updateAmount(itemID, (self.itemIDToAmounts[itemID] or 0) - maxCount)
 
-            table.insert(slots, firstNonStackI, slotID)
+            table.insert(self.emptySlots, slotID)
             self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI + 1
 
             print("end", self.itemIDToSlotsFirstNonStackI[itemID])
