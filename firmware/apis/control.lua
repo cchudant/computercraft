@@ -536,8 +536,17 @@ local function makeConnection(protocol, serverID, pullEvent, sendEvent)
 	---@return any ...
 	function connection.pullEvent(filter)
 		while true do
-			local fullProtocolString2, method2, _, connectionID2, args = pullEvent(fullProtocolString)
+			local fullProtocolString2, method2, nonce, connectionID2, args = pullEvent(fullProtocolString)
 			if fullProtocolString == fullProtocolString2
+				and method2 == 'end' and connectionID == connectionID2 then
+				-- end of connection
+				return 'end'
+			elseif fullProtocolString == fullProtocolString2
+				and method2 == 'keepAlive' and connectionID == connectionID2 then
+				-- keep alive
+				
+				sendEvent(fullProtocolString, 'keepAliveRep', nonce, connectionID)
+			elseif fullProtocolString == fullProtocolString2
 				and "event" == method2
 				and connectionID == connectionID2
 				and type(args) == 'table'
@@ -559,7 +568,6 @@ function control.localConnect(protocol, serverID)
 		return fullProtocolString, method, nonce, connectionID, args
 	end
 	local function sendEvent(fullProtocolString, method, nonce, connectionID, args)
-		print("sending", fullProtocolString, method, nonce, connectionID, args)
 		os.queueEvent(fullProtocolString, method, nonce, connectionID, args)
 	end
 
@@ -693,7 +701,6 @@ function control.makeServer(methods, protocol, serverID)
 				---@param args table
 				---@param answer fun(...)
 				local function handleRpc(sender, connectionID, method, args, answer)
-					print("server rpc", sender, connectionID, method)
 					if method == "keepAliveRep" then
 						lastKeepAlives[connectionID] = os.clock()
 					elseif method == "subscribeEvent" then
@@ -722,7 +729,8 @@ function control.makeServer(methods, protocol, serverID)
 							currentlyAnswering[connectionID] = (currentlyAnswering[connectionID] or 0) + 1
 
 							if protected then
-								local ret = table.pack(xpcall(func, debug.traceback, connectionID, table.unpack(args, 1, args.n)))
+								local ret = table.pack(xpcall(func, debug.traceback, connectionID,
+									table.unpack(args, 1, args.n)))
 								if ret[1] then
 									answer(true, table.unpack(ret, 2, ret.n))
 								else
@@ -788,14 +796,17 @@ function control.makeServer(methods, protocol, serverID)
 					local keepAliveTime = 5
 					os.sleep(keepAliveTime)
 					while true do
-						for connectionID, _ in pairs(connectionIDs) do
+						-- operate on a copy, so that when new connectionIDs are created during sleep, we don't remove them
+						-- until next loop turn
+						local connectionIDsCopy = util.objectCopy(connectionIDs)
+						for connectionID, _ in pairs(connectionIDsCopy) do
 							sendTo(connectionID, nil, "keepAlive")
 						end
 						os.sleep(keepAliveTime)
 						-- clear any connection that has not responded
 						local clock = os.clock()
-						for connectionID, _ in pairs(connectionIDs) do
-							local keepAlive = lastKeepAlives[connectionID]
+						for connectionID, _ in pairs(connectionIDsCopy) do
+							local keepAlive = lastKeepAlives[connectionID] or 0
 							if keepAlive ~= nil and clock - keepAlive > keepAliveTime then
 								server.closeConnection(connectionID)
 							end
@@ -819,12 +830,12 @@ function control.makeServer(methods, protocol, serverID)
 		)
 	end
 
-    local function getLocalConnection()
-        if not server.isUp then
-            os.pullEvent(fullProtocolString .. ":start")
-        end
-        return control.localConnect(protocol, serverID)
-    end
+	local function getLocalConnection()
+		if not server.isUp then
+			os.pullEvent(fullProtocolString .. ":start")
+		end
+		return control.localConnect(protocol, serverID)
+	end
 
 	return startServer, server, getLocalConnection
 end
