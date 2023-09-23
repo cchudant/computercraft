@@ -671,10 +671,10 @@ function ui.drawLoop(obj, termObj)
         termObj.clear()
         redraw(obj, termObj)
         while not termObj._stopFlag do
-            local bag = { os.pullEvent() }
-            util.prettyPrint(bag)
-            local event, a, b, c = table.unpack(bag)
             termObj._needsRedraw = false
+            local bag = { os.pullEvent() }
+            util.prettyPrint(bag[1])
+            local event, a, b, c = table.unpack(bag)
     
             local w, h = termObj.getSize()
             if event == 'monitor_touch' then

@@ -46,6 +46,7 @@ function itemView(storageConnection, makeChild)
             20,
             function(items)
                 itemsInStorage = items
+                print("set needs redraw")
                 term.setNeedsRedraw()
                 block.replaceChildren(term, createChildren())
                 print(#items, #createChildren())
