@@ -83,7 +83,6 @@ local storageUI = {}
 function storageUI.runUI(term, storageConnection)
 
     local itemsBlock, onTextChange = itemView(storageConnection, function (item)
-        util.prettyPrint(item)
         return ui.Block:new {
             width = 20,
             alignContentX = "spaceBetween",
