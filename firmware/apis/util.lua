@@ -629,7 +629,7 @@ end
 ---
 ---The function will ultimately return when every task in the task group has been completed.
 ---
----@param ... fun(addTask: fun(...: fun()))
+---@param ... fun(addTask: fun(...: fun()), addRemove: fun(...: fun()))
 function util.parallelGroup(...)
     local coroutineIDCounter = 1
     local coroutines = {}

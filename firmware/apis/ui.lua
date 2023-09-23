@@ -645,7 +645,6 @@ local function redraw(obj, termObj)
     termObj.setCursorPos(1, 1)
     termObj.setBackgroundColor(termObj.defaultBackgroundColor)
     termObj.setTextColor(termObj.defaultTextColor)
-    termObj.clear()
     termObj.setCursorBlink(false)
     termObj.setTextScale(0.5)
     obj:draw(termObj, 1, 1, w, h)
@@ -666,8 +665,10 @@ function ui.drawLoop(obj, termObj)
         termObj.addTask = addTask
         termObj.removeTask = removeTask
 
+
         obj:mount(termObj)
     
+        termObj.clear()
         redraw(obj, termObj)
         while not termObj._stopFlag do
             local bag = { os.pullEvent() }
@@ -694,6 +695,8 @@ function ui.drawLoop(obj, termObj)
                     handler(table.unpack(bag))
                 end
             end
+
+            print('needs redraw?', termObj._needsRedraw)
     
             if termObj._needsRedraw then
                 redraw(obj, termObj)
