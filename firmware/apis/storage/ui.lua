@@ -15,6 +15,7 @@ Button = ui.Block:new(Button)
 function Button:onPress(termObj) end
 function Button:onClick(termObj)
     self.active = true
+    termObj.setNeedsRedraw()
     termObj.scheduleDelayed(function ()
         self.active = false
         termObj.setNeedsRedraw()
