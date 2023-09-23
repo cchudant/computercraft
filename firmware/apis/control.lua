@@ -693,6 +693,7 @@ function control.makeServer(methods, protocol, serverID)
 				---@param args table
 				---@param answer fun(...)
 				local function handleRpc(sender, connectionID, method, args, answer)
+					print("server rpc", sender, connectionID, method)
 					if method == "keepAliveRep" then
 						lastKeepAlives[connectionID] = os.clock()
 					elseif method == "subscribeEvent" then
