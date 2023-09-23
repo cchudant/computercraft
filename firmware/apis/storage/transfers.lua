@@ -198,7 +198,8 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
                 if iItemID > #itemIDs then break end
             elseif util.arrayContains(itemIDs, destInfo.id) then
                 -- dest is not air, continue filling it
-                itemID = item.id
+                itemID = destInfo.id
+                item = destInfo
                 if nono then
                     storagePointer = state:nonoStoragePointer(itemID)
                 else
