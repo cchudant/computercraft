@@ -18,11 +18,13 @@ local function wrapConnection(connection)
     ---@param func fun(value: any)
     function storageConnection.listTopItems(fuzzySearch, limit, func)
         -- get initial value & sub to the topic
+        print("subbed amountsUpdate")
         storageConnection.subscribeEvent("amountsUpdate")
         while true do
             local value = storageConnection.getTopItems(fuzzySearch, limit)
             func(value)
             storageConnection.pullEvent("amountsUpdate")
+            print("pulled amountsUpdate")
         end
     end
 
@@ -217,6 +219,7 @@ function storage.newStorageServer(settings, serverID)
                 table.insert(ret, { displayName = strippedItem, name = tuple[1], amount = tuple[2] })
             end
         end
+        print(ret)
         return ret
     end
 
