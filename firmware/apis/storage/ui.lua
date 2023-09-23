@@ -87,7 +87,7 @@ function storageUI.runUI(term, getStorageConnection)
         mount = function(self, term)
             term.addTask(function ()
                 storageConnection = getStorageConnection()
-                print("connected")
+                print("connected 2")
                 term.close()
             end)
         end
