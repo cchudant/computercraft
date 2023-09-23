@@ -177,7 +177,7 @@ function transfers.handleRetrieveItemRequest(state, ireq, req, results, nono, ac
                     break
                 end
             end
-            -- if iItemID > #itemIDs then break end
+            if iItemID > #itemIDs then break end
         elseif util.arrayContains(itemIDs, destInfo.id) then
             -- dest is not air, continue filling it
             itemID = destInfo.id
