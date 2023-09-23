@@ -86,6 +86,7 @@ function storageUI.runUI(term, getStorageConnection)
         text = 'loading...',
         mount = function(self, term)
             storageConnection = getStorageConnection()
+            print("connected")
             term.close()
         end
     }, term)
