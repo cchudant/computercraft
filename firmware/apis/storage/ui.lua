@@ -109,6 +109,9 @@ function storageUI.runUI(term, getStorageConnection)
 
     local itemsBlock, onTextChange = itemView(storageConnection, function (item)
         return Button:new {
+            backgroundColor = colors.black,
+            textColor = colors.white,
+            activeBackgroundColor = colors.gray,
             width = 25,
             height = 1,
             alignContentX = "spaceBetween",
