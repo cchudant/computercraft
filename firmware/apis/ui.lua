@@ -378,6 +378,7 @@ local function computeFullTiling(self, blockWidth, blockHeight, contentW, conten
 end
 
 function ui.Block:draw(term, x, y, requestedW, requestedH)
+    print("Drawing block", self)
     if self.transparent then return end
     local blockWidth = requestedW - self.paddingLeft - self.paddingRight
     local blockHeight = requestedH - self.paddingTop - self.paddingBottom
