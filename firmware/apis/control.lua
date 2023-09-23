@@ -494,6 +494,7 @@ local function makeConnection(protocol, serverID, pullEvent, sendEvent)
 		sendEvent(fullProtocolString, method, nonce, connectionID, table.pack(...))
 		while true do
 			local fullProtocolString2, method2, nonce2, connectionID2, args = pullEvent(fullProtocolString)
+			print("got", fullProtocolString2, method2, nonce2, connectionID2, args)
 			if fullProtocolString == fullProtocolString2
 				and method == method2
 				and nonce == nonce2
