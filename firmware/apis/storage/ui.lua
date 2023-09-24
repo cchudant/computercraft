@@ -70,7 +70,7 @@ function itemView(storageConnection, makeChild)
     end
 
     block = ui.Grid:new {
-        childWidth = 26,
+        childWidth = 25,
         childHeight = 1,
         mount = function(self, term)
             self.task = term.addTask(function() task(term) end)
