@@ -510,7 +510,6 @@ function StorageState:storeItems(itemID, amount, sourceName, sourceSlot, maxCoun
         slots = {}
         self.itemIDToSlots[itemID] = slots
     end
-    util.prettyPrint(self.itemIDToSlots[itemID], self.itemIDToSlotsFirstNonStackI[itemID], #self.emptySlots)
 
     if maxCount == nil then maxCount = self:itemIDToItemInfo(itemID).maxCount end
 
@@ -533,7 +532,6 @@ function StorageState:storeItems(itemID, amount, sourceName, sourceSlot, maxCoun
         table.insert(slots, firstNonStackI, slotID)
         self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI + 1
 
-        util.prettyPrint(self.itemIDToSlots[itemID], self.itemIDToSlotsFirstNonStackI[itemID], #self.emptySlots)
         return true, nil, maxCount
     end
 
@@ -588,7 +586,6 @@ function StorageState:storeItems(itemID, amount, sourceName, sourceSlot, maxCoun
 
     self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI
 
-    util.prettyPrint(self.itemIDToSlots[itemID], self.itemIDToSlotsFirstNonStackI[itemID], #self.emptySlots)
     if totalTransfered < amount then
         return false, "not enough space in storage", totalTransfered
     end
@@ -597,7 +594,6 @@ end
 
 function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount)
     local slots = self.itemIDToSlots[itemID]
-    util.prettyPrint(self.itemIDToSlots[itemID], self.itemIDToSlotsFirstNonStackI[itemID], #self.emptySlots)
 
     local totalTransfered = 0
     local firstNonStackI = self.itemIDToSlotsFirstNonStackI[itemID]
@@ -616,7 +612,6 @@ function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount
             table.insert(self.emptySlots, slotID)
             self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI - 1
 
-            util.prettyPrint(self.itemIDToSlots[itemID], self.itemIDToSlotsFirstNonStackI[itemID], #self.emptySlots)
             return true, nil, maxCount
         end
     end
@@ -646,7 +641,6 @@ function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount
 
     self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI
 
-    util.prettyPrint(self.itemIDToSlots[itemID], self.itemIDToSlotsFirstNonStackI[itemID], #self.emptySlots)
     if totalTransfered < amount then
         return false, "not enough items in storage", totalTransfered
     end
