@@ -77,6 +77,7 @@ function itemView(storageConnection, makeChild)
             ui.Block.mount(self, term)
         end,
         unMount = function(self, term)
+            print("Removing", self.task)
             term.removeTask(self.task)
             ui.Block.unMount(self, term)
         end,
