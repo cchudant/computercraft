@@ -520,7 +520,6 @@ function StorageState:storeItems(itemID, amount, sourceName, sourceSlot, maxCoun
     -- we push directly the 64 to a new slot, and insert that slot before the 13
     if maxCount == amount and #self.emptySlots > 0 then
         -- get a new slot
-        print("ddd", #self.emptySlots)
         local slotID = table.remove(self.emptySlots, #self.emptySlots)
 
         local chest, chestSlot = self:getStorageChestFromSlotID(slotID)
@@ -568,7 +567,6 @@ function StorageState:storeItems(itemID, amount, sourceName, sourceSlot, maxCoun
             end
 
             local slotID = table.remove(self.emptySlots, emptySlotI)
-            print(2, emptySlotI, #self.emptySlots)
 
             local chest, chestSlot = self:getStorageChestFromSlotID(slotID)
             local chestObj = peripheral.wrap(chest.name)
@@ -609,20 +607,17 @@ function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount
 
         if firstNonStackI > 1 then
             local slotID = table.remove(slots, firstNonStackI - 1)
-            print(#slots, firstNonStackI)
 
             local chest, chestSlot = self:getStorageChestFromSlotID(slotID)
             local chestObj = peripheral.wrap(chest.name)
 
-            print("d", destName, chestSlot, maxCount, destSlot)
             chestObj.pushItems(destName, chestSlot, maxCount, destSlot)
             self:updateAmount(itemID, (self.itemIDToAmounts[itemID] or 0) - maxCount)
 
             table.insert(self.emptySlots, slotID)
             self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI - 1
 
-            print("end", self.itemIDToSlotsFirstNonStackI[itemID])
-
+            util.prettyPrint(self.itemIDToSlots, self.itemIDToSlotsFirstNonStackI, #self.emptySlots)
             return true, nil, maxCount
         end
     end
@@ -644,7 +639,6 @@ function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount
         chestObj.pushItems(destName, chestSlot, toTransfer, destSlot)
         self:updateAmount(itemID, (self.itemIDToAmounts[itemID] or 0) - toTransfer)
         if inSlotAmount - toTransfer == 0 then
-            print("remove", i)
             table.remove(slots, i)
             table.insert(self.emptySlots, slotID)
             firstNonStackI = i

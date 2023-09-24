@@ -544,8 +544,6 @@ local function makeConnection(protocol, serverID, pullEvent, sendEvent)
 				and method2 == 'keepAlive' and connectionID == connectionID2 then
 				-- keep alive
 
-				print("got keep alive request")
-				
 				sendEvent(fullProtocolString, 'keepAliveRep', nonce, connectionID)
 			elseif fullProtocolString == fullProtocolString2
 				and "event" == method2
@@ -703,7 +701,6 @@ function control.makeServer(methods, protocol, serverID)
 				---@param answer fun(...)
 				local function handleRpc(sender, connectionID, method, args, answer)
 					if method == "keepAliveRep" then
-						print("keep alive rep", os.clock())
 						lastKeepAlives[connectionID] = os.clock()
 					elseif method == "subscribeEvent" then
 						connectionIDs[connectionID] = sender
@@ -810,7 +807,6 @@ function control.makeServer(methods, protocol, serverID)
 						for connectionID, _ in pairs(connectionIDsCopy) do
 							local keepAlive = lastKeepAlives[connectionID] or 0
 							if keepAlive ~= nil and clock - keepAlive > keepAliveTime then
-								print("kicking out", connectionID, clock - keepAlive)
 								server.closeConnection(connectionID)
 							end
 						end
