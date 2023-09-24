@@ -233,7 +233,7 @@ function storage.newStorageServer(settings, serverID)
                 end
                 local item = state:itemIDToItemInfo(itemID)
                 local strippedItem = stripped(item.name)
-                table.insert(ret, { displayName = strippedItem, name = item.name })
+                table.insert(ret, { displayName = strippedItem, name = item.name, craft = true })
             end
         end
         return ret
