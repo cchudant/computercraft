@@ -697,7 +697,6 @@ function util.parallelGroup(...)
             addedCoroutines[coroutineID] = nil
             coroutines[coroutineID] = coroutine.create(function()
                 func()
-                print("really remove n@",coroutineID)
                 os.queueEvent("parallelGroup:end:" .. nonce, coroutineID)
             end)
             local ok, filter = coroutine.resume(coroutines[coroutineID])
@@ -711,7 +710,6 @@ function util.parallelGroup(...)
             coroutines[coroutineID] = nil
             filters[coroutineID] = nil
             nCoroutines = nCoroutines - 1
-            print("really remove", coroutineID)
         end
         for k, co in pairs(coroutines) do
             if filters[k] == nil or filters[k] == bag[1] or bag[1] == 'terminate' then

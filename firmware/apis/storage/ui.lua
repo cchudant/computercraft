@@ -70,7 +70,7 @@ function itemView(storageConnection, makeChild)
     end
 
     block = ui.Grid:new {
-        childWidth = 25,
+        childWidth = 26,
         childHeight = 1,
         mount = function(self, term)
             self.task = term.addTask(function() task(term) end)
@@ -134,6 +134,7 @@ function storageUI.runUI(term, getStorageConnection)
             height = 1,
             alignContentX = "spaceBetween",
             marginX = 0.5,
+            paddingRight = 1,
             onPress = function(self, term)
                 term.addTask(function()
                     storageConnection.transfer({
