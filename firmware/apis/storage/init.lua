@@ -219,6 +219,7 @@ function storage.newStorageServer(settings, serverID)
             end
             i = i + 1
         end
+        print("top items, ", #ret)
         return ret
     end
 
