@@ -37,10 +37,48 @@ function Button:onClick(termObj)
     self:onPress(termObj)
 end
 
-function itemView(storageConnection, makeChild)
+local function itemView(storageConnection)
     local itemsInStorage = nil
 
     local search = ''
+
+    local function makeChild(item)
+        local countText = ""
+        local textColor = colors.lightBlue
+        if not item.craft then
+            countText = tostring(item.count)
+            textColor = colors.white
+        end
+
+        local width = 25
+        local displayName = item.displayName
+        if string.len(displayName) > width - string.len(countText) then
+            displayName = string.sub(displayName, 1, width - string.len(countText) - 1) .. "."
+        end
+
+        return Button:new {
+            backgroundColor = colors.black,
+            textColor = textColor,
+            activeBackgroundColor = colors.gray,
+            width = width,
+            height = 1,
+            alignContentX = "spaceBetween",
+            marginX = 0.5,
+            paddingLeft = 1,
+            onPress = function(self, term)
+                term.addTask(function()
+                    storageConnection.transfer({
+                        type = "retrieveItems",
+                        name = item.name,
+                        amount = 'stack',
+                        destination = retrieveChest,
+                    })
+                end)
+            end,
+            ui.Text:new { text = displayName },
+            ui.Text:new { text = countText },
+        }
+    end
 
     local function createChildren()
         if itemsInStorage == nil then
@@ -94,6 +132,35 @@ function itemView(storageConnection, makeChild)
     return block, onTextChange
 end
 
+local function craftView(storageConnection, item)
+    return ui.Block:new {
+        width = '100%',
+        height = '100%',
+        maxWidth = 60,
+        maxHeight = 20,
+        backgroundColor = 'lightBlue',
+        alignContentY = 'spaceBetween',
+        ui.Block:new {
+            width = '100%',
+            ui.Text:new {
+                width = '100%',
+                text = "Crafting " .. item.displayName,
+            },
+        },
+        ui.Block:new {
+            width = '100%',
+            Button:new {
+                paddingY = 1,
+                paddingX = 5,
+                ui.Text:new {
+                    text = "Order"
+                },
+                marginLeft = 1,
+            }
+        },
+    }
+end
+
 local storageUI = {}
 ---@param term Redirect
 ---@param getStorageConnection fun(): StorageConnection
@@ -111,43 +178,7 @@ function storageUI.runUI(term, getStorageConnection)
         end
     }, term)
 
-    local itemsBlock, onTextChange = itemView(storageConnection, function(item)
-        local countText = ""
-        local textColor = colors.lightBlue
-        if not item.craft then
-            countText = tostring(item.count)
-            textColor = colors.white
-        end
-
-        local width = 25
-        local displayName = item.displayName
-        if string.len(displayName) > width - string.len(countText) then
-            displayName = string.sub(displayName, 1, width - string.len(countText) - 1) .. "."
-        end
-
-        return Button:new {
-            backgroundColor = colors.black,
-            textColor = textColor,
-            activeBackgroundColor = colors.gray,
-            width = width,
-            height = 1,
-            alignContentX = "spaceBetween",
-            marginX = 0.5,
-            paddingLeft = 1,
-            onPress = function(self, term)
-                term.addTask(function()
-                    storageConnection.transfer({
-                        type = "retrieveItems",
-                        name = item.name,
-                        amount = 'stack',
-                        destination = retrieveChest,
-                    })
-                end)
-            end,
-            ui.Text:new { text = displayName },
-            ui.Text:new { text = countText },
-        }
-    end)
+    local itemsBlock, onTextChange = itemView(storageConnection)
 
     local interface = ui.Block:new {
         width = '100%',
