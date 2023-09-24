@@ -532,6 +532,7 @@ function StorageState:storeItems(itemID, amount, sourceName, sourceSlot, maxCoun
         table.insert(slots, firstNonStackI, slotID)
         self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI + 1
 
+        util.prettyPrint(self.itemIDToSlots, self.itemIDToSlotsFirstNonStackI, #self.emptySlots)
         return true, nil, maxCount
     end
 
@@ -586,6 +587,7 @@ function StorageState:storeItems(itemID, amount, sourceName, sourceSlot, maxCoun
 
     self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI
 
+    util.prettyPrint(self.itemIDToSlots, self.itemIDToSlotsFirstNonStackI, #self.emptySlots)
     if totalTransfered < amount then
         return false, "not enough space in storage", totalTransfered
     end
@@ -604,7 +606,6 @@ function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount
 
     -- as with store items, we implement an optim for maxCount
     if amount == maxCount then
-
         if firstNonStackI > 1 then
             local slotID = table.remove(slots, firstNonStackI - 1)
 
@@ -647,6 +648,7 @@ function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount
 
     self.itemIDToSlotsFirstNonStackI[itemID] = firstNonStackI
 
+    util.prettyPrint(self.itemIDToSlots, self.itemIDToSlotsFirstNonStackI, #self.emptySlots)
     if totalTransfered < amount then
         return false, "not enough items in storage", totalTransfered
     end
