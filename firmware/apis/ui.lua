@@ -487,7 +487,6 @@ local function blockComputeSize(self, requestedW, requestedH)
         usedHeight = self.height
     end
 
-
     if self.minWidth ~= nil then usedWidth = math.max(usedWidth, self.minWidth) end
     if self.maxWidth ~= nil then usedWidth = math.min(usedWidth, self.maxWidth) end
     if self.minHeight ~= nil then usedHeight = math.max(usedHeight, self.minHeight) end
@@ -498,6 +497,8 @@ local function blockComputeSize(self, requestedW, requestedH)
     self._cachedSize[4], self._cachedSize[5],
     self._cachedSize[6], self._cachedSize[7] =
         requestedW, requestedH, usedWidth, usedHeight, contentW, contentH, nLines
+
+    print(self, usedWidth, usedHeight, contentW, contentH, nLines)
 
     return usedWidth, usedHeight, contentW, contentH, nLines
 end
