@@ -273,6 +273,7 @@ local function blockComputeSize(self, requestedW, requestedH)
         and self._cachedSize[1] == requestedW
         and self._cachedSize[2] == requestedH
     then
+        print("use cache", self)
         return self._cachedSize[3], self._cachedSize[4], self._cachedSize[5],
             self._cachedSize[6], self._cachedSize[7]
     end
