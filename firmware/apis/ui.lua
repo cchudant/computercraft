@@ -466,6 +466,22 @@ local function blockComputeSize(self, requestedW, requestedH)
             self._cachedSize[6], self._cachedSize[7]
     end
 
+    if self.width == '100%' then
+        -- requestedW = requestedW
+    elseif self.width ~= nil then
+        requestedW = self.width
+    end
+    if self.height == '100%' then
+        -- requestedH = requestedH
+    elseif self.height ~= nil then
+        requestedH = self.height
+    end
+
+    if self.minWidth ~= nil then requestedW = math.max(requestedW, self.minWidth) end
+    if self.maxWidth ~= nil then requestedW = math.min(requestedW, self.maxWidth) end
+    if self.minHeight ~= nil then requestedH = math.max(requestedH, self.minHeight) end
+    if self.maxHeight ~= nil then requestedH = math.min(requestedH, self.maxHeight) end
+
     if requestedW == nil then requestedW = self.paddingLeft + self.paddingRight end
     if requestedH == nil then requestedH = self.paddingTop + self.paddingBottom end
     local contentW, contentH, nLines = blockComputeContent(
@@ -476,21 +492,6 @@ local function blockComputeSize(self, requestedW, requestedH)
 
     local usedWidth = contentW + self.paddingLeft + self.paddingRight
     local usedHeight = contentH + self.paddingTop + self.paddingBottom
-    if self.width == '100%' then
-        usedWidth = requestedW
-    elseif self.width ~= nil then
-        usedWidth = self.width
-    end
-    if self.height == '100%' then
-        usedHeight = requestedH
-    elseif self.height ~= nil then
-        usedHeight = self.height
-    end
-
-    if self.minWidth ~= nil then usedWidth = math.max(usedWidth, self.minWidth) end
-    if self.maxWidth ~= nil then usedWidth = math.min(usedWidth, self.maxWidth) end
-    if self.minHeight ~= nil then usedHeight = math.max(usedHeight, self.minHeight) end
-    if self.maxHeight ~= nil then usedHeight = math.min(usedHeight, self.maxHeight) end
 
     self._cachedSize = self._cachedSize or {}
     self._cachedSize[1], self._cachedSize[2], self._cachedSize[3],
@@ -721,8 +722,8 @@ function ui.Text:new(obj)
 end
 
 function ui.Text:draw(term, x, y, parentW, parentH)
-    local width, height = self:getSize(parentW, parentH)
     if self.transparent then return end
+    local width, height = self:getSize(parentW, parentH)
     if self.backgroundColor ~= nil then
         term.setBackgroundColor(self.backgroundColor)
     end
