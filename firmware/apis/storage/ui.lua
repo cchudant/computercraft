@@ -86,7 +86,8 @@ function itemView(storageConnection, makeChild)
 
     local function onTextChange(term, newText)
         search = newText
-        if block.task then
+        if block.task ~= nil then
+            print("Removing", self.task)
             term.removeTask(block.task)
             block.task = term.addTask(function() task(term) end)
         end
