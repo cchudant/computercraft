@@ -708,7 +708,9 @@ ui.Text = ui.UIObject:new(ui.Text)
 function ui.Text:new(obj)
     ui.UIObject.new(self, obj)
     obj.text = obj.text
-    obj.width, obj.height = stringDisplaySize(obj.text)
+    local width, height = stringDisplaySize(obj.text)
+    if obj.width == nil then self.width = width end
+    if obj.height == nil then self.height = height end
     return obj
 end
 
