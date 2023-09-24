@@ -135,7 +135,7 @@ function storageUI.runUI(term, getStorageConnection)
             height = 1,
             alignContentX = "spaceBetween",
             marginX = 0.5,
-            paddingRight = 1,
+            paddingLeft = 1,
             onPress = function(self, term)
                 term.addTask(function()
                     storageConnection.transfer({

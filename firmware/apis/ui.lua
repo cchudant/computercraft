@@ -245,6 +245,7 @@ local function gridFindChildAt(self, x, y, requestedW, requestedH)
     
     -- man i hate that lua indexes start at one
     local relX, relY = (x - 1) % self.childWidth + 1, (y - 1) % self.childHeight + 1
+    print(relX, relY, iy * (nElemsW - 1) + ix)
     local child = self[iy * (nElemsW - 1) + ix]
     return child, relX, relY
 end
@@ -778,7 +779,7 @@ function ui.TextInput:mount(term)
         self:onChange(term, self.text)
     end
     self._globalOnKey = function(_, key)
-        if key == 259 then -- backspace
+        if key == 259 and string.len(self.text) > 0 then -- backspace
             self.text = string.sub(self.text, 1, string.len(self.text) - 1)
             term.setNeedsRedraw()
             self:onChange(term, self.text)
