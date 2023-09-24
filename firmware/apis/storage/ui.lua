@@ -77,7 +77,6 @@ function itemView(storageConnection, makeChild)
             ui.Block.mount(self, term)
         end,
         unMount = function(self, term)
-            print("Removing", self.task)
             term.removeTask(self.task)
             ui.Grid.unMount(self, term)
         end,
@@ -87,7 +86,6 @@ function itemView(storageConnection, makeChild)
     local function onTextChange(term, newText)
         search = newText
         if block.task ~= nil then
-            print("Removing", block.task)
             term.removeTask(block.task)
             block.task = term.addTask(function() task(term) end)
         end

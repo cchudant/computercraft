@@ -245,7 +245,7 @@ local function gridFindChildAt(self, x, y, requestedW, requestedH)
     
     -- man i hate that lua indexes start at one
     local relX, relY = (x - 1) % self.childWidth + 1, (y - 1) % self.childHeight + 1
-    print(relX, relY, iy * (nElemsW - 1) + ix)
+    print(relX, relY, ix, iy, iy * (nElemsW - 1) + ix)
     local child = self[iy * (nElemsW - 1) + ix]
     return child, relX, relY
 end
