@@ -117,11 +117,18 @@ function storageUI.runUI(term, getStorageConnection)
             countText = tostring(item.count)
             textColor = colors.white
         end
+
+        local width = 25
+        local displayName = item.displayName
+        if string.len(displayName) >= width - string.len(countText) then
+            displayName = string.sub(displayName, 1, width - string.len(countText) - 1) .. "."
+        end
+
         return Button:new {
             backgroundColor = colors.black,
             textColor = textColor,
             activeBackgroundColor = colors.gray,
-            width = 25,
+            width = width,
             height = 1,
             alignContentX = "spaceBetween",
             marginX = 0.5,
