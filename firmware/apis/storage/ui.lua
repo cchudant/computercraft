@@ -79,7 +79,7 @@ function itemView(storageConnection, makeChild)
         unMount = function(self, term)
             print("Removing", self.task)
             term.removeTask(self.task)
-            ui.Block.unMount(self, term)
+            ui.Grid.unMount(self, term)
         end,
         createChildren()
     }

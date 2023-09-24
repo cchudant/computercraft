@@ -155,7 +155,6 @@ end
 function ui.Grid:replaceChildren(term, ...)
     for i = #self, 1, -1 do
         local child = self[i]
-        print(child.mounted)
         if child.mounted then child:unMount(term) end
         self[i] = nil
     end
