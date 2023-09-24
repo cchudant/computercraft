@@ -79,6 +79,196 @@ function ui.UIObject:onClick(term, x, y, button, requestedW, requestedH) end
 
 function ui.UIObject:onMouseClick(term, x, y, button, requestedW, requestedH) end
 
+---@class ui.Grid: ui.UIObject
+ui.Grid = {
+    -- ---@type number|nil|'100%'
+    -- width = nil,
+    -- ---@type number|nil|'100%'
+    -- height = nil,
+
+    ---@type number
+    childWidth = nil,
+    ---@type number
+    childHeight = nil,
+    backgroundColor = nil,
+    textColor = nil,
+
+    paddingLeft = 0,
+    paddingTop = 0,
+    paddingBottom = 0,
+    paddingRight = 0,
+
+    ---@type number|nil
+    ---Shorthand to paddingLeft, paddingRight, paddingTop, paddingBottom
+    padding = nil,
+    ---@type number|nil
+    ---Shorthand to paddingLeft, paddingRight
+    paddingX = nil,
+    ---@type number|nil
+    ---Shorthand to paddingTop, paddingBottom
+    paddingY = nil,
+
+    -- ---@type number?
+    -- minHeight = nil,
+    -- ---@type number?
+    -- minWidth = nil,
+    -- ---@type number?
+    -- maxHeight = nil,
+    -- ---@type number?
+    -- maxWidth = nil,
+}
+ui.Grid = ui.UIObject:new(ui.Grid)
+function ui.Grid:__newindex(index, value)
+    if index == 'padding' then
+        self.paddingLeft = value
+        self.paddingRight = value
+        self.paddingTop = value
+        self.paddingBottom = value
+    elseif index == 'paddingX' then
+        self.paddingLeft = value
+        self.paddingRight = value
+    elseif index == 'paddingY' then
+        self.paddingTop = value
+        self.paddingBottom = value
+    end
+    ui.UIObject.__newindex(self, index, value)
+end
+
+---@return ui.Grid
+function ui.Grid:new(o)
+    ui.UIObject.new(self, o)
+    if o.paddingX ~= nil then
+        ui.Block.__newindex(o, 'paddingX', o.paddingX)
+        o.paddingX = nil
+    end
+    if o.paddingY ~= nil then
+        ui.Block.__newindex(o, 'paddingY', o.paddingY)
+        o.paddingY = nil
+    end
+    if o.padding ~= nil then
+        ui.Block.__newindex(o, 'padding', o.padding)
+        o.padding = nil
+    end
+    return o
+end
+
+function ui.Grid:replaceChildren(term, ...)
+    for i = #self, 1, -1 do
+        local child = self[i]
+        if child.mounted then child:unMount(term) end
+        self[i] = nil
+    end
+    local packed = table.pack(...)
+    for i = 1, packed.n do
+        self[i] = packed[i]
+        if self.mounted then
+            packed[i]:mount(term)
+        end
+    end
+end
+
+function ui.Grid:mount(term)
+    for _, child in ipairs(self) do
+        child:mount(term)
+    end
+    ui.UIObject.mount(self, term)
+end
+
+function ui.Grid:unMount(term)
+    for _, child in ipairs(self) do
+        child:unMount(term)
+    end
+    ui.UIObject.unMount(self, term)
+end
+
+function ui.Grid:getSize(requestedW, requestedH)
+    requestedW = requestedW - self.paddingLeft - self.paddingRight
+    requestedH = requestedH - self.paddingTop - self.paddingBottom
+    local nElemsW, nElemsH = math.floor(requestedW / self.childWidth), math.floor(requestedH / self.childHeight)
+    local width = nElemsW * self.childWidth + self.paddingLeft + self.paddingRight
+    local height = nElemsH * self.childHeight + self.paddingTop + self.paddingBottom
+    return width, height
+end
+
+function ui.Grid:draw(term, x, y, requestedW, requestedH)
+    requestedW = requestedW - self.paddingLeft - self.paddingRight
+    requestedH = requestedH - self.paddingTop - self.paddingBottom
+    local nElemsW, nElemsH = math.floor(requestedW / self.childWidth), math.floor(requestedH / self.childHeight)
+    local width = nElemsW * self.childWidth + self.paddingLeft + self.paddingRight
+    local height = nElemsH * self.childHeight + self.paddingTop + self.paddingBottom
+
+    if self.backgroundColor ~= nil then
+        term.setBackgroundColor(self.backgroundColor)
+
+        for i = 0, height - 1 do
+            term.setCursorPos(x, y + i)
+            for _ = 0, width - 1 do
+                term.write(" ")
+            end
+        end
+    end
+
+    for iy = 1, nElemsH do
+        for ix = 1, nElemsW do
+
+            local posX = x + self.paddingLeft + (ix - 1) * nElemsW
+            local posY = y + self.paddingTop + (iy - 1) * nElemsH
+
+            local i = ix + nElemsW * (iy - 1)
+            local child = self[i]
+            term.setTextColor(term.defaultTextColor)
+            term.setBackgroundColor(term.defaultBackgroundColor)
+            if self.textColor ~= nil then
+                term.setTextColor(self.textColor)
+            end
+            if self.backgroundColor ~= nil then
+                term.setBackgroundColor(self.backgroundColor)
+            end
+            child:draw(term, posX, posY, self.childWidth, self.childHeight)
+            term.setTextColor(term.defaultTextColor)
+            term.setBackgroundColor(term.defaultBackgroundColor)
+        end
+    end
+end
+
+local function gridFindChildAt(self, x, y, requestedW, requestedH)
+    requestedW = requestedW - self.paddingLeft - self.paddingRight
+    requestedH = requestedH - self.paddingTop - self.paddingBottom
+    local nElemsW = math.floor(requestedW / self.childWidth)
+
+    x = x - self.paddingLeft
+    y = y - self.paddingTop
+
+    local ix = math.floor(x / self.childWidth)
+    local iy = math.floor(y / self.childHeight)
+    
+    -- man i hate that lua indexes start at one
+    local relX, relY = (x - 1) % self.childWidth + 1, (y - 1) % self.childHeight + 1
+    local child = self[iy * (nElemsW - 1) + ix]
+    return child, relX, relY
+end
+
+function ui.Grid:onMonitorTouch(term, x, y, requestedW, requestedH)
+    local child, relX, relY = gridFindChildAt(self, x, y, requestedW, requestedH)
+    if child then
+        child:onMonitorTouch(term, relX, relY, requestedW, requestedH)
+    end
+end
+
+function ui.Grid:onClick(term, x, y, button, requestedW, requestedH)
+    local child, relX, relY = gridFindChildAt(self, x, y, requestedW, requestedH)
+    if child then
+        child:onClick(term, relX, relY, button, requestedW, requestedH)
+    end
+end
+
+function ui.Grid:onMouseClick(term, x, y, button, requestedW, requestedH)
+    local child, relX, relY = gridFindChildAt(self, x, y, requestedW, requestedH)
+    if child then
+        child:onMouseClick(term, relX, relY, button, requestedW, requestedH)
+    end
+end
+
 ---@class ui.Block: ui.UIObject
 ui.Block = {
     ---@type number|nil|'100%'
@@ -188,10 +378,11 @@ function ui.Block:unMount(term)
     for _, child in ipairs(self) do
         child:unMount(term)
     end
+    ui.UIObject.unMount(self, term)
 end
 
 ---@param self ui.Block
-local function computeContent(self, blockWidth, blockHeight, start, func)
+local function blockComputeContent(self, blockWidth, blockHeight, start, func)
     if blockWidth == nil then blockWidth = 0 end
     if blockHeight == nil then blockHeight = 0 end
     local availableW = blockWidth
@@ -280,7 +471,7 @@ local function blockComputeSize(self, requestedW, requestedH)
 
     if requestedW == nil then requestedW = self.paddingLeft + self.paddingRight end
     if requestedH == nil then requestedH = self.paddingTop + self.paddingBottom end
-    local contentW, contentH, nLines = computeContent(
+    local contentW, contentH, nLines = blockComputeContent(
         self,
         requestedW - self.paddingLeft - self.paddingRight,
         requestedH - self.paddingTop - self.paddingBottom
@@ -310,7 +501,7 @@ function ui.Block:getSize(requestedW, requestedH)
     return blockComputeSize(self, requestedW, requestedH)
 end
 
-local function calcSlackFromMiddle(max, nElems, i)
+local function blockCalcSlackFromMiddle(max, nElems, i)
     local v = math.floor(max / nElems)
     local rem = max % nElems
     local skip = nElems / 2 - rem / 2
@@ -319,7 +510,7 @@ local function calcSlackFromMiddle(max, nElems, i)
     return v
 end
 
-local function align(alignContent, slack, i, nElems)
+local function blockAlign(alignContent, slack, i, nElems)
     if alignContent == 'begin' then
         return 0
     elseif alignContent == 'end' then
@@ -329,24 +520,24 @@ local function align(alignContent, slack, i, nElems)
         if i == 1 then return math.floor(slack / 2) end
         return 0
     elseif alignContent == 'space' then
-        slack = calcSlackFromMiddle(slack, nElems + 1, i)
+        slack = blockCalcSlackFromMiddle(slack, nElems + 1, i)
         return slack
     elseif alignContent == 'spaceBetween' then
         if i == 1 then return 0 end
 
-        slack = calcSlackFromMiddle(slack, nElems - 1, i - 1)
+        slack = blockCalcSlackFromMiddle(slack, nElems - 1, i - 1)
         return slack
     end
     return 0
 end
 
-local function computeFullTiling(self, blockWidth, blockHeight, contentW, contentH, nLines, drawChild)
+local function blockComputeFullTiling(self, blockWidth, blockHeight, contentW, contentH, nLines, drawChild)
     local posX, posY = self.paddingLeft, self.paddingTop
 
     local lineHeight = 0
     local lineWidth = 0
     local elemsInLine = 0
-    computeContent(self, blockWidth, blockHeight, 1,
+    blockComputeContent(self, blockWidth, blockHeight, 1,
         function(i, iInLine, iLine, wThisLine_, maxHThisLine_, child, realW, realH)
             if i ~= 1 and iInLine == 1 then
                 posY = posY + lineHeight
@@ -356,7 +547,7 @@ local function computeFullTiling(self, blockWidth, blockHeight, contentW, conten
             if iInLine == 1 then
                 -- get line height!
                 local first = true
-                computeContent(self, blockWidth, blockHeight, i, function(_, iInLine_, _, wThisLine, maxHThisLine)
+                blockComputeContent(self, blockWidth, blockHeight, i, function(_, iInLine_, _, wThisLine, maxHThisLine)
                     if not first and iInLine_ == 1 then
                         return false -- stop iteration
                     end
@@ -372,13 +563,13 @@ local function computeFullTiling(self, blockWidth, blockHeight, contentW, conten
             local slackW = blockWidth - lineWidth -- per line slack
             local slackH = blockHeight - contentH -- whole content slack
 
-            posX = posX + align(self.alignContentX, slackW, iInLine, elemsInLine)
+            posX = posX + blockAlign(self.alignContentX, slackW, iInLine, elemsInLine)
             if iInLine == 1 then
-                posY = posY + align(self.alignContentY, slackH, iLine, nLines)
+                posY = posY + blockAlign(self.alignContentY, slackH, iLine, nLines)
             end
 
             -- between children align
-            local correctedY = posY + align(self.alignChildren, lineHeight - realH, 1, 1)
+            local correctedY = posY + blockAlign(self.alignChildren, lineHeight - realH, 1, 1)
 
             if not drawChild(child,
                     posX + child.marginLeft, correctedY + child.marginTop,
@@ -411,7 +602,7 @@ function ui.Block:draw(term, x, y, requestedW, requestedH)
         end
     end
 
-    computeFullTiling(self, blockWidth, blockHeight, contentW, contentH, nLines,
+    blockComputeFullTiling(self, blockWidth, blockHeight, contentW, contentH, nLines,
         function(child, posX, posY, availableW, availableH)
             term.setTextColor(term.defaultTextColor)
             term.setBackgroundColor(term.defaultBackgroundColor)
@@ -430,17 +621,17 @@ function ui.Block:draw(term, x, y, requestedW, requestedH)
     self._cachedSize = nil
 end
 
-local function findChildAt(self, x, y, requestedW, requestedH)
+local function blockFindChildAt(self, x, y, requestedW, requestedH)
     if self.transparent then return end
     local blockWidth = requestedW - self.paddingLeft - self.paddingRight
     local blockHeight = requestedH - self.paddingTop - self.paddingBottom
 
     x = x + self.paddingLeft
 
-    local contentW, contentH, nLines = computeContent(self, blockWidth, blockHeight)
+    local contentW, contentH, nLines = blockComputeContent(self, blockWidth, blockHeight)
 
     local foundChild, relX, relY
-    computeFullTiling(self, blockWidth, blockHeight, contentW, contentH, nLines,
+    blockComputeFullTiling(self, blockWidth, blockHeight, contentW, contentH, nLines,
         function(child, posX, posY, availableW, availableH)
             posX = posX + self.paddingLeft
             posY = posY + self.paddingTop
@@ -457,21 +648,21 @@ local function findChildAt(self, x, y, requestedW, requestedH)
 end
 
 function ui.Block:onMonitorTouch(term, x, y, requestedW, requestedH)
-    local child, relX, relY = findChildAt(self, x, y, requestedW, requestedH)
+    local child, relX, relY = blockFindChildAt(self, x, y, requestedW, requestedH)
     if child then
         child:onMonitorTouch(term, relX, relY, requestedW, requestedH)
     end
 end
 
 function ui.Block:onClick(term, x, y, button, requestedW, requestedH)
-    local child, relX, relY = findChildAt(self, x, y, requestedW, requestedH)
+    local child, relX, relY = blockFindChildAt(self, x, y, requestedW, requestedH)
     if child then
         child:onClick(term, relX, relY, button, requestedW, requestedH)
     end
 end
 
 function ui.Block:onMouseClick(term, x, y, button, requestedW, requestedH)
-    local child, relX, relY = findChildAt(self, x, y, requestedW, requestedH)
+    local child, relX, relY = blockFindChildAt(self, x, y, requestedW, requestedH)
     if child then
         child:onMouseClick(term, relX, relY, button, requestedW, requestedH)
     end

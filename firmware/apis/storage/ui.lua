@@ -69,7 +69,9 @@ function itemView(storageConnection, makeChild)
         )
     end
 
-    block = ui.Block:new {
+    block = ui.Grid:new {
+        childWidth = 26,
+        childHeight = 1,
         mount = function(self, term)
             self.task = term.addTask(function() task(term) end)
             ui.Block.mount(self, term)
@@ -119,7 +121,7 @@ function storageUI.runUI(term, getStorageConnection)
 
         local width = 25
         local displayName = item.displayName
-        if string.len(displayName) >= width - string.len(countText) then
+        if string.len(displayName) > width - string.len(countText) then
             displayName = string.sub(displayName, 1, width - string.len(countText) - 1) .. "."
         end
 
