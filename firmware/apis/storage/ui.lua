@@ -142,7 +142,7 @@ function storageUI.runUI(term, getStorageConnection)
                     })
                 end)
             end,
-            ui.Text:new { text = item.displayName },
+            ui.Text:new { text = displayName },
             ui.Text:new { text = countText },
         }
     end)
