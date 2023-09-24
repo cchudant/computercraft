@@ -111,7 +111,7 @@ function storageUI.runUI(term, getStorageConnection)
     }, term)
 
     local itemsBlock, onTextChange = itemView(storageConnection, function(item)
-        local countText = "Craft"
+        local countText = ""
         local textColor = colors.lightBlue
         if not item.craft then
             countText = tostring(item.count)
