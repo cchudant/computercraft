@@ -138,7 +138,7 @@ local function craftView(storageConnection, item)
         height = '100%',
         maxWidth = 60,
         maxHeight = 20,
-        backgroundColor = 'lightBlue',
+        backgroundColor = colors.lightBlue,
         alignContentY = 'spaceBetween',
         ui.Block:new {
             width = '100%',

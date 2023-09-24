@@ -589,8 +589,6 @@ function ui.Block:draw(term, x, y, requestedW, requestedH)
     if width == '100%' then width = requestedW end
     if height == '100%' then height = requestedH end
 
-    print(width, height)
-
     if self.backgroundColor ~= nil then
         term.setBackgroundColor(self.backgroundColor)
 
