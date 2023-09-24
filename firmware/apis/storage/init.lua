@@ -23,6 +23,7 @@ local function wrapConnection(connection)
             local value = storageConnection.getTopItems(options)
             func(value)
             storageConnection.pullEvent("amountsUpdate")
+            print("amountsUpdate " .. options.fuzzySearch)
         end
     end
 
