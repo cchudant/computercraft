@@ -597,10 +597,6 @@ end
 
 function StorageState:retrieveItems(itemID, amount, destName, destSlot, maxCount)
     local slots = self.itemIDToSlots[itemID]
-    if slots == nil then
-        slots = {}
-        self.itemIDToSlots[itemID] = slots
-    end
     util.prettyPrint(self.itemIDToSlots[itemID], self.itemIDToSlotsFirstNonStackI[itemID], #self.emptySlots)
 
     local totalTransfered = 0
