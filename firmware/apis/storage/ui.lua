@@ -59,7 +59,6 @@ function itemView(storageConnection, makeChild)
         storageConnection.listTopItems(
             {
                 fuzzySearch = search,
-                limit = 20,
                 otherwiseShowCrafts = true,
             },
             function(items)
@@ -114,7 +113,7 @@ function storageUI.runUI(term, getStorageConnection)
     local itemsBlock, onTextChange = itemView(storageConnection, function(item)
         local countText = "Craft"
         if not item.craft then
-            countText = tostring(item.amount)
+            countText = tostring(item.count)
         end
         return Button:new {
             backgroundColor = colors.black,
