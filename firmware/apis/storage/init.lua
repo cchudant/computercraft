@@ -210,7 +210,7 @@ function storage.newStorageServer(settings, serverID)
     function storageServer.getTopItems(clientID, fuzzySearch, limit)
         local ret = {}
         local i = 1
-        while (not limit or #ret < limit) and i < #state.itemIDAmountsSorted do
+        while (limit == nil or #ret <= limit) and i <= #state.itemIDAmountsSorted do
             local tuple = state.itemIDAmountsSorted[i]
             local item = state:itemIDToItemInfo(tuple[1])
             local strippedItem = stripped(item.name)
@@ -219,7 +219,6 @@ function storage.newStorageServer(settings, serverID)
             end
             i = i + 1
         end
-        print("top items, ", #ret)
         return ret
     end
 
