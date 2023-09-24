@@ -20,13 +20,15 @@ function Button:new(o)
     o.unactiveTextColor = o.textColor
     return o
 end
+
 function Button:onPress(termObj) end
+
 function Button:onClick(termObj)
     self.active = true
     self.backgroundColor = self.activeBackgroundColor
     self.textColor = self.activeTextColor
     termObj.setNeedsRedraw()
-    termObj.scheduleDelayed(function ()
+    termObj.scheduleDelayed(function()
         self.active = false
         self.backgroundColor = self.unactiveBackgroundColor
         self.textColor = self.unactiveTextColor
@@ -45,7 +47,7 @@ function itemView(storageConnection, makeChild)
             return ui.Text:new { text = "loading..." }
         end
         local children = {}
-        for i,v in ipairs(itemsInStorage) do
+        for i, v in ipairs(itemsInStorage) do
             table.insert(children, makeChild(v, i))
         end
 
@@ -54,12 +56,13 @@ function itemView(storageConnection, makeChild)
 
     local block
     local function task(term)
-        print("task")
         storageConnection.listTopItems(
-            search,
-            20,
+            {
+                fuzzySearch = search,
+                limit = 20,
+                otherwiseShowCrafts = true,
+            },
             function(items)
-                print("items", #items)
                 itemsInStorage = items
                 term.setNeedsRedraw()
                 block:replaceChildren(term, createChildren())
@@ -70,7 +73,6 @@ function itemView(storageConnection, makeChild)
     block = ui.Block:new {
         mount = function(self, term)
             self.task = term.addTask(function() task(term) end)
-            print("task is ", self.task)
             ui.Block.mount(self, term)
         end,
         unMount = function(self, term)
@@ -102,14 +104,14 @@ function storageUI.runUI(term, getStorageConnection)
     ui.drawLoop(ui.Text:new {
         text = 'loading...',
         mount = function(self, term)
-            term.addTask(function ()
+            term.addTask(function()
                 storageConnection = getStorageConnection()
                 term.close()
             end)
         end
     }, term)
 
-    local itemsBlock, onTextChange = itemView(storageConnection, function (item)
+    local itemsBlock, onTextChange = itemView(storageConnection, function(item)
         return Button:new {
             backgroundColor = colors.black,
             textColor = colors.white,
@@ -178,7 +180,7 @@ function storageUI.runUI(term, getStorageConnection)
             itemsBlock
         }
     }
-    
+
     ui.drawLoop(interface, term)
 end
 

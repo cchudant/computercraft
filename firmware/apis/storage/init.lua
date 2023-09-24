@@ -16,11 +16,11 @@ local function wrapConnection(connection)
     local storageConnection = setmetatable({}, { __index = connection })
 
     ---@param func fun(value: any)
-    function storageConnection.listTopItems(fuzzySearch, limit, func)
+    function storageConnection.listTopItems(options, func)
         -- get initial value & sub to the topic
         storageConnection.subscribeEvent("amountsUpdate")
         while true do
-            local value = storageConnection.getTopItems(fuzzySearch, limit)
+            local value = storageConnection.getTopItems(options)
             func(value)
             storageConnection.pullEvent("amountsUpdate")
         end
@@ -207,19 +207,45 @@ function storage.newStorageServer(settings, serverID)
             'chunkloaders:', '')
     end
 
-    function storageServer.getTopItems(clientID, fuzzySearch, limit)
+    function storageServer.getTopItems(clientID, options)
+        options = util.defaultArgs(options, {
+            fuzzySearch = nil,
+            limit = nil,
+            otherwiseShowCrafts = false,
+        })
+
         local ret = {}
         local i = 1
-        while (limit == nil or #ret <= limit) and i <= #state.itemIDAmountsSorted do
+        while (options.limit == nil or #ret < options.limit) and i <= #state.itemIDAmountsSorted do
             local tuple = state.itemIDAmountsSorted[i]
             local item = state:itemIDToItemInfo(tuple[1])
             local strippedItem = stripped(item.name)
-            if util.stringStartsWith(strippedItem, stripped(fuzzySearch)) then
+            if options.fuzzySearch == nil or util.stringStartsWith(strippedItem, stripped(options.fuzzySearch)) then
                 table.insert(ret, { displayName = strippedItem, name = item.name, count = tuple[2] })
             end
             i = i + 1
         end
+
+        if options.otherwiseShowCrafts then
+            for itemID, _ in pairs(state.crafts) do
+                if options.limit ~= nil and #ret >= options.limit then
+                    break
+                end
+                local item = state:itemIDToItemInfo(itemID)
+                local strippedItem = stripped(item.name)
+                table.insert(ret, { displayName = strippedItem, name = item.name })
+            end
+        end
         return ret
+    end
+
+    function storageServer.getCraftList(clientID)
+        local ret = {}
+        for itemID, _ in pairs(state.crafts) do
+            local item = state:itemIDToItemInfo(itemID)
+            local strippedItem = stripped(item.name)
+            table.insert(ret, { displayName = strippedItem, name = item.name })
+        end
     end
 
     state:initialStateSetup(settings)
