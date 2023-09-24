@@ -222,7 +222,8 @@ function storageUI.runUI(term, getStorageConnection)
             width = '100%',
             height = '100%',
             alignContentX = 'center',
-            itemsBlock
+            -- itemsBlock
+            craftView(storageConnection, { displayName =  'minecraft:chest' })
         }
     }
 
