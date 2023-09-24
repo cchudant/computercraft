@@ -144,6 +144,7 @@ local function craftView(storageConnection, item)
             width = '100%',
             ui.Text:new {
                 width = '100%',
+                backgroundColor = colors.lightBlue,
                 text = "Crafting " .. item.displayName,
             },
         },

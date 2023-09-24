@@ -477,14 +477,16 @@ local function blockComputeSize(self, requestedW, requestedH)
 
     local usedWidth = contentW + self.paddingLeft + self.paddingRight
     local usedHeight = contentH + self.paddingTop + self.paddingBottom
+    if self.width == '100%' then usedWidth = requestedW end
+    if self.height == '100%' then usedHeight = requestedH end
+
+    if self.height ~= nil then usedHeight = self.height end
+    if self.width ~= nil then usedWidth = self.width end
 
     if self.minWidth ~= nil then usedWidth = math.max(usedWidth, self.minWidth) end
     if self.maxWidth ~= nil then usedWidth = math.min(usedWidth, self.maxWidth) end
     if self.minHeight ~= nil then usedHeight = math.max(usedHeight, self.minHeight) end
     if self.maxHeight ~= nil then usedHeight = math.min(usedHeight, self.maxHeight) end
-
-    if self.height ~= nil then usedHeight = self.height end
-    if self.width ~= nil then usedWidth = self.width end
 
     self._cachedSize = self._cachedSize or {}
     self._cachedSize[1], self._cachedSize[2], self._cachedSize[3],
@@ -586,8 +588,6 @@ function ui.Block:draw(term, x, y, requestedW, requestedH)
     local blockWidth = requestedW - self.paddingLeft - self.paddingRight
     local blockHeight = requestedH - self.paddingTop - self.paddingBottom
     local width, height, contentW, contentH, nLines = blockComputeSize(self, requestedW, requestedH)
-    if width == '100%' then width = requestedW end
-    if height == '100%' then height = requestedH end
 
     if self.backgroundColor ~= nil then
         term.setBackgroundColor(self.backgroundColor)
