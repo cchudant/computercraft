@@ -308,6 +308,7 @@ function transfers.batchTransfer(state, requests, options)
     end
 
     state.amountObservers:triggerTransaction(balance)
+    util.prettyPrint(balance)
 
     if #errors == 0 then
         return true, nil, totalTransfered, results
@@ -360,6 +361,7 @@ function transfers.transfer(state, req, options)
     end
 
     state.amountObservers:triggerTransaction(balance)
+    util.prettyPrint(balance)
 
     if error == nil then
         return true, nil, transfered, results
