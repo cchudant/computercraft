@@ -663,13 +663,13 @@ function util.parallelGroup(...)
                 local packed = table.pack(...)
                 for i = 1, packed.n do
                     local toRemoveID = packed[i]
-                    for coroutineID, _ in ipairs(coroutines) do
+                    for coroutineID, _ in pairs(coroutines) do
                         if toRemoveID == coroutineID then
                             coroutines[coroutineID] = nil
                             os.queueEvent("parallelGroup:end:" .. nonce, coroutineID)
                         end
                     end
-                    for coroutineID, _ in ipairs(addedCoroutines) do
+                    for coroutineID, _ in pairs(addedCoroutines) do
                         if toRemoveID == coroutineID then
                             coroutines[coroutineID] = nil
                             os.queueEvent("parallelGroup:end:" .. nonce, coroutineID)
