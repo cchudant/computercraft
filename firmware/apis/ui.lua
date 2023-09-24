@@ -240,8 +240,8 @@ local function gridFindChildAt(self, x, y, requestedW, requestedH)
     x = x - self.paddingLeft
     y = y - self.paddingTop
 
-    local ix = math.floor(x / self.childWidth)
-    local iy = math.floor(y / self.childHeight)
+    local ix = math.floor((x - 1) / self.childWidth) + 1
+    local iy = math.floor((y - 1) / self.childHeight) + 1
     
     -- man i hate that lua indexes start at one
     local relX, relY = (x - 1) % self.childWidth + 1, (y - 1) % self.childHeight + 1
@@ -253,21 +253,21 @@ end
 function ui.Grid:onMonitorTouch(term, x, y, requestedW, requestedH)
     local child, relX, relY = gridFindChildAt(self, x, y, requestedW, requestedH)
     if child then
-        child:onMonitorTouch(term, relX, relY, requestedW, requestedH)
+        child:onMonitorTouch(term, relX, relY, self.childWidth, self.childHeight)
     end
 end
 
 function ui.Grid:onClick(term, x, y, button, requestedW, requestedH)
     local child, relX, relY = gridFindChildAt(self, x, y, requestedW, requestedH)
     if child then
-        child:onClick(term, relX, relY, button, requestedW, requestedH)
+        child:onClick(term, relX, relY, button, self.childWidth, self.childHeight)
     end
 end
 
 function ui.Grid:onMouseClick(term, x, y, button, requestedW, requestedH)
     local child, relX, relY = gridFindChildAt(self, x, y, requestedW, requestedH)
     if child then
-        child:onMouseClick(term, relX, relY, button, requestedW, requestedH)
+        child:onMouseClick(term, relX, relY, button, self.childWidth, self.childHeight)
     end
 end
 
@@ -633,39 +633,40 @@ local function blockFindChildAt(self, x, y, requestedW, requestedH)
 
     local foundChild, relX, relY
     blockComputeFullTiling(self, blockWidth, blockHeight, contentW, contentH, nLines,
-        function(child, posX, posY, availableW, availableH)
+        function(child, posX, posY, availableW_, availableH_)
             posX = posX + self.paddingLeft
             posY = posY + self.paddingTop
-            if x >= posX and x <= posX + availableW and y >= posY and y <= posY + availableH then
+            if x >= posX and x <= posX + availableW_ and y >= posY and y <= posY + availableH_ then
                 relX = x - posX
                 relY = y - posY
                 foundChild = child
+                availableW, availableH = availableW_, availableH_
                 return false
             end
             return true
         end)
 
-    return foundChild, relX, relY
+    return foundChild, relX, relY, availableW, availableH
 end
 
 function ui.Block:onMonitorTouch(term, x, y, requestedW, requestedH)
-    local child, relX, relY = blockFindChildAt(self, x, y, requestedW, requestedH)
+    local child, relX, relY, availableW, availableH = blockFindChildAt(self, x, y, requestedW, requestedH)
     if child then
-        child:onMonitorTouch(term, relX, relY, requestedW, requestedH)
+        child:onMonitorTouch(term, relX, relY, availableW, availableH)
     end
 end
 
 function ui.Block:onClick(term, x, y, button, requestedW, requestedH)
-    local child, relX, relY = blockFindChildAt(self, x, y, requestedW, requestedH)
+    local child, relX, relY, availableW, availableH = blockFindChildAt(self, x, y, requestedW, requestedH)
     if child then
-        child:onClick(term, relX, relY, button, requestedW, requestedH)
+        child:onClick(term, relX, relY, button, availableW, availableH)
     end
 end
 
 function ui.Block:onMouseClick(term, x, y, button, requestedW, requestedH)
-    local child, relX, relY = blockFindChildAt(self, x, y, requestedW, requestedH)
+    local child, relX, relY, availableW, availableH = blockFindChildAt(self, x, y, requestedW, requestedH)
     if child then
-        child:onMouseClick(term, relX, relY, button, requestedW, requestedH)
+        child:onMouseClick(term, relX, relY, button, availableW, availableH)
     end
 end
 
