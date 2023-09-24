@@ -216,6 +216,7 @@ function ui.Grid:draw(term, x, y, requestedW, requestedH)
 
             local i = ix + nElemsW * (iy - 1)
             local child = self[i]
+            if child == nil then break end
             term.setTextColor(term.defaultTextColor)
             term.setBackgroundColor(term.defaultBackgroundColor)
             if self.textColor ~= nil then
