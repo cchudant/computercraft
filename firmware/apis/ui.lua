@@ -187,6 +187,7 @@ function ui.Grid:getSize(requestedW, requestedH)
     local nElemsW, nElemsH = math.floor(requestedW / self.childWidth), math.floor(requestedH / self.childHeight)
     local width = nElemsW * self.childWidth + self.paddingLeft + self.paddingRight
     local height = nElemsH * self.childHeight + self.paddingTop + self.paddingBottom
+    print(width, height)
     return width, height
 end
 
