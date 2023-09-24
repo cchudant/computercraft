@@ -210,7 +210,6 @@ function ui.Grid:draw(term, x, y, requestedW, requestedH)
 
     for iy = 1, nElemsH do
         for ix = 1, nElemsW do
-
             local posX = x + self.paddingLeft + (ix - 1) * self.childWidth
             local posY = y + self.paddingTop + (iy - 1) * self.childHeight
 
@@ -477,11 +476,17 @@ local function blockComputeSize(self, requestedW, requestedH)
 
     local usedWidth = contentW + self.paddingLeft + self.paddingRight
     local usedHeight = contentH + self.paddingTop + self.paddingBottom
-    if self.width == '100%' then usedWidth = requestedW end
-    if self.height == '100%' then usedHeight = requestedH end
+    if self.width == '100%' then
+        usedWidth = requestedW
+    elseif self.width ~= nil then
+        usedWidth = self.width
+    end
+    if self.height == '100%' then
+        usedHeight = requestedH
+    elseif self.height ~= nil then
+        usedHeight = self.height
+    end
 
-    if self.height ~= nil then usedHeight = self.height end
-    if self.width ~= nil then usedWidth = self.width end
 
     if self.minWidth ~= nil then usedWidth = math.max(usedWidth, self.minWidth) end
     if self.maxWidth ~= nil then usedWidth = math.min(usedWidth, self.maxWidth) end
