@@ -268,7 +268,23 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
     return totalW, totalH, totalLines
 end
 
-local function sizeFromContentSize(self, contentW, contentH, requestedW, requestedH)
+local function blockComputeSize(self, requestedW, requestedH)
+    if self._cachedSize ~= nil
+        and self._cachedSize[1] == requestedW
+        and self._cachedSize[2] == requestedH
+    then
+        return self._cachedSize[3], self._cachedSize[4], self._cachedSize[5],
+            self._cachedSize[6], self._cachedSize[7]
+    end
+
+    if requestedW == nil then requestedW = self.paddingLeft + self.paddingRight end
+    if requestedH == nil then requestedH = self.paddingTop + self.paddingBottom end
+    local contentW, contentH, nLines = computeContent(
+        self,
+        requestedW - self.paddingLeft - self.paddingRight,
+        requestedH - self.paddingTop - self.paddingBottom
+    )
+
     local usedWidth = contentW + self.paddingLeft + self.paddingRight
     local usedHeight = contentH + self.paddingTop + self.paddingBottom
 
@@ -280,25 +296,17 @@ local function sizeFromContentSize(self, contentW, contentH, requestedW, request
     if self.height ~= nil then usedHeight = self.height end
     if self.width ~= nil then usedWidth = self.width end
 
-    return usedWidth, usedHeight
+    self._cachedSize = self._cachedSize or {}
+    self._cachedSize[1], self._cachedSize[2], self._cachedSize[3],
+    self._cachedSize[4], self._cachedSize[5],
+    self._cachedSize[6], self._cachedSize[7] =
+        requestedW, requestedH, usedWidth, usedHeight, contentW, contentH, nLines
+
+    return usedWidth, usedHeight, contentW, contentH, nLines
 end
 
 function ui.Block:getSize(requestedW, requestedH)
-    if self._cachedSize ~= nil and
-        self._cachedSize[3] == requestedW and self._cachedSize[4] == requestedH
-    then
-        return self._cachedSize[1], self._cachedSize[2]
-    end 
-    if requestedW == nil then requestedW = self.paddingLeft + self.paddingRight end
-    if requestedH == nil then requestedH = self.paddingTop + self.paddingBottom end
-    local contentW, contentH = computeContent(
-        self,
-        requestedW - self.paddingLeft - self.paddingRight,
-        requestedH - self.paddingTop - self.paddingBottom
-    )
-    self._cachedSize = self._cachedSize or {}
-    self._cachedSize[1], self._cachedSize[2] = sizeFromContentSize(self, contentW, contentH, requestedW, requestedH)
-    self._cachedSize[3], self._cachedSize[4] = requestedW, requestedH
+    return blockComputeSize(self, requestedW, requestedH)
 end
 
 local function calcSlackFromMiddle(max, nElems, i)
@@ -387,9 +395,7 @@ end
 function ui.Block:draw(term, x, y, requestedW, requestedH)
     local blockWidth = requestedW - self.paddingLeft - self.paddingRight
     local blockHeight = requestedH - self.paddingTop - self.paddingBottom
-
-    local contentW, contentH, nLines = computeContent(self, blockWidth, blockHeight)
-    local width, height = sizeFromContentSize(self, contentW, contentH, requestedW, requestedH)
+    local width, height, contentW, contentH, nLines = blockComputeSize(self, requestedW, requestedH)
     if width == '100%' then width = requestedW end
     if height == '100%' then height = requestedH end
 
@@ -419,6 +425,8 @@ function ui.Block:draw(term, x, y, requestedW, requestedH)
             term.setBackgroundColor(term.defaultBackgroundColor)
             return true
         end)
+
+    self._cachedSize = nil
 end
 
 local function findChildAt(self, x, y, requestedW, requestedH)
