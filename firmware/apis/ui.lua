@@ -690,8 +690,18 @@ ui.Text = {
     text = nil,
     backgroundColor = nil,
     textColor = nil,
+    ---@type number|nil|'100%'
     width = nil,
-    height = nil
+    ---@type number|nil|'100%'
+    height = nil,
+    ---@type number?
+    minHeight = nil,
+    ---@type number?
+    minWidth = nil,
+    ---@type number?
+    maxHeight = nil,
+    ---@type number?
+    maxWidth = nil,
 }
 ui.Text = ui.UIObject:new(ui.Text)
 ---@return ui.Text
@@ -703,6 +713,7 @@ function ui.Text:new(obj)
 end
 
 function ui.Text:draw(term, x, y, parentW, parentH)
+    local width, height = self:getSize(parentW, parentH)
     if self.transparent then return end
     if self.backgroundColor ~= nil then
         term.setBackgroundColor(self.backgroundColor)
@@ -715,7 +726,7 @@ function ui.Text:draw(term, x, y, parentW, parentH)
     for i = 1, string.len(self.text) do
         local c = string.sub(self.text, i, i)
 
-        if offsetWidth < parentW and offsetHeight < parentH then
+        if offsetWidth < width and offsetHeight < height then
             term.write(c)
         end
 
@@ -728,8 +739,15 @@ function ui.Text:draw(term, x, y, parentW, parentH)
     end
 end
 
-function ui.Text:getSize()
-    return self.width, self.height
+function ui.Text:getSize(parentW, parentH)
+    local w, h = self.width, self.height
+    if self.width == '100%' then w = parentW end
+    if self.height == '100%' then h = parentH end
+    if self.minWidth ~= nil then w = math.max(w, self.minWidth) end
+    if self.maxWidth ~= nil then w = math.min(w, self.maxWidth) end
+    if self.minHeight ~= nil then h = math.max(h, self.minHeight) end
+    if self.maxHeight ~= nil then h = math.min(h, self.maxHeight) end
+    return w, h
 end
 
 ---@class ui.TextInput: ui.UIObject
