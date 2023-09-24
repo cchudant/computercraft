@@ -269,7 +269,6 @@ local function computeContent(self, blockWidth, blockHeight, start, func)
 end
 
 local function blockComputeSize(self, requestedW, requestedH)
-    print(self._cachedSize)
     if self._cachedSize ~= nil
         and self._cachedSize[1] == requestedW
         and self._cachedSize[2] == requestedH
