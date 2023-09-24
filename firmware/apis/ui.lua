@@ -284,6 +284,11 @@ local function sizeFromContentSize(self, contentW, contentH, requestedW, request
 end
 
 function ui.Block:getSize(requestedW, requestedH)
+    if self._cachedSize ~= nil and
+        self._cachedSize[3] == requestedW and self._cachedSize[4] == requestedH
+    then
+        return self._cachedSize[1], self._cachedSize[2]
+    end 
     if requestedW == nil then requestedW = self.paddingLeft + self.paddingRight end
     if requestedH == nil then requestedH = self.paddingTop + self.paddingBottom end
     local contentW, contentH = computeContent(
@@ -291,7 +296,9 @@ function ui.Block:getSize(requestedW, requestedH)
         requestedW - self.paddingLeft - self.paddingRight,
         requestedH - self.paddingTop - self.paddingBottom
     )
-    return sizeFromContentSize(self, contentW, contentH, requestedW, requestedH)
+    self._cachedSize = self._cachedSize or {}
+    self._cachedSize[1], self._cachedSize[2] = sizeFromContentSize(self, contentW, contentH, requestedW, requestedH)
+    self._cachedSize[3], self._cachedSize[4] = requestedW, requestedH
 end
 
 local function calcSlackFromMiddle(max, nElems, i)
