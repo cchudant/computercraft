@@ -214,6 +214,8 @@ function storage.newStorageServer(settings, serverID)
             otherwiseShowCrafts = false,
         })
 
+        util.prettyPrint(options)
+
         local ret = {}
         local i = 1
         while (options.limit == nil or #ret < options.limit) and i <= #state.itemIDAmountsSorted do
